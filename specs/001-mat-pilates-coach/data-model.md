@@ -1,6 +1,6 @@
 # Data Model: Mat Pilates Coach
 
-**Branch**: `001-mat-pilates-coach` | **Date**: 2026-05-24
+**Branch**: `001-mat-pilates-coach-student-app` | **Date**: 2026-05-24
 
 ---
 
@@ -17,7 +17,7 @@ students ───────────────────────�
    │         │                               │
    ├──< progress_records (per session)       │
    ├──< metric_logs                          │
-   ├──< feedback_threads >── coach_replies   │
+   ├──< feedback_threads (student + coach reply) │
    ├──< subscriptions                        │
    └──< download_manifests ─────────────────-┘
 ```
@@ -94,7 +94,7 @@ Coach (service role) can write.
 | `updated_at` | `timestamptz` | NOT NULL, default `now()` | |
 
 Unique constraint: `(program_id, day_number)`.
-RLS: Readable by authenticated students; writable by coach.
+RLS: Readable by students enrolled in the parent program; writable by coach.
 
 ---
 
@@ -118,6 +118,7 @@ RLS: Readable by authenticated students; writable by coach.
 | `updated_at` | `timestamptz` | NOT NULL, default `now()` | |
 
 Unique constraint: `(session_id, display_order)`.
+RLS: Readable by students enrolled in the parent program; writable by coach.
 
 ---
 

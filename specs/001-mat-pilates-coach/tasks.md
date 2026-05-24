@@ -208,7 +208,8 @@ Each P1 user story is an independently shippable MVP slice.
 - [ ] T106 Create `admin/components/video-uploader.tsx` — Mux Direct Upload flow using `@mux/mux-uploader-react`; on upload complete → save `mux_asset_id` to DB; poll Mux webhook (or poll asset status) until `ready`
 - [ ] T107 [P] Create `admin/components/asset-uploader.tsx` — GLB file upload to Supabase Storage `exercise-models/` bucket; save URL to exercise record
 - [ ] T108 Create `admin/app/students/[id]/feedback/page.tsx` — list feedback threads for student; reply form; POST reply → triggers Supabase Realtime + notification webhook
-- [ ] T109 [P] Create `admin/app/api/programs/[id]/publish/route.ts` — server action: set `published = true`, `published_at = now()`
+- [ ] T109 [P] Create `admin/app/api/programs/[id]/publish/route.ts` — server action: set `published = true|false`; on publish set `published_at = now()`
+- [ ] T122 [P] Create `admin/app/api/programs/[id]/delete/route.ts` — delete program (hard delete or soft delete strategy), enforce referential cleanup for sessions/exercises
 
 **Checkpoint**: US6 fully functional. Full coach → publish → student sees content flow verified.
 
@@ -230,6 +231,14 @@ Each P1 user story is an independently shippable MVP slice.
 - [ ] T119 [P] Add `README.md` to `mobile/` with setup steps (env vars, Firebase config, Supabase URL)
 - [ ] T120 [P] Add `README.md` to `admin/` with setup, env vars, local Supabase instructions
 - [ ] T121 Run `flutter analyze` + `flutter test` → zero errors, zero warnings
+- [ ] T123 Implement subscription grace-period UX in `mobile/lib/features/auth/`: while status is `grace_period`, allow access with warning banner and retry verification CTA
+- [ ] T124 Implement multi-device conflict policy in `mobile/lib/core/auth/`: define and enforce behavior for concurrent phone/tablet sessions; add user-facing messaging when token/session is revoked
+- [ ] T125 Implement deleted-session reconciliation in `mobile/lib/core/sync/sync_service.dart`: if a completed session is removed by coach, preserve historical completion snapshot in local/remote progress history
+- [ ] T126 Add SC benchmark integration tests in `mobile/test/integration/`: measure SC-001 (signup to first session), SC-002 (playback startup), SC-003 (3D render latency), SC-004 (offline sync latency), SC-006 (reply notification latency)
+- [ ] T127 [P] Add coach-flow benchmark in `admin/test/e2e/program_publish.spec.ts`: validate SC-005 (create + publish single-session program under 15 min target)
+- [ ] T128 [P] Implement analytics event schema in `mobile/lib/core/analytics/`: onboarding funnel and workout playback QoE events needed for SC-007 tracking
+- [ ] T129 [P] Add retention cohort job in `supabase/functions/retention-cohorts/index.ts`: compute 30-day active-subscriber retention for SC-008
+- [ ] T130 Add KPI dashboard docs in `specs/001-mat-pilates-coach/metrics.md`: source-of-truth queries and alert thresholds for SC-001..SC-008
 
 ---
 
@@ -278,3 +287,40 @@ Continue with Phases 5–7 (metrics, feedback, admin panel) then Phase 8 (polish
 - RevenueCat + Supabase secrets MUST be in `.env` files, never committed
 - `model_viewer_plus` uses a WebView; test on physical devices for 3D rendering
 - Mux signed download URLs expire; edge function refresh should be called before offline sync packages URLs into `download_manifest`
+
+---
+
+## Requirements Traceability
+
+### Functional Requirements → Tasks
+
+- FR-001 → T034, T044, T045
+- FR-002 → T049, T050, T051
+- FR-003 → T053, T055, T056, T058
+- FR-004 → T057, T060, T066, T069
+- FR-005 → T063, T064, T065, T068
+- FR-006 → T039, T070, T071, T078
+- FR-007 → T036, T037, T074, T075, T076
+- FR-008 → T079, T080, T082
+- FR-009 → T083, T084
+- FR-010 → T088, T089, T090, T096
+- FR-011 → T092, T093, T094
+- FR-012 → T067
+- FR-013 → T061, T062, T066
+- FR-014 → T081, T085
+- FR-015 → T101, T102, T103, T122
+- FR-016 → T104, T105, T106, T107
+- FR-017 → T103, T109
+- FR-018 → T108
+- FR-019 → T073
+
+### Success Criteria → Tasks
+
+- SC-001 → T126
+- SC-002 → T063, T126
+- SC-003 → T064, T126
+- SC-004 → T074, T075, T076, T126
+- SC-005 → T101, T102, T103, T104, T105, T106, T107, T109, T127
+- SC-006 → T092, T093, T094, T126
+- SC-007 → T128, T130
+- SC-008 → T129, T130

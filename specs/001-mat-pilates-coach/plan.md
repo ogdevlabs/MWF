@@ -1,6 +1,6 @@
 # Implementation Plan: Mat Pilates Coach — Student App
 
-**Branch**: `001-mat-pilates-coach` | **Date**: 2026-05-24 | **Spec**: `spec.md`
+**Branch**: `001-mat-pilates-coach-student-app` | **Date**: 2026-05-24 | **Spec**: `spec.md`
 
 ---
 
