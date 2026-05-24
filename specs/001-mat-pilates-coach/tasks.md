@@ -66,6 +66,12 @@ Each P1 user story is an independently shippable MVP slice.
 - [ ] T038 Create `mobile/lib/core/sync/connectivity_provider.dart` — Riverpod provider wrapping `connectivity_plus`; triggers `SyncService.sync()` on reconnect
 - [ ] T039 Create `mobile/lib/core/downloads/download_service.dart` — wrap `background_downloader`; expose `downloadExerciseMedia(exerciseId)`, `cancelDownload(exerciseId)`, progress stream; update `download_manifest` in Drift
 - [ ] T040 Update `mobile/lib/shared/router/app_router.dart` — complete all route definitions now that features are known
+- [ ] T131 Create `supabase/migrations/003_cqrs_read_models.sql` — define query projections (`program_catalog_view`, `student_today_session_view`, `session_playback_view`, `student_progress_dashboard_view`, `student_notifications_view`)
+- [ ] T132 Create `supabase/functions/projection-refresh/index.ts` — idempotent projection refresh handler triggered by command-side table changes
+- [ ] T133 Create `mobile/lib/core/cqrs/command_bus.dart` — dispatch command intents (`complete_session`, `log_metric`, `submit_feedback`) into `sync_queue`
+- [ ] T134 [P] Create `mobile/lib/core/cqrs/query_gateway.dart` — read-only gateway for projection-backed queries consumed by features
+- [ ] T135 Create `admin/lib/cqrs/query-client.ts` — admin panel uses projection read models for list/detail pages instead of ad-hoc joins
+- [ ] T136 [P] Add CQRS consistency tests in `mobile/test/integration/cqrs_projection_lag_test.dart` and `admin/test/e2e/cqrs_read_models.spec.ts`
 
 **Checkpoint**: Run `flutter test test/unit/core/` — auth, sync queue, and download service tests pass.
 
@@ -313,6 +319,7 @@ Continue with Phases 5–7 (metrics, feedback, admin panel) then Phase 8 (polish
 - FR-017 → T103, T109
 - FR-018 → T108
 - FR-019 → T073
+- FR-020 → T131, T132, T133, T134, T135, T136
 
 ### Success Criteria → Tasks
 

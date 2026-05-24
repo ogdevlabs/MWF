@@ -243,6 +243,9 @@ play it in the mobile app.
   replies.
 - **FR-019**: System MUST invalidate cached video assets on student devices when a
   video is updated by the coach.
+- **FR-020**: System MUST implement CQRS for persistence: command-side writes to
+  normalized source-of-truth tables and query-side reads from denormalized
+  projections/materialized views with eventual consistency.
 
 ### Key Entities
 
@@ -305,3 +308,5 @@ play it in the mobile app.
 - The app supports iOS 16+ and Android 10+ (API 29+) at launch.
 - Accessibility (screen reader support, minimum contrast ratios) follows WCAG 2.1 AA
   for all non-video content.
+- CQRS read models are eventually consistent; projection lag target is <= 5 seconds
+  for normal operation.

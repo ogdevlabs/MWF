@@ -60,6 +60,13 @@ the coach to create/publish programs and respond to student feedback.
 
 **Scale/Scope**: Single-coach brand; ~50 screens across mobile + ~20 admin pages
 
+**Persistence Pattern**:
+- CQRS: command-side writes to normalized transactional tables; query-side reads
+  from denormalized read models (Postgres views/materialized views + local Drift
+  projections).
+- Projection updates are asynchronous and idempotent; mobile and admin UIs consume
+  query models only.
+
 ---
 
 ## Architecture Overview
@@ -251,10 +258,27 @@ server code entirely.
 - **Media path**: Videos and GLB assets are downloaded via `background_downloader`
   to the app's documents directory; Drift stores local file paths.
 
+### CQRS Persistence Strategy
+- **Command model (write)**: `enrollments`, `progress_records`, `metric_logs`,
+  `feedback_threads`, and coach content writes (`programs`, `sessions`,
+  `exercises`) remain normalized and transactional.
+- **Query model (read)**: projection-backed read models power program catalog,
+  daily session view, progress dashboard, and notifications timeline.
+- **Projection updates**: Supabase DB triggers + Edge functions update read models
+  after command commits; retries are safe via idempotent projection keys.
+- **Client contract**: command handlers return acknowledgement; UI rehydrates from
+  query models and tolerates short eventual-consistency windows.
+
 ### Why Riverpod (not Bloc/Provider)
 Riverpod's compile-time safety, AsyncNotifier pattern, and first-class support for
 code generation (`riverpod_generator`) reduce boilerplate while keeping state
 testable in isolation. It integrates cleanly with Drift streams for reactive UI.
+
+### Why CQRS for Persistence
+CQRS cleanly separates write correctness from read performance for this app's
+highly read-heavy UI (program catalog, session sequencing, progress dashboards,
+notifications). It reduces query complexity in mobile/admin clients and allows
+offline sync writes to stay minimal while read projections remain optimized.
 
 ---
 

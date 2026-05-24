@@ -244,3 +244,36 @@ Tracks which exercise media files have been downloaded.
 | `progress_records` | own rows | own rows | service role |
 | `metric_logs` | own rows | own rows | ✗ |
 | `feedback_threads` | own rows | own insert | service role (reply) |
+
+---
+
+## CQRS Persistence Model
+
+### Command Side (Source of Truth)
+
+Command handlers write only to normalized transactional tables:
+
+- Content: `programs`, `sessions`, `exercises`
+- Student lifecycle: `students`, `subscriptions`, `enrollments`
+- Activity: `progress_records`, `metric_logs`, `feedback_threads`
+
+All command writes are idempotent where possible and emit projection refresh
+signals (trigger or edge function job).
+
+### Query Side (Read Projections)
+
+Read models are denormalized and optimized for UI rendering. Suggested objects:
+
+- `program_catalog_view` (published programs + enrollment/subscription overlay)
+- `student_today_session_view` (current day, next session, lock state)
+- `session_playback_view` (ordered exercises + media readiness)
+- `student_progress_dashboard_view` (streak snapshot + completion aggregates)
+- `student_notifications_view` (coach replies ordered by replied_at)
+
+Read models are eventually consistent with a target projection lag <= 5 seconds.
+
+### Local Drift CQRS Alignment
+
+- Local command queue: `sync_queue` remains append-only for pending commands.
+- Local query projections: `local_programs`, `local_sessions`, `local_exercises`,
+  and dashboard-oriented aggregates are treated as read models refreshed by sync.
