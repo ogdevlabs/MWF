@@ -34,8 +34,8 @@ fi
 # ── run ───────────────────────────────────────────────────────────────────────
 step "Starting Next.js dev server"
 echo ""
-echo "  Admin panel: http://localhost:3000"
+echo "  Admin panel: http://localhost:3555"
 echo "  Press Ctrl+C to stop"
 echo ""
 
-npm run dev
+npm run dev -- --port 3555

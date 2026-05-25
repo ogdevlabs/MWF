@@ -143,7 +143,7 @@ You should see the **Login** placeholder screen — the auth guard redirects una
 ```bash
 cd admin
 npm run dev
-# Open http://localhost:3000
+# Open http://localhost:3555
 ```
 
 ---

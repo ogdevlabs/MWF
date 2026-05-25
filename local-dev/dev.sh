@@ -3,7 +3,7 @@
 #
 # Starts (each in its own terminal tab / background process):
 #   1. Local Supabase stack
-#   2. Next.js admin panel (http://localhost:3000)
+#   2. Next.js admin panel (http://localhost:3555)
 #   3. Flutter app on iOS Simulator
 #
 # Usage:
@@ -90,9 +90,9 @@ fi
 if [[ "$TARGET" != "mobile-only" ]]; then
   step "Starting Next.js admin panel (background)"
   cd "$REPO_ROOT/admin"
-  npm run dev &>/tmp/mwf-admin.log &
+  npm run dev -- --port 3555 &>/tmp/mwf-admin.log &
   PIDS+=($!)
-  echo "  Admin panel: http://localhost:3000  (logs: /tmp/mwf-admin.log)"
+  echo "  Admin panel: http://localhost:3555  (logs: /tmp/mwf-admin.log)"
 fi
 
 # ── start Flutter app ─────────────────────────────────────────────────────────
