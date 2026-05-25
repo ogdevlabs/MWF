@@ -82,8 +82,18 @@ echo "  API:             $SUPABASE_URL"
 
 # ── ensure admin .env.local ───────────────────────────────────────────────────
 if [[ ! -f admin/.env.local ]]; then
-  cp admin/.env.local.example admin/.env.local
-  warn "Created admin/.env.local — update NEXT_PUBLIC_SUPABASE_ANON_KEY with the key above."
+  if [[ -f admin/.env.local.example ]]; then
+    cp admin/.env.local.example admin/.env.local
+  else
+    cat > admin/.env.local << EOF
+NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=placeholder
+SUPABASE_SERVICE_ROLE_KEY=placeholder
+MUX_TOKEN_ID=placeholder
+MUX_TOKEN_SECRET=placeholder
+EOF
+  fi
+  warn "Created admin/.env.local — update with real Supabase keys from: npx supabase status"
 fi
 
 # ── start admin panel (background) ───────────────────────────────────────────

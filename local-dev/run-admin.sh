@@ -18,8 +18,18 @@ step "Checking environment"
 cd "$REPO_ROOT/admin"
 
 if [[ ! -f .env.local ]]; then
-  cp .env.local.example .env.local
-  warn ".env.local created from example — fill in Supabase keys before using the admin panel."
+  if [[ -f .env.local.example ]]; then
+    cp .env.local.example .env.local
+  else
+    cat > .env.local << EOF
+NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=placeholder
+SUPABASE_SERVICE_ROLE_KEY=placeholder
+MUX_TOKEN_ID=placeholder
+MUX_TOKEN_SECRET=placeholder
+EOF
+  fi
+  warn ".env.local created — fill in Supabase keys before using the admin panel."
 fi
 
 # ── ensure deps ───────────────────────────────────────────────────────────────
