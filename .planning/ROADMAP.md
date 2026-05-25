@@ -1,135 +1,128 @@
-# Roadmap — Mat Pilates Coach v1.0
+# Roadmap: Mat Pilates Coach
 
-**Milestone**: v1.0 — Full MVP + P2 Features
-**Created**: 2026-05-25
+## Overview
 
----
+Build an offline-first Flutter mobile app (iOS + Android) where students follow
+coach-designed multi-week Mat Pilates programs with video + 3D animation exercise
+playback, subscription gating via in-app purchase, body metric tracking, and
+private 1-to-1 coach direct messaging. A companion Next.js admin panel lets the
+coach create/publish programs and reply to student messages.
 
-## Phase 1 — Setup & Scaffold
+## Phases
 
-**Goal**: Initialize both Flutter and Next.js projects, provision Supabase and
-external services (Mux, RevenueCat, Firebase), and establish CI foundations.
+- [ ] **Phase 1: Setup & Scaffold** - Initialize Flutter + Next.js projects, provision Supabase, Mux, RevenueCat, Firebase
+- [ ] **Phase 2: Foundation** - Auth, Drift database, sync engine, download service, CQRS infrastructure
+- [ ] **Phase 3: US1 Enroll & Access** - Student signup, subscription, program browse and access
+- [ ] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking
+- [ ] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync
+- [ ] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks
+- [ ] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading
+- [ ] **Phase 8: US6 Admin Panel** - Coach content creation, program publishing, private feedback replies
+- [ ] **Phase 9: Polish & QA** - Accessibility, error handling, performance benchmarks, analytics, final QA
 
-**Tasks**: T001–T014 (see `specs/001-mat-pilates-coach/tasks.md`)
+## Phase Details
 
-**Dependencies**: None — start immediately
-**Parallel opportunities**: T001, T002, T003 (three separate project initializations)
+### Phase 1: Setup & Scaffold
+**Goal**: Initialize both Flutter and Next.js projects, configure tooling, provision all external services (Supabase, Mux, RevenueCat, Firebase), and establish the project skeleton that all subsequent phases build on.
+**Depends on**: Nothing (first phase)
+**Requirements**: none
+**Success Criteria** (what must be TRUE):
+  1. `mobile/` Flutter project runs `flutter run` without errors on iOS simulator and Android emulator
+  2. `admin/` Next.js 16 project runs `npm run dev` without errors
+  3. `supabase/migrations/001_initial_schema.sql` exists with all tables from data-model.md
+  4. RevenueCat dashboard has entitlements configured; Firebase project exists with config files
+  5. Supabase edge functions directory exists with webhook stubs for RevenueCat and Mux
+**Plans**: 3 plans
+Plans:
+- [ ] 01-01-PLAN.md — Project initializations (Flutter, Next.js, Supabase)
+- [ ] 01-02-PLAN.md — Dependencies, schema migration, and edge function stubs
+- [ ] 01-03-PLAN.md — Flutter skeleton (main.dart, theme, router) + service stubs
 
----
+### Phase 2: Foundation
+**Goal**: Implement Drift local database, Supabase client, auth repository, offline sync queue, download service, and CQRS infrastructure. This phase blocks all feature phases.
+**Depends on**: Phase 1
+**Requirements**: none
+**Success Criteria** (what must be TRUE):
+  1. `flutter test test/unit/core/` passes — auth, sync queue, and download service tests pass
+  2. Drift database opens in-memory with all tables and DAOs accessible
+  3. SyncService can enqueue and replay operations against a mock Supabase client
+  4. DownloadService can queue, download, and update manifest entries
+  5. CQRS CommandBus and QueryGateway exist and are wired via Riverpod providers
+**Plans**: TBD
 
-## Phase 2 — Foundation: Auth, Database & Sync Engine
+### Phase 3: US1 Enroll & Access
+**Goal**: Student can sign up (email/password + Apple + Google), subscribe via in-app purchase through RevenueCat, browse published programs with lock/unlock state, and access enrolled program detail.
+**Depends on**: Phase 2
+**Requirements**: FR-001, FR-002, FR-003
+**Success Criteria** (what must be TRUE):
+  1. New user can sign up → subscribe → land on program list → open enrolled program detail
+  2. Locked programs display paywall overlay; subscribed programs are accessible
+  3. Subscription status is enforced via RevenueCat entitlement check
+  4. Apple Sign-In and Google Sign-In buttons present and functional on iOS
+**Plans**: TBD
 
-**Goal**: Implement Drift local database, Supabase client, auth repository, offline
-sync queue, download service, and CQRS infrastructure. Blocks all feature phases.
+### Phase 4: US2 Session Player
+**Goal**: Subscribed enrolled student opens today's session, plays each exercise with a video player and 3D animation companion, tracks progress through the session, and reaches a completion screen.
+**Depends on**: Phase 3
+**Requirements**: FR-004, FR-005, FR-012, FR-013, FR-014
+**Success Criteria** (what must be TRUE):
+  1. Subscribed enrolled user can open session → play video → 3D model renders → complete all exercises → see completion screen
+  2. Session is marked done in program calendar after completion
+  3. Re-opening a mid-session app resumes from last incomplete exercise
+  4. Streak counter increments after session completion
+**Plans**: TBD
 
-**Tasks**: T015–T040, T131–T136
+### Phase 5: US3 Offline-First
+**Goal**: Student pre-downloads session content on Wi-Fi, completes a full session in airplane mode, and has progress automatically synced to the server when connectivity is restored.
+**Depends on**: Phase 4
+**Requirements**: FR-006, FR-007
+**Success Criteria** (what must be TRUE):
+  1. Airplane mode enabled after sync → student completes pre-downloaded session → reconnect → progress visible in program calendar
+  2. Storage guard pauses downloads when free space < 500 MB
+  3. Stale video versions are detected and re-queued for download on sync
+  4. Sync queue replays in order on reconnect; retry_count stops at 5 failures
+**Plans**: TBD
 
-**Dependencies**: Phase 1 complete
-**Parallel opportunities**: All table (T016–T024) and DAO (T025–T032) tasks run in parallel
+### Phase 6: US4 Metrics & Progress
+**Goal**: Student can log body metrics (weight, measurements, flexibility) with date stamps, view trend line charts with delta badge, and see session completion streaks on a progress dashboard.
+**Depends on**: Phase 5
+**Requirements**: FR-008, FR-009
+**Success Criteria** (what must be TRUE):
+  1. Student can log 3 weight entries on different dates → Progress screen shows line chart with 3 data points and delta badge
+  2. Streak card shows current streak and longest streak, updating after each session completion
+  3. Metric log prompt appears (non-blocking) on session completion screen
+  4. Offline metric logs enqueue in sync_queue and sync on reconnect
+**Plans**: TBD
 
----
+### Phase 7: US5 Private Feedback
+**Goal**: Student submits a private post-session note and optional photo directly to the coach; receives a push notification when the coach replies; the full exchange is visible only to the student and coach (no community/public visibility).
+**Depends on**: Phase 5
+**Requirements**: FR-010, FR-010a, FR-011
+**Success Criteria** (what must be TRUE):
+  1. Submit private feedback → admin panel reply posted → student receives push notification within 60 s → reply visible in private thread
+  2. No cross-student data access: RLS prevents student A from reading student B's threads
+  3. Offline feedback notes save locally and submit on reconnect
+  4. Notifications screen lists all coach replies with session links
+**Plans**: TBD
 
-## Phase 3 — US1: Enroll & Access a Program (P1 MVP)
+### Phase 8: US6 Admin Panel
+**Goal**: Coach can create and publish multi-week programs (with Mux video + GLB 3D asset uploads), manage sessions and exercises, and reply to individual student private feedback threads via the Next.js admin panel.
+**Depends on**: Phase 7
+**Requirements**: FR-015, FR-016, FR-017, FR-018, FR-019
+**Success Criteria** (what must be TRUE):
+  1. Coach creates program → adds session → uploads video via Mux Direct Upload → publishes → student app shows program within 60 s
+  2. Coach replies to student feedback → student receives push notification → reply visible in student's private thread
+  3. Updated video invalidates student cached version; re-download queued on next sync
+  4. Program delete cleans up sessions and exercises without orphaned records
+**Plans**: TBD
 
-**Goal**: Student can sign up, subscribe via in-app purchase, browse programs, and
-access enrolled program detail.
-
-**Tasks**: T041–T058
-
-**Dependencies**: Phase 2 complete
-**Success Test**: New user signs up → subscribes → lands on program list → opens enrolled program detail.
-
----
-
-## Phase 4 — US2: Daily Session Player (P1 MVP)
-
-**Goal**: Student opens today's session, plays exercises with video + 3D animation,
-marks session complete.
-
-**Tasks**: T059–T069
-
-**Dependencies**: Phase 3 complete (requires auth + enrollment)
-**Success Test**: Subscribed enrolled user completes full session → completion screen → session marked done.
-
----
-
-## Phase 5 — US3: Offline-First (P1 MVP)
-
-**Goal**: Student pre-downloads content, completes session with no internet, syncs
-progress on reconnect.
-
-**Tasks**: T070–T078
-
-**Dependencies**: Phase 4 complete (offline wraps the session player)
-**Success Test**: Airplane mode → complete pre-synced session → reconnect → progress synced.
-
----
-
-## Phase 6 — US4: Body Metrics & Progress Dashboard (P2)
-
-**Goal**: Student logs body metrics, views trend charts, sees session completion
-streaks on a dashboard.
-
-**Tasks**: T079–T087
-
-**Dependencies**: Phase 5 complete
-**Success Test**: Log 3 weight entries → Progress screen shows line chart with delta badge.
-
----
-
-## Phase 7 — US5: Private Coach Feedback & Notifications (P2)
-
-**Goal**: Student submits private post-session note/photo directly to coach; receives
-coach reply as push notification. Strictly 1-to-1 — no community visibility.
-
-**Tasks**: T088–T096
-
-**Dependencies**: Phase 5 complete (can run in parallel with Phase 6)
-**Success Test**: Submit private feedback → admin panel reply → student push notification within 60 s → reply in private thread.
-
----
-
-## Phase 8 — US6: Admin Panel — Coach Content Creation (P2)
-
-**Goal**: Coach creates programs, uploads video + 3D assets, publishes to student
-app, and replies to private student feedback.
-
-**Tasks**: T097–T109, T122
-
-**Dependencies**: Phase 7 complete (feedback reply flow)
-**Success Test**: Coach creates program → adds session → uploads video → publishes → student sees content.
-
----
-
-## Phase 9 — Polish & Cross-Cutting Concerns
-
-**Goal**: Accessibility, error handling, edge cases, performance benchmarks,
-analytics scaffolding, localization, and final QA.
-
-**Tasks**: T110–T121, T123–T130
-
-**Dependencies**: All user story phases complete
-**Success Test**: `flutter analyze` + `flutter test` → zero errors. SC-001..SC-008 benchmark tests pass.
-
----
-
-## MVP Milestone Gate (after Phase 5)
-
-Validate full P1 flow before continuing to P2 phases:
-signup → subscribe → program browse → session player → offline completion → sync
-
----
-
-## Phase Summary
-
-| # | Name | Priority | Blocks |
-|---|------|----------|--------|
-| 1 | Setup & Scaffold | — | 2 |
-| 2 | Foundation | Critical | 3–9 |
-| 3 | US1: Enroll & Access | P1 MVP | 4 |
-| 4 | US2: Session Player | P1 MVP | 5 |
-| 5 | US3: Offline-First | P1 MVP | 6, 7 |
-| 6 | US4: Metrics & Progress | P2 | 9 |
-| 7 | US5: Private Feedback | P2 | 8 |
-| 8 | US6: Admin Panel | P2 | 9 |
-| 9 | Polish & QA | — | — |
+### Phase 9: Polish & QA
+**Goal**: Accessibility, comprehensive error handling, edge case coverage, performance benchmark tests for all SC-001..SC-008 success criteria, analytics scaffolding, localization scaffold, and final zero-error QA pass.
+**Depends on**: Phase 8
+**Requirements**: none
+**Success Criteria** (what must be TRUE):
+  1. `flutter analyze` + `flutter test` exits with zero errors and zero warnings
+  2. SC-001..SC-008 benchmark integration tests exist and pass
+  3. VoiceOver and TalkBack can navigate through the session player screen
+  4. All AsyncValue widgets show an error state with retry on network failure
+**Plans**: TBD
