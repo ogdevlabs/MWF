@@ -126,31 +126,37 @@ time, and see the delta between their first and latest log.
 
 ### User Story 5 — Submit Session Notes & Receive Coach Feedback (Priority: P2)
 
-After completing a session, a student can submit written notes or photos to the
-coach; the coach can reply through the admin panel and the student sees the response
-in-app.
+After completing a session, a student can submit written notes or photos directly
+to the coach via private direct message; the coach can reply through the admin panel
+and the student sees the response in-app. All communication is strictly private
+between student and coach — there is no public commenting, community feed, or
+ability for other students to see any messages.
 
 **Why this priority**: The feedback loop differentiates this app from generic fitness
 content and drives student retention.
 
-**Independent Test**: A student submits a note on a completed session; using the
-admin panel a coach posts a reply; the student sees the reply as a notification and
-within the session detail view.
+**Independent Test**: A student submits a private note on a completed session; using the
+admin panel a coach posts a private reply; the student sees the reply as a notification and
+within the session detail view. No other student can see either message.
 
 **Acceptance Scenarios**:
 
 1. **Given** a session is marked complete, **When** the student views its detail
    page, **Then** a "Send to Coach" input is available for text and optional photo
-   attachment.
+   attachment; this message is private and visible only to the student and coach.
 2. **Given** a student submits feedback, **When** the coach replies via the admin
    panel, **Then** the student receives a push notification and sees the reply
-   threaded below their original note.
+   threaded below their original note; the exchange is never visible to other students.
 3. **Given** no internet connection, **When** a student writes a note,
    **Then** the note is saved locally and submitted automatically when the device
    reconnects.
 4. **Given** a student has received coach replies, **When** they open the
    Notifications screen, **Then** all coach replies are listed chronologically with
    links to the relevant session.
+5. **Given** the student/coach messaging system, **When** any message is stored or
+   displayed, **Then** there is no community board, public comments section, or
+   shared activity feed — only private 1-to-1 threads between each student and the
+   coach.
 
 ---
 
@@ -221,8 +227,13 @@ play it in the mobile app.
   flexibility scores) with date stamps.
 - **FR-009**: System MUST display metric trends as line charts over the program
   timeline.
-- **FR-010**: Students MUST be able to submit session feedback (text + optional
-  photo) after completing a session.
+- **FR-010**: Students MUST be able to submit private session feedback (text +
+  optional photo) directly to the coach after completing a session; messages are
+  visible only to the submitting student and the coach — no public or community
+  visibility.
+- **FR-010a**: System MUST NOT expose any community commenting, public activity
+  feed, or shared message board. All student–coach communication is strictly private
+  direct messaging (1-to-1).
 - **FR-011**: System MUST deliver push notifications for coach replies to feedback.
 - **FR-012**: System MUST display a completion screen with session summary after all
   exercises are finished.
@@ -239,8 +250,9 @@ play it in the mobile app.
   each having a video upload, 3D asset upload, rep/time config, and text cues.
 - **FR-017**: Coach MUST be able to publish/unpublish programs; published programs
   appear in the student app within 60 seconds.
-- **FR-018**: Coach MUST be able to view student feedback submissions and post
-  replies.
+- **FR-018**: Coach MUST be able to view individual student feedback submissions and
+  post private replies; each thread is scoped to a single student and is never
+  visible to other students.
 - **FR-019**: System MUST invalidate cached video assets on student devices when a
   video is updated by the coach.
 - **FR-020**: System MUST implement CQRS for persistence: command-side writes to

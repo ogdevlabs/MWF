@@ -178,14 +178,16 @@ Each P1 user story is an independently shippable MVP slice.
 
 ## Phase 6: User Story 5 — Coach Feedback & Notifications (Priority: P2)
 
-**Goal**: Student submits post-session note/photo; receives coach reply as push notification.
+**Goal**: Student submits post-session note/photo as a **private direct message** to
+the coach; receives coach reply as push notification. There is no community feed,
+public comments, or cross-student visibility at any point.
 
-**Independent Test**: Submit feedback on completed session → admin panel reply posted → student receives push notification within 60 s → reply visible in thread.
+**Independent Test**: Submit private feedback on completed session → admin panel reply posted → student receives push notification within 60 s → reply visible in private thread. Verify no other student can read the exchange.
 
-- [ ] T088 Create `mobile/lib/features/feedback/domain/feedback_thread_model.dart` — `@freezed` FeedbackThread
-- [ ] T089 Create `mobile/lib/features/feedback/data/feedback_repository.dart` — insert thread to Drift + enqueue sync; watch Realtime subscription on `feedback_threads` for coach replies; update local on reply
-- [ ] T090 Create `mobile/lib/features/feedback/presentation/feedback_thread_screen.dart` — student message bubble + optional photo; coach reply bubble; text input + image picker; submit via repository; show pending state while offline
-- [ ] T091 [P] Create `mobile/lib/features/feedback/presentation/notifications_screen.dart` — list of received coach replies with timestamp, session title, excerpt; tap → navigate to `feedback_thread_screen`
+- [ ] T088 Create `mobile/lib/features/feedback/domain/feedback_thread_model.dart` — `@freezed` FeedbackThread; scoped per `(student_id, session_id)` — strictly private
+- [ ] T089 Create `mobile/lib/features/feedback/data/feedback_repository.dart` — insert thread to Drift + enqueue sync; watch Realtime subscription on `feedback_threads` for coach replies; update local on reply; RLS enforces student sees only own threads
+- [ ] T090 Create `mobile/lib/features/feedback/presentation/feedback_thread_screen.dart` — private DM-style UI: student message bubble + optional photo; coach reply bubble; text input + image picker; submit via repository; show pending state while offline; no community/public UI elements
+- [ ] T091 [P] Create `mobile/lib/features/feedback/presentation/notifications_screen.dart` — list of received coach replies with timestamp, session title, excerpt; tap → navigate to `feedback_thread_screen`; shows only replies addressed to this student
 - [ ] T092 Create `mobile/lib/core/notifications/fcm_service.dart` — initialize `firebase_messaging`; request permission; register token with Supabase `students` table (`fcm_token` column); handle foreground + background tap routing
 - [ ] T093 [P] Create `mobile/lib/core/notifications/local_notification_service.dart` — `flutter_local_notifications` for foreground message display
 - [ ] T094 Create `supabase/functions/send-reply-notification/index.ts` — Supabase Database Webhook on `feedback_threads.coach_reply` column update → look up student FCM token → call FCM HTTP v1 API
@@ -213,7 +215,7 @@ Each P1 user story is an independently shippable MVP slice.
 - [ ] T105 Create `admin/components/exercise-editor.tsx` — inline exercise form: title, cues, rep/duration toggle, video uploader, GLB asset uploader
 - [ ] T106 Create `admin/components/video-uploader.tsx` — Mux Direct Upload flow using `@mux/mux-uploader-react`; on upload complete → save `mux_asset_id` to DB; poll Mux webhook (or poll asset status) until `ready`
 - [ ] T107 [P] Create `admin/components/asset-uploader.tsx` — GLB file upload to Supabase Storage `exercise-models/` bucket; save URL to exercise record
-- [ ] T108 Create `admin/app/students/[id]/feedback/page.tsx` — list feedback threads for student; reply form; POST reply → triggers Supabase Realtime + notification webhook
+- [ ] T108 Create `admin/app/students/[id]/feedback/page.tsx` — list private feedback threads for a single student (coach sees all their own students' threads individually, never aggregated into a community board); reply form; POST reply → triggers Supabase Realtime + notification webhook; enforce service-role RLS so coach can read/write replies but cannot expose threads to other students
 - [ ] T109 [P] Create `admin/app/api/programs/[id]/publish/route.ts` — server action: set `published = true|false`; on publish set `published_at = now()`
 - [ ] T122 [P] Create `admin/app/api/programs/[id]/delete/route.ts` — delete program (hard delete or soft delete strategy), enforce referential cleanup for sessions/exercises
 

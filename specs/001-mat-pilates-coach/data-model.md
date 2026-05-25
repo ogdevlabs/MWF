@@ -185,6 +185,11 @@ Unique constraint: `(student_id, session_id)` — one completion per session.
 One feedback thread per student per session (unique: `student_id, session_id`).
 Realtime subscription on this table drives push notification trigger.
 
+**Privacy**: This table implements strictly private 1-to-1 direct messaging between
+each student and the coach. RLS ensures a student can only read rows where
+`student_id = auth.uid()`. There is no community or public-facing query path; no
+student can ever read another student's threads.
+
 ---
 
 ## Local SQLite Schema (Drift)
@@ -243,7 +248,7 @@ Tracks which exercise media files have been downloaded.
 | `enrollments` | own rows | own insert | service role |
 | `progress_records` | own rows | own rows | service role |
 | `metric_logs` | own rows | own rows | ✗ |
-| `feedback_threads` | own rows | own insert | service role (reply) |
+| `feedback_threads` | own rows only (private DM — no cross-student access) | own insert | service role (reply only) |
 
 ---
 
