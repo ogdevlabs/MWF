@@ -114,9 +114,11 @@ if [[ "$TARGET" != "admin-only" ]]; then
   cd "$REPO_ROOT"
 
   if [[ "$MOBILE_TARGET" == "ios" ]]; then
-    flutter emulators --launch apple_ios_simulator 2>/dev/null || true
-    sleep 3
-    DEVICE_FLAG="-d apple_ios_simulator"
+    IOS_UDID="C214ED26-B110-42B2-A0CA-9A889F501784"  # iPhone 17 Pro
+    xcrun simctl boot "$IOS_UDID" 2>/dev/null || true  # no-op if already booted
+    open -a Simulator 2>/dev/null || true
+    sleep 2
+    DEVICE_FLAG="-d $IOS_UDID"
   else
     flutter emulators --launch Pixel_10_Pro 2>/dev/null || true
     sleep 5

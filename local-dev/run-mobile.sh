@@ -2,10 +2,11 @@
 # run-mobile.sh — Install Flutter deps (if needed) and run the mobile app
 #
 # Usage:
-#   ./local-dev/run-mobile.sh              — pick device interactively
-#   ./local-dev/run-mobile.sh ios          — iOS Simulator
+#   ./local-dev/run-mobile.sh              — iOS Simulator (iPhone 17 Pro, default)
+#   ./local-dev/run-mobile.sh ios          — iOS Simulator (iPhone 17 Pro)
 #   ./local-dev/run-mobile.sh android      — Android Emulator (Pixel 10 Pro)
-#   ./local-dev/run-mobile.sh <device-id>  — specific device ID from `flutter devices`
+#   ./local-dev/run-mobile.sh list         — list available devices
+#   ./local-dev/run-mobile.sh <device-id>  — specific UDID or device ID from `flutter devices`
 
 set -euo pipefail
 
@@ -54,10 +55,12 @@ TARGET="${1:-}"
 
 case "$TARGET" in
   ios|"")
-    step "Launching iOS Simulator"
-    flutter emulators --launch apple_ios_simulator 2>/dev/null || true
-    sleep 3
-    DEVICE_FLAG="-d apple_ios_simulator"
+    step "Launching iOS Simulator (iPhone 17 Pro)"
+    IOS_UDID="C214ED26-B110-42B2-A0CA-9A889F501784"
+    xcrun simctl boot "$IOS_UDID" 2>/dev/null || true  # no-op if already booted
+    open -a Simulator 2>/dev/null || true
+    sleep 2
+    DEVICE_FLAG="-d $IOS_UDID"
     ;;
   android)
     step "Launching Android Emulator (Pixel 10 Pro)"
