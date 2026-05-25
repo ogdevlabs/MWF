@@ -97,6 +97,18 @@ The CLI will print your local `API URL`, `anon key`, and `service_role key` — 
 
 > **Docker required.** Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
+**Local port assignments** (configured in `supabase/config.toml` — none use 5432):
+
+| Service | Port |
+|---------|------|
+| API (PostgREST) | 54321 |
+| Database (Postgres) | **54322** |
+| Studio | 54323 |
+| Inbucket (email) | 54324 |
+| Analytics | 54327 |
+
+The Postgres DB runs on **54322**, not 5432, to avoid conflicts with any existing local Postgres instance.
+
 To stop:
 
 ```bash

@@ -44,6 +44,7 @@ case "$cmd" in
     echo ""
     info "Studio:            http://localhost:54323"
     info "API:               http://localhost:54321"
+    info "Database (Postgres): localhost:54322  ← not 5432; avoids conflicts"
     info "Inbucket (email):  http://localhost:54324"
     echo ""
     warn "Copy the anon key and service_role key printed above into admin/.env.local"
