@@ -2,11 +2,11 @@
 # run-mobile.sh — Install Flutter deps (if needed) and run the mobile app
 #
 # Usage:
-#   ./local-dev/run-mobile.sh              — iOS Simulator (iPhone 17 Pro, default)
-#   ./local-dev/run-mobile.sh ios          — iOS Simulator (iPhone 17 Pro)
-#   ./local-dev/run-mobile.sh android      — Android Emulator (Pixel 10 Pro)
-#   ./local-dev/run-mobile.sh list         — list available devices
-#   ./local-dev/run-mobile.sh <device-id>  — specific UDID or device ID from `flutter devices`
+#   ./local-dev/run-mobile.sh              — auto-discover best available device
+#   ./local-dev/run-mobile.sh ios          — first available iPhone simulator
+#   ./local-dev/run-mobile.sh android      — first available Android emulator
+#   ./local-dev/run-mobile.sh list         — list all available devices
+#   ./local-dev/run-mobile.sh <device-id>  — specific UDID or device ID
 
 set -euo pipefail
 
@@ -21,12 +21,41 @@ info() { echo -e "${CYAN}   $*${NC}"; }
 
 command -v flutter >/dev/null 2>&1 || die "Flutter not found. Run ./local-dev/install.sh first."
 
+# ── device discovery ──────────────────────────────────────────────────────────
+
+# Find first available iPhone simulator UDID (booted first, then shutdown)
+find_ios_device() {
+  # Prefer already-booted simulator
+  local udid
+  udid=$(xcrun simctl list devices available 2>/dev/null \
+    | grep -E "iPhone" \
+    | grep "Booted" \
+    | head -1 \
+    | grep -oE '[A-F0-9-]{36}')
+  if [[ -n "$udid" ]]; then echo "$udid"; return; fi
+
+  # Fall back to first available (shutdown) iPhone
+  udid=$(xcrun simctl list devices available 2>/dev/null \
+    | grep -E "iPhone" \
+    | grep -v "unavailable" \
+    | head -1 \
+    | grep -oE '[A-F0-9-]{36}')
+  echo "$udid"
+}
+
+# Find first available Android emulator ID
+find_android_device() {
+  flutter emulators 2>/dev/null \
+    | grep -E "android|pixel|nexus|galaxy" -i \
+    | awk '{print $1}' \
+    | head -1
+}
+
 # ── resolve Supabase keys from running stack ──────────────────────────────────
 SUPABASE_URL="${SUPABASE_URL:-http://localhost:54321}"
 SUPABASE_ANON_KEY="${SUPABASE_ANON_KEY:-}"
 
 if [[ -z "$SUPABASE_ANON_KEY" ]]; then
-  # Try to extract from `supabase status` output
   STATUS_OUTPUT=$(npx supabase status 2>/dev/null || true)
   if [[ -n "$STATUS_OUTPUT" ]]; then
     SUPABASE_ANON_KEY=$(echo "$STATUS_OUTPUT" | grep -E "anon key" | awk '{print $NF}' | tr -d '[:space:]')
@@ -34,9 +63,8 @@ if [[ -z "$SUPABASE_ANON_KEY" ]]; then
 fi
 
 if [[ -z "$SUPABASE_ANON_KEY" ]]; then
-  warn "SUPABASE_ANON_KEY not set and local Supabase may not be running."
-  warn "The app will start but Supabase calls will fail until Phase 2 wires them in."
-  warn "To fix: ./local-dev/supabase.sh start, then export SUPABASE_ANON_KEY=<key>"
+  warn "SUPABASE_ANON_KEY not set — Supabase calls will fail until Phase 2."
+  warn "Fix: ./local-dev/supabase.sh start, then export SUPABASE_ANON_KEY=<key>"
   SUPABASE_ANON_KEY="placeholder"
 fi
 
@@ -44,36 +72,51 @@ fi
 step "Checking Flutter dependencies"
 cd "$REPO_ROOT/mobile"
 if [[ ! -f pubspec.lock ]] || [[ pubspec.yaml -nt pubspec.lock ]]; then
-  echo "  pubspec.yaml changed — running flutter pub get"
   flutter pub get
 else
-  echo "  pubspec.lock is up to date — skipping pub get"
+  echo "  pubspec.lock up to date — skipping"
 fi
 
-# ── resolve target device ────────────────────────────────────────────────────
+# ── resolve target device ─────────────────────────────────────────────────────
 TARGET="${1:-}"
 
 case "$TARGET" in
   ios|"")
-    step "Launching iOS Simulator (iPhone 17 Pro)"
-    IOS_UDID="C214ED26-B110-42B2-A0CA-9A889F501784"
+    step "Discovering iOS Simulator"
+    IOS_UDID=$(find_ios_device)
+    [[ -n "$IOS_UDID" ]] || die "No iPhone simulator found. Open Xcode → Simulator to create one."
+
+    DEVICE_NAME=$(xcrun simctl list devices available 2>/dev/null \
+      | grep "$IOS_UDID" | sed 's/ (.*//; s/^[[:space:]]*//')
+    info "Using: $DEVICE_NAME ($IOS_UDID)"
+
     xcrun simctl boot "$IOS_UDID" 2>/dev/null || true  # no-op if already booted
     open -a Simulator 2>/dev/null || true
     sleep 2
     DEVICE_FLAG="-d $IOS_UDID"
     ;;
+
   android)
-    step "Launching Android Emulator (Pixel 10 Pro)"
-    flutter emulators --launch Pixel_10_Pro 2>/dev/null || true
+    step "Discovering Android Emulator"
+    ANDROID_ID=$(find_android_device)
+    [[ -n "$ANDROID_ID" ]] || die "No Android emulator found. Create one in Android Studio → AVD Manager."
+
+    info "Using: $ANDROID_ID"
+    flutter emulators --launch "$ANDROID_ID" 2>/dev/null || true
     sleep 5
-    DEVICE_FLAG="-d Pixel_10_Pro"
+    DEVICE_FLAG="-d $ANDROID_ID"
     ;;
+
   list)
+    echo -e "\n${CYAN}Available devices:${NC}"
     flutter devices
+    echo -e "\n${CYAN}Available emulators:${NC}"
+    flutter emulators
     exit 0
     ;;
+
   *)
-    # Treat as explicit device ID
+    # Explicit device ID passed
     DEVICE_FLAG="-d $TARGET"
     ;;
 esac
@@ -81,7 +124,6 @@ esac
 # ── run ───────────────────────────────────────────────────────────────────────
 echo ""
 info "SUPABASE_URL: $SUPABASE_URL"
-info "Device:       ${TARGET:-ios (default)}"
 echo ""
 
 # shellcheck disable=SC2086

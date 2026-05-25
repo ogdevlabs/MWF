@@ -105,6 +105,21 @@ if [[ "$TARGET" != "mobile-only" ]]; then
   echo "  Admin panel: http://localhost:3555  (logs: /tmp/mwf-admin.log)"
 fi
 
+# ── device discovery helpers ──────────────────────────────────────────────────
+find_ios_device() {
+  local udid
+  udid=$(xcrun simctl list devices available 2>/dev/null \
+    | grep -E "iPhone" | grep "Booted" | head -1 | grep -oE '[A-F0-9-]{36}')
+  if [[ -n "$udid" ]]; then echo "$udid"; return; fi
+  xcrun simctl list devices available 2>/dev/null \
+    | grep -E "iPhone" | grep -v "unavailable" | head -1 | grep -oE '[A-F0-9-]{36}'
+}
+
+find_android_device() {
+  flutter emulators 2>/dev/null \
+    | grep -E "android|pixel|nexus|galaxy" -i | awk '{print $1}' | head -1
+}
+
 # ── start Flutter app ─────────────────────────────────────────────────────────
 if [[ "$TARGET" != "admin-only" ]]; then
   MOBILE_TARGET="ios"
@@ -114,23 +129,36 @@ if [[ "$TARGET" != "admin-only" ]]; then
   cd "$REPO_ROOT"
 
   if [[ "$MOBILE_TARGET" == "ios" ]]; then
-    IOS_UDID="C214ED26-B110-42B2-A0CA-9A889F501784"  # iPhone 17 Pro
-    xcrun simctl boot "$IOS_UDID" 2>/dev/null || true  # no-op if already booted
-    open -a Simulator 2>/dev/null || true
-    sleep 2
-    DEVICE_FLAG="-d $IOS_UDID"
+    IOS_UDID=$(find_ios_device)
+    [[ -n "$IOS_UDID" ]] || { warn "No iPhone simulator found — skipping Flutter launch."; IOS_UDID=""; }
+    if [[ -n "$IOS_UDID" ]]; then
+      DEVICE_NAME=$(xcrun simctl list devices available 2>/dev/null \
+        | grep "$IOS_UDID" | sed 's/ (.*//; s/^[[:space:]]*//')
+      echo "  Using simulator: $DEVICE_NAME ($IOS_UDID)"
+      xcrun simctl boot "$IOS_UDID" 2>/dev/null || true
+      open -a Simulator 2>/dev/null || true
+      sleep 2
+      DEVICE_FLAG="-d $IOS_UDID"
+    fi
   else
-    flutter emulators --launch Pixel_10_Pro 2>/dev/null || true
-    sleep 5
-    DEVICE_FLAG="-d Pixel_10_Pro"
+    ANDROID_ID=$(find_android_device)
+    [[ -n "$ANDROID_ID" ]] || { warn "No Android emulator found — skipping Flutter launch."; ANDROID_ID=""; }
+    if [[ -n "$ANDROID_ID" ]]; then
+      echo "  Using emulator: $ANDROID_ID"
+      flutter emulators --launch "$ANDROID_ID" 2>/dev/null || true
+      sleep 5
+      DEVICE_FLAG="-d $ANDROID_ID"
+    fi
   fi
 
-  cd "$REPO_ROOT/mobile"
-  # shellcheck disable=SC2086
-  flutter run $DEVICE_FLAG \
-    --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-    --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" &
-  PIDS+=($!)
+  if [[ -n "${DEVICE_FLAG:-}" ]]; then
+    cd "$REPO_ROOT/mobile"
+    # shellcheck disable=SC2086
+    flutter run $DEVICE_FLAG \
+      --dart-define=SUPABASE_URL="$SUPABASE_URL" \
+      --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" &
+    PIDS+=($!)
+  fi
 fi
 
 # ── wait ─────────────────────────────────────────────────────────────────────

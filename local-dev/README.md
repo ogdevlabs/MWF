@@ -18,7 +18,7 @@ Scripts for running the full MWF stack locally.
 |--------|-------------|
 | `install.sh` | Install Flutter + npm deps, accept Android licenses, create `.env.local` |
 | `dev.sh` | Start full stack (Supabase + admin + Flutter). Ctrl+C stops all. |
-| `run-mobile.sh [ios\|android\|<device-id>]` | Run Flutter app only |
+| `run-mobile.sh [ios\|android\|list\|<device-id>]` | Run Flutter app — auto-discovers first available simulator/emulator |
 | `run-admin.sh` | Run Next.js admin panel only (`http://localhost:3555`) |
 | `supabase.sh <start\|stop\|reset\|status\|logs>` | Manage local Supabase stack |
 
