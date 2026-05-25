@@ -61,6 +61,14 @@ cd "$REPO_ROOT/mobile" && flutter pub get 2>&1 | grep -E "Changed|up to date|Res
 cd "$REPO_ROOT/admin"  && npm install --silent 2>/dev/null || npm install
 cd "$REPO_ROOT"
 
+# ── iOS CocoaPods ─────────────────────────────────────────────────────────────
+if [[ "$TARGET" != "android" ]] && command -v pod >/dev/null 2>&1; then
+  step "Running pod install (iOS)"
+  cd "$REPO_ROOT/mobile/ios"
+  pod install --repo-update 2>&1 | grep -E "Installing|Updating|error:|warning:" || true
+  cd "$REPO_ROOT"
+fi
+
 # ── start Supabase ────────────────────────────────────────────────────────────
 step "Starting local Supabase"
 npx supabase start

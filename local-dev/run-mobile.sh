@@ -77,6 +77,15 @@ else
   echo "  pubspec.lock up to date — skipping"
 fi
 
+# ── iOS CocoaPods ─────────────────────────────────────────────────────────────
+TARGET_PEEK="${1:-ios}"
+if [[ "$TARGET_PEEK" != "android" ]] && command -v pod >/dev/null 2>&1; then
+  step "Running pod install (iOS)"
+  cd "$REPO_ROOT/mobile/ios"
+  pod install --repo-update 2>&1 | grep -E "Installing|Updating|error:|warning:" || true
+  cd "$REPO_ROOT/mobile"
+fi
+
 # ── resolve target device ─────────────────────────────────────────────────────
 TARGET="${1:-}"
 
