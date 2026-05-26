@@ -8,14 +8,14 @@ progress:
   total_phases: 11
   completed_phases: 1
   total_plans: 10
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-26
 **Current Phase**: 3
-**Current Plan**: 03-02
+**Current Plan**: 03-03
 **Status**: in-progress
 
 ## Session Context
@@ -45,6 +45,7 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 02]: connectivityProvider is the riverpod 4.x generated name for ConnectivityNotifier (Notifier suffix dropped)
 - [Phase 02]: GoogleSignIn 7.x: singleton initialize()+authenticate() replaces constructor+signIn() pattern
 - [Phase 03]: EnrollmentsDao was Phase 2 gap; resolved in 03-01 before any enrollment feature work
+- [Phase 03]: AuthRemoteDatasource calls Purchases.logIn(userId) after every successful sign-in; upsert uses onConflict:'id' for idempotency
 
 ## Blockers
 
@@ -71,7 +72,8 @@ None
 | Phase 02 P02-05 | 82 | 2 tasks | 2 files |
 | Phase 02 P02-07 | 7m | 3 tasks | 26 files |
 | 03 | 03-01 | 5m | 2 | 12 |
+| 03 | 03-02 | 2m | 2 | 10 |
 
 ## Stopped At
 
-Completed 03-01-PLAN.md
+Completed 03-02-PLAN.md
