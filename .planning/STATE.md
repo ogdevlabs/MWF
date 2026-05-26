@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-26T01:34:46.652Z"
+last_updated: "2026-05-26T01:39:06.330Z"
 progress:
   total_phases: 12
   completed_phases: 1
   total_plans: 16
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # GSD State
@@ -48,6 +48,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 03]: AuthRemoteDatasource calls Purchases.logIn(userId) after every successful sign-in; upsert uses onConflict:'id' for idempotency
 - [Phase 03]: Use AsyncValue.value ?? true (not .valueOrNull) for onboardingSeenProvider in router — Riverpod 3.x dropped .valueOrNull
 - [Phase 03]: Default onboarding_seen=true during async loading to prevent flash-redirect to /onboarding on relaunch
+- [Phase 03]: PurchaseParams.package(pkg) named constructor — purchases_flutter 10.1.1 has no unnamed constructor
+- [Phase 03]: Purchases.configure() guarded by rcApiKey.isNotEmpty to allow dev runs without dart-define keys
 
 ## Blockers
 
@@ -76,6 +78,7 @@ None
 | 03 | 03-01 | 5m | 2 | 12 |
 | 03 | 03-02 | 2m | 2 | 10 |
 | Phase 03 P03-03 | 157s | 2 tasks | 7 files |
+| Phase 03 P04 | 8m | 2 tasks | 6 files |
 
 ## Stopped At
 

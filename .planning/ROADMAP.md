@@ -72,7 +72,7 @@ Plans:
 - [x] 03-01-PLAN.md — EnrollmentsDao fix + build_runner (Wave 1 blocker)
 - [x] 03-02-PLAN.md — Domain models (Student, Subscription) + auth datasources
 - [x] 03-03-PLAN.md — Auth screens (Login, Signup, Onboarding) + router wiring
-- [ ] 03-04-PLAN.md — Subscription repository + Paywall screen + RevenueCat init
+- [x] 03-04-PLAN.md — Subscription repository + Paywall screen + RevenueCat init
 - [ ] 03-05-PLAN.md — Program domain model + datasources + repository
 - [ ] 03-06-PLAN.md — Program UI screens (list, detail, card widget)
 
