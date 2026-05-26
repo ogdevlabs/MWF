@@ -8,14 +8,14 @@ part of 'connectivity_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Raw connectivity stream — emits List<ConnectivityResult> on every change.
-/// connectivity_plus 7.x returns a list (e.g., [wifi, vpn] or [none]).
+/// Raw connectivity stream — emits `List<ConnectivityResult>` on every change.
+/// connectivity_plus 7.x returns a list (e.g., `[wifi, vpn]` or `[none]`).
 
 @ProviderFor(connectivityStream)
 final connectivityStreamProvider = ConnectivityStreamProvider._();
 
-/// Raw connectivity stream — emits List<ConnectivityResult> on every change.
-/// connectivity_plus 7.x returns a list (e.g., [wifi, vpn] or [none]).
+/// Raw connectivity stream — emits `List<ConnectivityResult>` on every change.
+/// connectivity_plus 7.x returns a list (e.g., `[wifi, vpn]` or `[none]`).
 
 final class ConnectivityStreamProvider
     extends
@@ -27,8 +27,8 @@ final class ConnectivityStreamProvider
     with
         $FutureModifier<List<ConnectivityResult>>,
         $StreamProvider<List<ConnectivityResult>> {
-  /// Raw connectivity stream — emits List<ConnectivityResult> on every change.
-  /// connectivity_plus 7.x returns a list (e.g., [wifi, vpn] or [none]).
+  /// Raw connectivity stream — emits `List<ConnectivityResult>` on every change.
+  /// connectivity_plus 7.x returns a list (e.g., `[wifi, vpn]` or `[none]`).
   ConnectivityStreamProvider._()
     : super(
         from: null,

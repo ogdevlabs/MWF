@@ -102,7 +102,7 @@ final class CurrentUserProvider extends $FunctionalProvider<User?, User?, User?>
   }
 }
 
-String _$currentUserHash() => r'd8b7512195c5f9bf341ff8631900f66e72a6bc6f';
+String _$currentUserHash() => r'dd5b1e3a1ebb875a88650ea03f77c677dae4a0ae';
 
 /// Whether the user is currently authenticated.
 

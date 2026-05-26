@@ -5048,6 +5048,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final DownloadManifestDao downloadManifestDao = DownloadManifestDao(
     this as AppDatabase,
   );
+  late final EnrollmentsDao enrollmentsDao = EnrollmentsDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
