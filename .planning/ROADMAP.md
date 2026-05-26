@@ -69,7 +69,7 @@ Plans:
   4. Apple Sign-In and Google Sign-In buttons present and functional on iOS
 **Plans**: 6 plans
 Plans:
-- [ ] 03-01-PLAN.md — EnrollmentsDao fix + build_runner (Wave 1 blocker)
+- [x] 03-01-PLAN.md — EnrollmentsDao fix + build_runner (Wave 1 blocker)
 - [ ] 03-02-PLAN.md — Domain models (Student, Subscription) + auth datasources
 - [ ] 03-03-PLAN.md — Auth screens (Login, Signup, Onboarding) + router wiring
 - [ ] 03-04-PLAN.md — Subscription repository + Paywall screen + RevenueCat init

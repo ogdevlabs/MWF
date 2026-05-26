@@ -13,9 +13,9 @@ progress:
 
 # GSD State
 
-**Last Updated**: 2026-05-25
-**Current Phase**: 2
-**Current Plan**: 02-06
+**Last Updated**: 2026-05-26
+**Current Phase**: 3
+**Current Plan**: 03-02
 **Status**: in-progress
 
 ## Session Context
@@ -44,6 +44,7 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 02]: Admin query client uses SUPABASE_SERVICE_ROLE_KEY bypassing RLS for full coach access to student data
 - [Phase 02]: connectivityProvider is the riverpod 4.x generated name for ConnectivityNotifier (Notifier suffix dropped)
 - [Phase 02]: GoogleSignIn 7.x: singleton initialize()+authenticate() replaces constructor+signIn() pattern
+- [Phase 03]: EnrollmentsDao was Phase 2 gap; resolved in 03-01 before any enrollment feature work
 
 ## Blockers
 
@@ -53,9 +54,9 @@ None
 
 - `SPEC.md` and `specs/001-mat-pilates-coach/spec.md` are kept in sync
 - All feedback_threads RLS updated to document private-only access
-- build_runner not yet run — code generation deferred to Wave 7 (Plan 02-07)
-- 8 DAOs created in mobile/lib/core/database/daos/ (02-03 complete)
-- AppDatabase class wires all 9 tables + 8 DAOs with test-injectable constructor (02-03 complete)
+- 9 DAOs created in mobile/lib/core/database/daos/ (03-01 adds EnrollmentsDao)
+- AppDatabase class wires all 9 tables + 9 DAOs with test-injectable constructor (03-01 complete)
+- build_runner regenerated all .g.dart files cleanly (03-01 complete)
 - AuthRepository, auth providers, ConnectivityProvider created (02-04 complete)
 - Google Sign-In defers credentials to Phase 3; throws descriptive AuthException if GOOGLE_WEB_CLIENT_ID empty
 
@@ -69,7 +70,8 @@ None
 | 02 | 02-04 | 6m | 3 | 3 |
 | Phase 02 P02-05 | 82 | 2 tasks | 2 files |
 | Phase 02 P02-07 | 7m | 3 tasks | 26 files |
+| 03 | 03-01 | 5m | 2 | 12 |
 
 ## Stopped At
 
-Completed 02-05-PLAN.md
+Completed 03-01-PLAN.md
