@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'shared/theme/app_theme.dart';
 import 'shared/router/app_router.dart';
 
@@ -18,13 +19,12 @@ void main() async {
   runApp(const ProviderScope(child: MwfApp()));
 }
 
-class MwfApp extends StatelessWidget {
+class MwfApp extends ConsumerWidget {
   const MwfApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // TODO Phase 2: Replace with Riverpod-driven auth state
-    final router = createAppRouter(isAuthenticated: false);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
       title: 'Mat Pilates Coach',
