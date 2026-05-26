@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-26T00:30:55.578Z"
+last_updated: "2026-05-26T01:34:46.652Z"
 progress:
-  total_phases: 11
+  total_phases: 12
   completed_phases: 1
-  total_plans: 10
-  completed_plans: 8
+  total_plans: 16
+  completed_plans: 10
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-26
 **Current Phase**: 3
-**Current Plan**: 03-03
+**Current Plan**: 03-04
 **Status**: in-progress
 
 ## Session Context
@@ -46,6 +46,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 02]: GoogleSignIn 7.x: singleton initialize()+authenticate() replaces constructor+signIn() pattern
 - [Phase 03]: EnrollmentsDao was Phase 2 gap; resolved in 03-01 before any enrollment feature work
 - [Phase 03]: AuthRemoteDatasource calls Purchases.logIn(userId) after every successful sign-in; upsert uses onConflict:'id' for idempotency
+- [Phase 03]: Use AsyncValue.value ?? true (not .valueOrNull) for onboardingSeenProvider in router — Riverpod 3.x dropped .valueOrNull
+- [Phase 03]: Default onboarding_seen=true during async loading to prevent flash-redirect to /onboarding on relaunch
 
 ## Blockers
 
@@ -73,7 +75,8 @@ None
 | Phase 02 P02-07 | 7m | 3 tasks | 26 files |
 | 03 | 03-01 | 5m | 2 | 12 |
 | 03 | 03-02 | 2m | 2 | 10 |
+| Phase 03 P03-03 | 157s | 2 tasks | 7 files |
 
 ## Stopped At
 
-Completed 03-02-PLAN.md
+Completed 03-03-PLAN.md
