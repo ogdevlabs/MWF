@@ -1,8 +1,21 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: unknown
+last_updated: "2026-05-26T00:17:54.326Z"
+progress:
+  total_phases: 11
+  completed_phases: 0
+  total_plans: 10
+  completed_plans: 5
+---
+
 # GSD State
 
 **Last Updated**: 2026-05-25
 **Current Phase**: 2
-**Current Plan**: 02-05
+**Current Plan**: 02-06
 **Status**: in-progress
 
 ## Session Context
@@ -18,12 +31,15 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - Use existing 8-phase task breakdown (T001–T136) as the roadmap phases
 - Messaging architecture: private DM only (no community/public feed) — enforced at
   RLS level in Supabase and no UI surface for public commenting
+
 - CQRS persistence pattern as specified in data-model.md
 - SyncQueue column getter named `targetTable` with `.named('table_name')` to avoid Drift Table.tableName getter conflict
 - DownloadManifest uses text PK on exerciseId
 - Supabase provider uses `@Riverpod(keepAlive: true)` — client must survive full app lifecycle
 - Google Sign-In uses 7.x constructor (GoogleSignIn(serverClientId:, clientId:)) — pubspec.lock shows 7.2.0 installed
 - authStateProvider watches supabaseClientProvider directly; ConnectivityNotifier assumes online initially
+- [Phase 02]: Insert operations use upsert for idempotent SyncQueue replay
+- [Phase 02]: DownloadService stores relative paths only (iOS absolute path safety)
 
 ## Blockers
 
@@ -47,7 +63,8 @@ None
 | 02 | 02-02 | 2m | 2 | 11 |
 | 02 | 02-03 | 8m | 2 | 9 |
 | 02 | 02-04 | 6m | 3 | 3 |
+| Phase 02 P02-05 | 82 | 2 tasks | 2 files |
 
 ## Stopped At
 
-Completed 02-04-PLAN.md
+Completed 02-05-PLAN.md
