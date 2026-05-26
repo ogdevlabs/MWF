@@ -1,0 +1,80 @@
+name: Admin Panel (Next.js) — Main Validation
+
+# ── Post-merge: extended validation after merging to main ────────────────────
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'admin/**'
+      - '.github/workflows/admin-main.yml'
+
+concurrency:
+  group: admin-main-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      js: ${{ steps.filter.outputs.js }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            js:
+              - 'admin/app/**'
+              - 'admin/components/**'
+              - 'admin/lib/**'
+              - 'admin/package.json'
+              - 'admin/package-lock.json'
+              - 'admin/tsconfig.json'
+              - 'admin/next.config.ts'
+              - '.github/workflows/admin-main.yml'
+
+  validate:
+    name: Full Validation
+    needs: changes
+    if: needs.changes.outputs.js == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: admin/package-lock.json
+
+      - name: Install dependencies
+        working-directory: admin
+        run: npm ci
+
+      - name: Lint
+        working-directory: admin
+        run: npm run lint
+
+      - name: Type-check
+        working-directory: admin
+        run: npx tsc --noEmit
+
+      - name: Build
+        working-directory: admin
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder' }}
+          MUX_TOKEN_ID: ${{ secrets.MUX_TOKEN_ID || 'placeholder' }}
+          MUX_TOKEN_SECRET: ${{ secrets.MUX_TOKEN_SECRET || 'placeholder' }}
+        run: npm run build
+
+      # ── Future additions (Phase 9 Polish) ───────────────────────────────────
+      # - name: E2E tests (Playwright)
+      #   run: npm run test:e2e
+      # - name: Lighthouse CI
+      #   uses: treosh/lighthouse-ci-action@v10

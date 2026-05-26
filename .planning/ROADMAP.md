@@ -48,7 +48,15 @@ Plans:
   3. SyncService can enqueue and replay operations against a mock Supabase client
   4. DownloadService can queue, download, and update manifest entries
   5. CQRS CommandBus and QueryGateway exist and are wired via Riverpod providers
-**Plans**: TBD
+**Plans**: 7 plans
+Plans:
+- [x] 02-01-PLAN.md — Missing packages + CQRS Supabase schema + projection-refresh edge function
+- [x] 02-02-PLAN.md — Drift table definitions + Supabase client provider
+- [x] 02-03-PLAN.md — Drift DAOs + AppDatabase class
+- [x] 02-04-PLAN.md — Auth repository + provider + ConnectivityProvider
+- [x] 02-05-PLAN.md — SyncQueue wrapper + DownloadService
+- [x] 02-06-PLAN.md — SyncService + CommandBus + QueryGateway
+- [x] 02-07-PLAN.md — App router completion + Admin CQRS query client + Unit tests
 
 ### Phase 3: US1 Enroll & Access
 **Goal**: Student can sign up (email/password + Apple + Google), subscribe via in-app purchase through RevenueCat, browse published programs with lock/unlock state, and access enrolled program detail.

@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-GoRouter createAppRouter({required bool isAuthenticated}) {
+import '../../core/auth/auth_provider.dart';
+
+part 'app_router.g.dart';
+
+/// Provides the app router with reactive auth-based redirects.
+///
+/// Uses refreshListenable pattern: router re-evaluates redirect whenever
+/// auth state changes (sign in, sign out, token refresh).
+@Riverpod(keepAlive: true)
+GoRouter appRouter(Ref ref) {
+  final isAuth = ref.watch(isAuthenticatedProvider);
+
   return GoRouter(
     initialLocation: '/programs',
     redirect: (BuildContext context, GoRouterState state) {
-      final loggingIn = state.matchedLocation == '/login';
-      final signingUp = state.matchedLocation == '/signup';
+      final isAuthRoute = state.matchedLocation == '/login' ||
+          state.matchedLocation == '/signup';
 
-      if (!isAuthenticated) {
-        if (loggingIn || signingUp) return null;
-        return '/login';
-      }
-
-      if (loggingIn || signingUp) return '/programs';
+      if (!isAuth && !isAuthRoute) return '/login';
+      if (isAuth && isAuthRoute) return '/programs';
       return null;
     },
     routes: [
@@ -25,8 +33,7 @@ GoRouter createAppRouter({required bool isAuthenticated}) {
       GoRoute(
         path: '/signup',
         name: 'signup',
-        builder: (context, state) =>
-            const _PlaceholderScreen(title: 'Sign Up'),
+        builder: (context, state) => const _PlaceholderScreen(title: 'Sign Up'),
       ),
       GoRoute(
         path: '/onboarding',
@@ -74,6 +81,18 @@ GoRouter createAppRouter({required bool isAuthenticated}) {
         builder: (context, state) =>
             const _PlaceholderScreen(title: 'Paywall'),
       ),
+      GoRoute(
+        path: '/feedback/:sessionId',
+        name: 'feedback',
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Feedback'),
+      ),
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) =>
+            const _PlaceholderScreen(title: 'Settings'),
+      ),
     ],
   );
 }
@@ -88,7 +107,7 @@ class _PlaceholderScreen extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: Text(
-          '$title\n(Placeholder — Phase 2+)',
+          '$title\n(Placeholder — Feature phases will replace)',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineMedium,
         ),

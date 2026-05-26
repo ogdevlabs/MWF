@@ -1,0 +1,70 @@
+name: Mobile (Flutter)
+
+# ── PR check: fast feedback on every branch ──────────────────────────────────
+on:
+  pull_request:
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile.yml'
+
+concurrency:
+  group: mobile-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      dart: ${{ steps.filter.outputs.dart }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            dart:
+              - 'mobile/lib/**'
+              - 'mobile/test/**'
+              - 'mobile/pubspec.yaml'
+              - 'mobile/pubspec.lock'
+              - 'mobile/analysis_options.yaml'
+              - '.github/workflows/mobile.yml'
+
+  analyze-and-test:
+    name: Analyze & Test
+    needs: changes
+    if: needs.changes.outputs.dart == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Code generation
+        working-directory: mobile
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze
+        working-directory: mobile
+        run: flutter analyze --fatal-warnings --no-fatal-infos
+
+      - name: Test
+        working-directory: mobile
+        run: flutter test --coverage
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: flutter-coverage-${{ github.sha }}
+          path: mobile/coverage/lcov.info
