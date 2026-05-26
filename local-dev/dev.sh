@@ -84,6 +84,11 @@ if [[ -z "$SUPABASE_ANON_KEY" ]]; then
   SUPABASE_ANON_KEY="placeholder"
 fi
 
+GOOGLE_WEB_CLIENT_ID="${GOOGLE_WEB_CLIENT_ID:-}"
+GOOGLE_IOS_CLIENT_ID="${GOOGLE_IOS_CLIENT_ID:-}"
+[[ -z "$GOOGLE_WEB_CLIENT_ID" ]] && warn "GOOGLE_WEB_CLIENT_ID not set — Google Sign-In will fail."
+[[ -z "$GOOGLE_IOS_CLIENT_ID" ]] && warn "GOOGLE_IOS_CLIENT_ID not set — Google Sign-In will fail."
+
 echo ""
 echo "  Supabase Studio: http://localhost:54323"
 echo "  API:             $SUPABASE_URL"
@@ -164,7 +169,10 @@ if [[ "$TARGET" != "admin-only" ]]; then
     # shellcheck disable=SC2086
     flutter run $DEVICE_FLAG \
       --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-      --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" &
+      --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
+      --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID" \
+      --dart-define=GOOGLE_IOS_CLIENT_ID="$GOOGLE_IOS_CLIENT_ID" \
+      --dart-define=GOOGLE_IOS_URL_SCHEME="${GOOGLE_IOS_CLIENT_ID:+com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}}" &
     PIDS+=($!)
   fi
 fi

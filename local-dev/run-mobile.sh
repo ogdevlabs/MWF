@@ -54,6 +54,8 @@ find_android_device() {
 # ── resolve Supabase keys from running stack ──────────────────────────────────
 SUPABASE_URL="${SUPABASE_URL:-http://localhost:54321}"
 SUPABASE_ANON_KEY="${SUPABASE_ANON_KEY:-}"
+GOOGLE_WEB_CLIENT_ID="${GOOGLE_WEB_CLIENT_ID:-}"
+GOOGLE_IOS_CLIENT_ID="${GOOGLE_IOS_CLIENT_ID:-}"
 
 if [[ -z "$SUPABASE_ANON_KEY" ]]; then
   STATUS_OUTPUT=$(npx supabase status 2>/dev/null || true)
@@ -131,11 +133,19 @@ case "$TARGET" in
 esac
 
 # ── run ───────────────────────────────────────────────────────────────────────
+[[ -z "$GOOGLE_WEB_CLIENT_ID" ]] && warn "GOOGLE_WEB_CLIENT_ID not set — Google Sign-In will show an error."
+[[ -z "$GOOGLE_IOS_CLIENT_ID" ]] && warn "GOOGLE_IOS_CLIENT_ID not set — Google Sign-In will show an error."
+
 echo ""
-info "SUPABASE_URL: $SUPABASE_URL"
+info "SUPABASE_URL:          $SUPABASE_URL"
+info "GOOGLE_WEB_CLIENT_ID:  ${GOOGLE_WEB_CLIENT_ID:-not set}"
+info "GOOGLE_IOS_CLIENT_ID:  ${GOOGLE_IOS_CLIENT_ID:-not set}"
 echo ""
 
 # shellcheck disable=SC2086
 flutter run $DEVICE_FLAG \
   --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-  --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
+  --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
+  --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID" \
+  --dart-define=GOOGLE_IOS_CLIENT_ID="$GOOGLE_IOS_CLIENT_ID" \
+  --dart-define=GOOGLE_IOS_URL_SCHEME="${GOOGLE_IOS_CLIENT_ID:+com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}}"
