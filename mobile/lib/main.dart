@@ -12,7 +12,7 @@ void main() async {
 
   await Supabase.initialize(
     url: const String.fromEnvironment('SUPABASE_URL'),
-    anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
+    anonKey: const String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY'),
   );
 
   // RevenueCat initialization — platform-specific API key via dart-define.

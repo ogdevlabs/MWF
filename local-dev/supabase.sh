@@ -47,7 +47,7 @@ case "$cmd" in
     info "Database (Postgres): localhost:54322  ← not 5432; avoids conflicts"
     info "Inbucket (email):  http://localhost:54324"
     echo ""
-    warn "Copy the anon key and service_role key printed above into admin/.env.local"
+    warn "Copy the publishable key and service_role key printed above into admin/.env.local"
     ;;
 
   stop)

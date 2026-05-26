@@ -57,21 +57,21 @@ find_android_device() {
 
 # ── resolve Supabase keys from running stack ──────────────────────────────────
 SUPABASE_URL="${SUPABASE_URL:-http://localhost:54321}"
-SUPABASE_ANON_KEY="${SUPABASE_ANON_KEY:-}"
+SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY:-}"
 GOOGLE_WEB_CLIENT_ID="${GOOGLE_WEB_CLIENT_ID:-}"
 GOOGLE_IOS_CLIENT_ID="${GOOGLE_IOS_CLIENT_ID:-}"
 
-if [[ -z "$SUPABASE_ANON_KEY" ]]; then
+if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]]; then
   STATUS_OUTPUT=$(npx supabase status 2>/dev/null || true)
   if [[ -n "$STATUS_OUTPUT" ]]; then
-    SUPABASE_ANON_KEY=$(echo "$STATUS_OUTPUT" | grep -E "anon key" | awk '{print $NF}' | tr -d '[:space:]')
+    SUPABASE_PUBLISHABLE_KEY=$(echo "$STATUS_OUTPUT" | grep -E "publishable key" | awk '{print $NF}' | tr -d '[:space:]')
   fi
 fi
 
-if [[ -z "$SUPABASE_ANON_KEY" ]]; then
-  warn "SUPABASE_ANON_KEY not set — Supabase calls will fail until Phase 2."
-  warn "Fix: ./local-dev/supabase.sh start, then export SUPABASE_ANON_KEY=<key>"
-  SUPABASE_ANON_KEY="placeholder"
+if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]]; then
+  warn "SUPABASE_PUBLISHABLE_KEY not set — Supabase calls will fail until Phase 2."
+  warn "Fix: ./local-dev/supabase.sh start, then export SUPABASE_PUBLISHABLE_KEY=<key>"
+  SUPABASE_PUBLISHABLE_KEY="placeholder"
 fi
 
 # ── ensure deps are installed ─────────────────────────────────────────────────
@@ -166,7 +166,7 @@ echo ""
 # shellcheck disable=SC2086
 flutter run $DEVICE_FLAG \
   --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-  --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
+  --dart-define=SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY" \
   --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID" \
   --dart-define=GOOGLE_IOS_CLIENT_ID="$GOOGLE_IOS_CLIENT_ID" \
   --dart-define=GOOGLE_IOS_URL_SCHEME="${GOOGLE_IOS_CLIENT_ID:+com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}}"

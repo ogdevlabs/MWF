@@ -87,14 +87,14 @@ step "Starting local Supabase"
 npx supabase start
 npx supabase db push 2>/dev/null || warn "Migration push failed — DB may already be up to date."
 
-# Extract anon key from supabase status
+# Extract publishable key from supabase status
 SUPABASE_URL="http://localhost:54321"
-SUPABASE_ANON_KEY=$(npx supabase status 2>/dev/null \
-  | grep -E "anon key" | awk '{print $NF}' | tr -d '[:space:]' || echo "")
+SUPABASE_PUBLISHABLE_KEY=$(npx supabase status 2>/dev/null \
+  | grep -E "publishable key" | awk '{print $NF}' | tr -d '[:space:]' || echo "")
 
-if [[ -z "$SUPABASE_ANON_KEY" ]]; then
-  warn "Could not read anon key from supabase status — Flutter will use placeholder."
-  SUPABASE_ANON_KEY="placeholder"
+if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]]; then
+  warn "Could not read publishable key from supabase status — Flutter will use placeholder."
+  SUPABASE_PUBLISHABLE_KEY="placeholder"
 fi
 
 GOOGLE_WEB_CLIENT_ID="${GOOGLE_WEB_CLIENT_ID:-}"
@@ -113,7 +113,7 @@ if [[ ! -f admin/.env.local ]]; then
   else
     cat > admin/.env.local << EOF
 NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=placeholder
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=placeholder
 SUPABASE_SERVICE_ROLE_KEY=placeholder
 MUX_TOKEN_ID=placeholder
 MUX_TOKEN_SECRET=placeholder
@@ -182,7 +182,7 @@ if [[ "$TARGET" != "admin-only" ]]; then
     # shellcheck disable=SC2086
     flutter run $DEVICE_FLAG \
       --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-      --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
+      --dart-define=SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY" \
       --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID" \
       --dart-define=GOOGLE_IOS_CLIENT_ID="$GOOGLE_IOS_CLIENT_ID" \
       --dart-define=GOOGLE_IOS_URL_SCHEME="${GOOGLE_IOS_CLIENT_ID:+com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}}" &
