@@ -2,7 +2,7 @@
 
 **Last Updated**: 2026-05-25
 **Current Phase**: 2
-**Current Plan**: 02-04
+**Current Plan**: 02-05
 **Status**: in-progress
 
 ## Session Context
@@ -22,6 +22,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - SyncQueue column getter named `targetTable` with `.named('table_name')` to avoid Drift Table.tableName getter conflict
 - DownloadManifest uses text PK on exerciseId
 - Supabase provider uses `@Riverpod(keepAlive: true)` — client must survive full app lifecycle
+- Google Sign-In uses 7.x constructor (GoogleSignIn(serverClientId:, clientId:)) — pubspec.lock shows 7.2.0 installed
+- authStateProvider watches supabaseClientProvider directly; ConnectivityNotifier assumes online initially
 
 ## Blockers
 
@@ -34,6 +36,8 @@ None
 - build_runner not yet run — code generation deferred to Wave 7 (Plan 02-07)
 - 8 DAOs created in mobile/lib/core/database/daos/ (02-03 complete)
 - AppDatabase class wires all 9 tables + 8 DAOs with test-injectable constructor (02-03 complete)
+- AuthRepository, auth providers, ConnectivityProvider created (02-04 complete)
+- Google Sign-In defers credentials to Phase 3; throws descriptive AuthException if GOOGLE_WEB_CLIENT_ID empty
 
 ## Performance Metrics
 
@@ -42,7 +46,8 @@ None
 | 02 | 02-01 | — | — | — |
 | 02 | 02-02 | 2m | 2 | 11 |
 | 02 | 02-03 | 8m | 2 | 9 |
+| 02 | 02-04 | 6m | 3 | 3 |
 
 ## Stopped At
 
-Completed 02-03-PLAN.md
+Completed 02-04-PLAN.md
