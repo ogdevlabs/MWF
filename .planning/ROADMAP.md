@@ -52,11 +52,11 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Missing packages + CQRS Supabase schema + projection-refresh edge function
 - [x] 02-02-PLAN.md — Drift table definitions + Supabase client provider
-- [ ] 02-03-PLAN.md — Drift DAOs + AppDatabase class
-- [ ] 02-04-PLAN.md — Auth repository + provider + ConnectivityProvider
-- [ ] 02-05-PLAN.md — SyncQueue wrapper + DownloadService
-- [ ] 02-06-PLAN.md — SyncService + CommandBus + QueryGateway
-- [ ] 02-07-PLAN.md — App router completion + Admin CQRS query client + Unit tests
+- [x] 02-03-PLAN.md — Drift DAOs + AppDatabase class
+- [x] 02-04-PLAN.md — Auth repository + provider + ConnectivityProvider
+- [x] 02-05-PLAN.md — SyncQueue wrapper + DownloadService
+- [x] 02-06-PLAN.md — SyncService + CommandBus + QueryGateway
+- [x] 02-07-PLAN.md — App router completion + Admin CQRS query client + Unit tests
 
 ### Phase 3: US1 Enroll & Access
 **Goal**: Student can sign up (email/password + Apple + Google), subscribe via in-app purchase through RevenueCat, browse published programs with lock/unlock state, and access enrolled program detail.

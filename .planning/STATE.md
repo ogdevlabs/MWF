@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-26T00:17:54.326Z"
+last_updated: "2026-05-26T00:30:55.578Z"
 progress:
   total_phases: 11
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 10
-  completed_plans: 5
+  completed_plans: 7
 ---
 
 # GSD State
@@ -40,6 +40,10 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - authStateProvider watches supabaseClientProvider directly; ConnectivityNotifier assumes online initially
 - [Phase 02]: Insert operations use upsert for idempotent SyncQueue replay
 - [Phase 02]: DownloadService stores relative paths only (iOS absolute path safety)
+- [Phase 02]: App router uses @Riverpod(keepAlive: true) appRouter watching isAuthenticatedProvider — reactive redirect without manual router refresh
+- [Phase 02]: Admin query client uses SUPABASE_SERVICE_ROLE_KEY bypassing RLS for full coach access to student data
+- [Phase 02]: connectivityProvider is the riverpod 4.x generated name for ConnectivityNotifier (Notifier suffix dropped)
+- [Phase 02]: GoogleSignIn 7.x: singleton initialize()+authenticate() replaces constructor+signIn() pattern
 
 ## Blockers
 
@@ -64,6 +68,7 @@ None
 | 02 | 02-03 | 8m | 2 | 9 |
 | 02 | 02-04 | 6m | 3 | 3 |
 | Phase 02 P02-05 | 82 | 2 tasks | 2 files |
+| Phase 02 P02-07 | 7m | 3 tasks | 26 files |
 
 ## Stopped At
 
