@@ -50,8 +50,8 @@ Plans:
   5. CQRS CommandBus and QueryGateway exist and are wired via Riverpod providers
 **Plans**: 7 plans
 Plans:
-- [ ] 02-01-PLAN.md — Missing packages + CQRS Supabase schema + projection-refresh edge function
-- [ ] 02-02-PLAN.md — Drift table definitions + Supabase client provider
+- [x] 02-01-PLAN.md — Missing packages + CQRS Supabase schema + projection-refresh edge function
+- [x] 02-02-PLAN.md — Drift table definitions + Supabase client provider
 - [ ] 02-03-PLAN.md — Drift DAOs + AppDatabase class
 - [ ] 02-04-PLAN.md — Auth repository + provider + ConnectivityProvider
 - [ ] 02-05-PLAN.md — SyncQueue wrapper + DownloadService
