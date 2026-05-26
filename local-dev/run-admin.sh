@@ -6,6 +6,10 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# Load local credentials (gitignored — never committed)
+# shellcheck source=/dev/null
+[[ -f "$REPO_ROOT/local-dev/.env" ]] && source "$REPO_ROOT/local-dev/.env"
+
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
 step() { echo -e "\n${GREEN}▶ $*${NC}"; }
 warn() { echo -e "${YELLOW}⚠  $*${NC}"; }

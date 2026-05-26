@@ -7,6 +7,10 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# Load local credentials if already set up (silent — install may run before .env exists)
+# shellcheck source=/dev/null
+[[ -f "$REPO_ROOT/local-dev/.env" ]] && source "$REPO_ROOT/local-dev/.env"
+
 # ── colours ──────────────────────────────────────────────────────────────────
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
 step()  { echo -e "\n${GREEN}▶ $*${NC}"; }
@@ -38,14 +42,23 @@ step "Installing npm dependencies (admin/)"
 cd "$REPO_ROOT/admin"
 npm install
 
-# ── env file ─────────────────────────────────────────────────────────────────
-step "Checking admin/.env.local"
+# ── env files ────────────────────────────────────────────────────────────────
+step "Checking environment files"
 cd "$REPO_ROOT"
+
 if [[ ! -f admin/.env.local ]]; then
   cp admin/.env.local.example admin/.env.local
-  warn "Created admin/.env.local from example. Fill in real values before running the admin panel."
+  warn "Created admin/.env.local — fill in Supabase keys before running the admin panel."
 else
   echo "  admin/.env.local already exists — skipping."
+fi
+
+if [[ ! -f local-dev/.env ]]; then
+  cp local-dev/.env.example local-dev/.env
+  warn "Created local-dev/.env — fill in your Google Sign-In client IDs and other credentials."
+  warn "Edit: local-dev/.env"
+else
+  echo "  local-dev/.env already exists — skipping."
 fi
 
 # ── done ─────────────────────────────────────────────────────────────────────
