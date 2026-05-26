@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-26T01:45:10.961Z"
+last_updated: "2026-05-26T01:51:01.218Z"
 progress:
   total_phases: 12
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 16
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-26
 **Current Phase**: 3
-**Current Plan**: 03-05
+**Current Plan**: 03-06
 **Status**: in-progress
 
 ## Session Context
@@ -52,6 +52,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 03]: Purchases.configure() guarded by rcApiKey.isNotEmpty to allow dev runs without dart-define keys
 - [Phase 03]: uuid package added to pubspec for enrollment ID generation in ProgramsRepository
 - [Phase 03]: LocalProgramsCompanion.cacheProgram supplies createdAt/updatedAt = DateTime.now() for non-nullable Drift columns
+- [Phase 03]: AsyncValue.value ?? true (not .valueOrNull) for onboardingSeenProvider — Riverpod 3.x dropped .valueOrNull
+- [Phase 03]: errorBuilder uses (_, _, _) all-underscore wildcards to satisfy unnecessary_underscores lint
 
 ## Blockers
 
@@ -82,7 +84,8 @@ None
 | Phase 03 P03-03 | 157s | 2 tasks | 7 files |
 | Phase 03 P04 | 8m | 2 tasks | 6 files |
 | Phase 03 P03-05 | 205 | 2 tasks | 11 files |
+| Phase 03 P03-06 | 183s | 2 tasks | 4 files |
 
 ## Stopped At
 
-Completed 03-05-PLAN.md
+Completed 03-06-PLAN.md
