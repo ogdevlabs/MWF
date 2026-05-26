@@ -281,7 +281,7 @@ SyncService syncService(Ref ref) {
   // ConnectivityNotifier state is bool: true = online, false = offline.
   // On transition from offline (false) to online (true): run full sync
   // AND resume any paused downloads.
-  ref.listen(connectivityNotifierProvider, (previous, next) {
+  ref.listen(connectivityProvider, (previous, next) {
     final wasOffline = previous == false;
     final isNowOnline = next;
     if (wasOffline && isNowOnline) {

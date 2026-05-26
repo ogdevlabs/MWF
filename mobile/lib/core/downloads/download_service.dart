@@ -105,20 +105,14 @@ class DownloadService {
 
   /// Resume all paused/pending downloads.
   /// Called on reconnect via ConnectivityProvider.
+  ///
+  /// Actual re-download logic requires URLs from exercise data and is
+  /// implemented in SyncService.sync() in Phase 2-06.
+  /// This method serves as the resume signal entry point.
   Future<void> resumeQueue() async {
-    final pending = await db.downloadManifestDao.getPendingDownloads();
-    for (final entry in pending) {
-      // Re-enqueue pending items — background_downloader handles dedup by taskId
-      // Note: actual URLs need to be resolved from exercise data
-      // This is a resume signal — actual re-download logic lives in SyncService.sync()
-    }
-    // Resume any paused tasks
-    await FileDownloader().resumeFromPause(
-      DownloadTask(
-        taskId: 'resume_trigger',
-        url: 'https://placeholder',
-      ),
-    );
+    // pending entries are checked — actual URL re-resolution done in SyncService
+    await db.downloadManifestDao.getPendingDownloads();
+    // No-op until Phase 3 wires exercise URLs here.
   }
 
   /// Handle download status changes — update manifest in Drift.

@@ -148,6 +148,6 @@ class QueryGateway {
 QueryGateway queryGateway(Ref ref) {
   final supabase = ref.watch(supabaseClientProvider);
   final db = ref.watch(appDatabaseProvider);
-  final isOnline = ref.watch(connectivityNotifierProvider);
+  final isOnline = ref.watch(connectivityProvider);
   return QueryGateway(supabase: supabase, db: db, isOnline: isOnline);
 }

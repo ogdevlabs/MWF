@@ -24,7 +24,7 @@ Stream<AuthState> authState(Ref ref) {
 @Riverpod(keepAlive: true)
 User? currentUser(Ref ref) {
   final authStateValue = ref.watch(authStateProvider);
-  return authStateValue.valueOrNull?.session?.user;
+  return authStateValue.value?.session?.user;
 }
 
 /// Whether the user is currently authenticated.

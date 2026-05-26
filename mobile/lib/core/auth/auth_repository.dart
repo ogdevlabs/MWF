@@ -81,6 +81,9 @@ class AuthRepository {
     // Pass via: --dart-define=GOOGLE_WEB_CLIENT_ID=your_web_client_id
     //           --dart-define=GOOGLE_IOS_CLIENT_ID=your_ios_client_id
     // See: https://supabase.com/docs/guides/auth/social-login/auth-google?platform=flutter
+    //
+    // google_sign_in 7.x uses a singleton with initialize() + authenticate().
+    // Credentials must be configured before calling this method.
     const webClientId = String.fromEnvironment('GOOGLE_WEB_CLIENT_ID');
     const iosClientId = String.fromEnvironment('GOOGLE_IOS_CLIENT_ID');
 
@@ -91,19 +94,16 @@ class AuthRepository {
       );
     }
 
-    final googleSignIn = GoogleSignIn(
+    // Initialize the GoogleSignIn singleton with credentials (7.x API).
+    await GoogleSignIn.instance.initialize(
       serverClientId: webClientId,
       clientId: iosClientId.isNotEmpty ? iosClientId : null,
     );
 
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) {
-      throw const AuthException('Google Sign-In was cancelled');
-    }
+    // Use authenticate() — replaces signIn() in google_sign_in 7.x.
+    final googleUser = await GoogleSignIn.instance.authenticate();
 
-    final googleAuth = await googleUser.authentication;
-    final idToken = googleAuth.idToken;
-    final accessToken = googleAuth.accessToken;
+    final idToken = googleUser.authentication.idToken;
 
     if (idToken == null) {
       throw const AuthException('No ID token from Google Sign-In');
@@ -112,7 +112,6 @@ class AuthRepository {
     return await _client.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
-      accessToken: accessToken,
     );
   }
 
