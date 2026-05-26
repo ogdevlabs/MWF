@@ -5,8 +5,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'connectivity_provider.g.dart';
 
-/// Raw connectivity stream — emits List<ConnectivityResult> on every change.
-/// connectivity_plus 7.x returns a list (e.g., [wifi, vpn] or [none]).
+/// Raw connectivity stream — emits `List<ConnectivityResult>` on every change.
+/// connectivity_plus 7.x returns a list (e.g., `[wifi, vpn]` or `[none]`).
 @Riverpod(keepAlive: true)
 Stream<List<ConnectivityResult>> connectivityStream(Ref ref) {
   return Connectivity().onConnectivityChanged;

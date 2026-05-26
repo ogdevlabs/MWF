@@ -5,7 +5,6 @@ import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../database/app_database.dart';
-import '../database/tables/download_manifest_table.dart';
 
 part 'download_service.g.dart';
 

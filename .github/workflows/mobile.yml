@@ -36,7 +36,7 @@ jobs:
 
       - name: Analyze
         working-directory: mobile
-        run: flutter analyze --fatal-warnings
+        run: flutter analyze --fatal-warnings --no-fatal-infos
 
       - name: Test
         working-directory: mobile

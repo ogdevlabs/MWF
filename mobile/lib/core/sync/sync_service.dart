@@ -6,12 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../database/app_database.dart';
-import '../database/tables/programs_table.dart';
-import '../database/tables/sessions_table.dart';
-import '../database/tables/exercises_table.dart';
-import '../database/tables/enrollments_table.dart';
-import '../database/tables/progress_records_table.dart';
-import '../database/tables/feedback_threads_table.dart';
 import '../downloads/download_service.dart';
 import '../network/supabase_client.dart';
 import 'sync_queue.dart';

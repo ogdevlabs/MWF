@@ -5,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../database/app_database.dart';
-import '../database/tables/sync_queue_table.dart';
 import '../network/supabase_client.dart';
 
 part 'sync_queue.g.dart';
