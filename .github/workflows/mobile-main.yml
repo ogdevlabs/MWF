@@ -1,7 +1,6 @@
 name: Mobile (Flutter) — Main Validation
 
-# ── Post-merge: full build validation after merging to main ──────────────────
-# Runs Android APK (ubuntu) + iOS no-codesign (macos). Not required to merge.
+# ── Post-merge: build validation after merging to main ───────────────────────
 on:
   push:
     branches: [main]
@@ -14,8 +13,37 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      android: ${{ steps.filter.outputs.android }}
+      ios: ${{ steps.filter.outputs.ios }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            android:
+              - 'mobile/lib/**'
+              - 'mobile/android/**'
+              - 'mobile/pubspec.yaml'
+              - 'mobile/pubspec.lock'
+              - '.github/workflows/mobile-main.yml'
+            ios:
+              - 'mobile/lib/**'
+              - 'mobile/ios/**'
+              - 'mobile/pubspec.yaml'
+              - 'mobile/pubspec.lock'
+              - '.github/workflows/mobile-main.yml'
+
   build-android:
     name: Build Android APK
+    needs: changes
+    if: needs.changes.outputs.android == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -55,6 +83,8 @@ jobs:
 
   build-ios:
     name: Build iOS (no-codesign)
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
     runs-on: macos-latest
 
     steps:

@@ -1,7 +1,6 @@
 name: Mobile (Flutter)
 
 # ── PR check: fast feedback on every branch ──────────────────────────────────
-# Runs analyze + test only. Required to merge.
 on:
   pull_request:
     paths:
@@ -13,8 +12,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      dart: ${{ steps.filter.outputs.dart }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            dart:
+              - 'mobile/lib/**'
+              - 'mobile/test/**'
+              - 'mobile/pubspec.yaml'
+              - 'mobile/pubspec.lock'
+              - 'mobile/analysis_options.yaml'
+              - '.github/workflows/mobile.yml'
+
   analyze-and-test:
     name: Analyze & Test
+    needs: changes
+    if: needs.changes.outputs.dart == 'true'
     runs-on: ubuntu-latest
 
     steps:

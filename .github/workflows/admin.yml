@@ -1,7 +1,6 @@
 name: Admin Panel (Next.js)
 
 # ── PR check: fast feedback on every branch ──────────────────────────────────
-# Runs lint + type-check + build. Required to merge.
 on:
   pull_request:
     paths:
@@ -13,8 +12,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      js: ${{ steps.filter.outputs.js }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            js:
+              - 'admin/app/**'
+              - 'admin/components/**'
+              - 'admin/lib/**'
+              - 'admin/package.json'
+              - 'admin/package-lock.json'
+              - 'admin/tsconfig.json'
+              - 'admin/next.config.ts'
+              - '.github/workflows/admin.yml'
+
   lint-typecheck-build:
     name: Lint, Type-check & Build
+    needs: changes
+    if: needs.changes.outputs.js == 'true'
     runs-on: ubuntu-latest
 
     steps:
