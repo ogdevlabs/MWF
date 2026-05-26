@@ -82,7 +82,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 const SizedBox(height: 60),
                 Text(
-                  'Mat Pilates Coach',
+                  'Move With Fergie',
                   style: Theme.of(context).textTheme.headlineLarge,
                   textAlign: TextAlign.center,
                 ),

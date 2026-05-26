@@ -25,7 +25,7 @@ Manual configuration steps required outside of code before certain features func
 
 **Required for:** Phase 3 — Subscription gating
 
-1. Create project at https://app.revenuecat.com → name: `MWF Pilates`
+1. Create project at https://app.revenuecat.com → name: `Move With Fergie`
 2. Configure platforms (App Store Connect API key + Google Play service account)
 3. Create entitlement: `premium_access`
 4. Create products: `mwf_monthly_premium` (monthly), `mwf_annual_premium` (annual)
@@ -56,7 +56,7 @@ Manual configuration steps required outside of code before certain features func
 
 **Required for:** All phases
 
-1. Create project at https://supabase.com/dashboard → name: `mwf-pilates`
+1. Create project at https://supabase.com/dashboard → name: `move-with-fergie`
 2. Note: Project URL, Anon Key, Service Role Key (Settings → API)
 3. Run migration:
    ```bash

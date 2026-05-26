@@ -40,7 +40,7 @@ class MwfApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      title: 'Mat Pilates Coach',
+      title: 'Move With Fergie',
       theme: AppTheme.lightTheme,
       routerConfig: router,
       debugShowCheckedModeBanner: false,

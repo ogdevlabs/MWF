@@ -36,8 +36,8 @@ class DefaultFirebaseOptions {
     apiKey: 'TODO-replace-with-real-api-key',
     appId: '1:000000000000:android:0000000000000000000000',
     messagingSenderId: '000000000000',
-    projectId: 'mwf-pilates-placeholder',
-    storageBucket: 'mwf-pilates-placeholder.appspot.com',
+    projectId: 'move-with-fergie-placeholder',
+    storageBucket: 'move-with-fergie-placeholder.appspot.com',
   );
 
   // TODO: Replace with real values from flutterfire configure
@@ -45,8 +45,8 @@ class DefaultFirebaseOptions {
     apiKey: 'TODO-replace-with-real-api-key',
     appId: '1:000000000000:ios:0000000000000000000000',
     messagingSenderId: '000000000000',
-    projectId: 'mwf-pilates-placeholder',
-    storageBucket: 'mwf-pilates-placeholder.appspot.com',
+    projectId: 'move-with-fergie-placeholder',
+    storageBucket: 'move-with-fergie-placeholder.appspot.com',
     iosBundleId: 'com.fererelabs.mwfMobile',
   );
 }
