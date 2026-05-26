@@ -7,6 +7,9 @@ import '../../features/auth/data/onboarding_prefs_service.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/signup_screen.dart';
 import '../../features/auth/presentation/onboarding_screen.dart';
+import '../../features/auth/presentation/paywall_screen.dart';
+import '../../features/programs/presentation/program_list_screen.dart';
+import '../../features/programs/presentation/program_detail_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -18,7 +21,7 @@ part 'app_router.g.dart';
 /// 3. Authenticated + on auth route + onboarding seen -> /programs
 /// 4. Authenticated + on /onboarding + already seen -> /programs
 ///
-/// Uses .value ?? true for onboardingSeenProvider to default to "seen"
+/// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
 /// during async loading, preventing flash-redirect to /onboarding on every launch.
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
@@ -64,14 +67,14 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/programs',
         name: 'programs',
-        builder: (context, state) =>
-            const _PlaceholderScreen(title: 'Programs'),
+        builder: (context, state) => const ProgramListScreen(),
         routes: [
           GoRoute(
             path: ':programId',
             name: 'program-detail',
-            builder: (context, state) =>
-                const _PlaceholderScreen(title: 'Program Detail'),
+            builder: (context, state) => ProgramDetailScreen(
+              programId: state.pathParameters['programId']!,
+            ),
             routes: [
               GoRoute(
                 path: 'session/:sessionId',
@@ -98,8 +101,7 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/paywall',
         name: 'paywall',
-        builder: (context, state) =>
-            const _PlaceholderScreen(title: 'Paywall'),
+        builder: (context, state) => const PaywallScreen(),
       ),
       GoRoute(
         path: '/feedback/:sessionId',
@@ -127,7 +129,7 @@ class _PlaceholderScreen extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: Text(
-          '$title\n(Placeholder - will be replaced in later plans)',
+          '$title\n(Placeholder - will be replaced in later phases)',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineMedium,
         ),

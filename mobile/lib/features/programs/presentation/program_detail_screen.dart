@@ -65,7 +65,7 @@ class _ProgramDetailBody extends ConsumerWidget {
                   ? Image.network(
                       program.thumbnailUrl!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                      errorBuilder: (_, _, _) => Container(
                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       ),
                     )

@@ -33,7 +33,7 @@ class ProgramCard extends StatelessWidget {
                     Image.network(
                       program.thumbnailUrl!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                      errorBuilder: (_, _, _) => Container(
                         color: Theme.of(context).colorScheme.surfaceContainerHighest,
                         child: const Icon(Icons.fitness_center, size: 40),
                       ),
