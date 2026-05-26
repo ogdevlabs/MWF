@@ -65,6 +65,15 @@ cd "$REPO_ROOT/mobile" && flutter pub get 2>&1 | grep -E "Changed|up to date|Res
 cd "$REPO_ROOT/admin"  && npm install --silent 2>/dev/null || npm install
 cd "$REPO_ROOT"
 
+# ── Patch iOS URL scheme ──────────────────────────────────────────────────────
+INFO_PLIST="$REPO_ROOT/mobile/ios/Runner/Info.plist"
+if [[ "$TARGET" != "android" ]] && [[ -n "$GOOGLE_IOS_CLIENT_ID" ]]; then
+  IOS_URL_SCHEME="com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}"
+  sed -i '' "s|GOOGLE_IOS_URL_SCHEME_PLACEHOLDER|$IOS_URL_SCHEME|g" "$INFO_PLIST"
+  sed -i '' "s|com\.googleusercontent\.apps\.[^<]*|$IOS_URL_SCHEME|g" "$INFO_PLIST"
+  echo "  Google iOS URL scheme: $IOS_URL_SCHEME"
+fi
+
 # ── iOS CocoaPods ─────────────────────────────────────────────────────────────
 if [[ "$TARGET" != "android" ]] && command -v pod >/dev/null 2>&1; then
   step "Running pod install (iOS)"

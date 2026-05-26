@@ -83,8 +83,25 @@ else
   echo "  pubspec.lock up to date — skipping"
 fi
 
-# ── iOS CocoaPods ─────────────────────────────────────────────────────────────
+# ── Patch iOS URL scheme in Info.plist ───────────────────────────────────────
+# Info.plist must contain the reversed iOS client ID as a literal string —
+# Xcode build setting variables ($(VAR)) are not populated by flutter run.
+# We patch the placeholder before every launch so the scheme stays current.
 TARGET_PEEK="${1:-ios}"
+INFO_PLIST="$REPO_ROOT/mobile/ios/Runner/Info.plist"
+if [[ "$TARGET_PEEK" != "android" ]] && [[ -n "$GOOGLE_IOS_CLIENT_ID" ]]; then
+  # Reversed client ID: strip .apps.googleusercontent.com suffix
+  IOS_URL_SCHEME="com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}"
+  # Replace placeholder OR any previously-set scheme — always idempotent
+  sed -i '' "s|GOOGLE_IOS_URL_SCHEME_PLACEHOLDER|$IOS_URL_SCHEME|g" "$INFO_PLIST"
+  sed -i '' "s|com\.googleusercontent\.apps\.[^<]*|$IOS_URL_SCHEME|g" "$INFO_PLIST"
+  info "Google iOS URL scheme: $IOS_URL_SCHEME"
+elif [[ "$TARGET_PEEK" != "android" ]]; then
+  warn "GOOGLE_IOS_CLIENT_ID not set — Google Sign-In redirect will fail on iOS."
+  warn "Set GOOGLE_IOS_CLIENT_ID in local-dev/.env"
+fi
+
+# ── iOS CocoaPods ─────────────────────────────────────────────────────────────
 if [[ "$TARGET_PEEK" != "android" ]] && command -v pod >/dev/null 2>&1; then
   step "Running pod install (iOS)"
   cd "$REPO_ROOT/mobile/ios"
