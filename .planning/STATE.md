@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-26T00:30:55.578Z"
+last_updated: "2026-05-26T01:51:01.218Z"
 progress:
-  total_phases: 11
-  completed_phases: 1
-  total_plans: 10
-  completed_plans: 7
+  total_phases: 12
+  completed_phases: 2
+  total_plans: 16
+  completed_plans: 13
 ---
 
 # GSD State
 
-**Last Updated**: 2026-05-25
-**Current Phase**: 2
-**Current Plan**: 02-06
+**Last Updated**: 2026-05-26
+**Current Phase**: 3
+**Current Plan**: 03-06
 **Status**: in-progress
 
 ## Session Context
@@ -44,6 +44,16 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 02]: Admin query client uses SUPABASE_SERVICE_ROLE_KEY bypassing RLS for full coach access to student data
 - [Phase 02]: connectivityProvider is the riverpod 4.x generated name for ConnectivityNotifier (Notifier suffix dropped)
 - [Phase 02]: GoogleSignIn 7.x: singleton initialize()+authenticate() replaces constructor+signIn() pattern
+- [Phase 03]: EnrollmentsDao was Phase 2 gap; resolved in 03-01 before any enrollment feature work
+- [Phase 03]: AuthRemoteDatasource calls Purchases.logIn(userId) after every successful sign-in; upsert uses onConflict:'id' for idempotency
+- [Phase 03]: Use AsyncValue.value ?? true (not .valueOrNull) for onboardingSeenProvider in router — Riverpod 3.x dropped .valueOrNull
+- [Phase 03]: Default onboarding_seen=true during async loading to prevent flash-redirect to /onboarding on relaunch
+- [Phase 03]: PurchaseParams.package(pkg) named constructor — purchases_flutter 10.1.1 has no unnamed constructor
+- [Phase 03]: Purchases.configure() guarded by rcApiKey.isNotEmpty to allow dev runs without dart-define keys
+- [Phase 03]: uuid package added to pubspec for enrollment ID generation in ProgramsRepository
+- [Phase 03]: LocalProgramsCompanion.cacheProgram supplies createdAt/updatedAt = DateTime.now() for non-nullable Drift columns
+- [Phase 03]: AsyncValue.value ?? true (not .valueOrNull) for onboardingSeenProvider — Riverpod 3.x dropped .valueOrNull
+- [Phase 03]: errorBuilder uses (_, _, _) all-underscore wildcards to satisfy unnecessary_underscores lint
 
 ## Blockers
 
@@ -53,9 +63,9 @@ None
 
 - `SPEC.md` and `specs/001-mat-pilates-coach/spec.md` are kept in sync
 - All feedback_threads RLS updated to document private-only access
-- build_runner not yet run — code generation deferred to Wave 7 (Plan 02-07)
-- 8 DAOs created in mobile/lib/core/database/daos/ (02-03 complete)
-- AppDatabase class wires all 9 tables + 8 DAOs with test-injectable constructor (02-03 complete)
+- 9 DAOs created in mobile/lib/core/database/daos/ (03-01 adds EnrollmentsDao)
+- AppDatabase class wires all 9 tables + 9 DAOs with test-injectable constructor (03-01 complete)
+- build_runner regenerated all .g.dart files cleanly (03-01 complete)
 - AuthRepository, auth providers, ConnectivityProvider created (02-04 complete)
 - Google Sign-In defers credentials to Phase 3; throws descriptive AuthException if GOOGLE_WEB_CLIENT_ID empty
 
@@ -69,7 +79,13 @@ None
 | 02 | 02-04 | 6m | 3 | 3 |
 | Phase 02 P02-05 | 82 | 2 tasks | 2 files |
 | Phase 02 P02-07 | 7m | 3 tasks | 26 files |
+| 03 | 03-01 | 5m | 2 | 12 |
+| 03 | 03-02 | 2m | 2 | 10 |
+| Phase 03 P03-03 | 157s | 2 tasks | 7 files |
+| Phase 03 P04 | 8m | 2 tasks | 6 files |
+| Phase 03 P03-05 | 205 | 2 tasks | 11 files |
+| Phase 03 P03-06 | 183s | 2 tasks | 4 files |
 
 ## Stopped At
 
-Completed 02-05-PLAN.md
+Completed 03-06-PLAN.md

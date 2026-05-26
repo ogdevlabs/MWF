@@ -11,9 +11,9 @@
 	<key>BUNDLE_ID</key>
 	<string>com.fererelabs.mwfMobile</string>
 	<key>PROJECT_ID</key>
-	<string>mwf-pilates-placeholder</string>
+	<string>move-with-fergie-placeholder</string>
 	<key>STORAGE_BUCKET</key>
-	<string>mwf-pilates-placeholder.appspot.com</string>
+	<string>move-with-fergie-placeholder.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>

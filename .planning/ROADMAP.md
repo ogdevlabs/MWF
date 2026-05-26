@@ -12,7 +12,7 @@ coach create/publish programs and reply to student messages.
 
 - [ ] **Phase 1: Setup & Scaffold** - Initialize Flutter + Next.js projects, provision Supabase, Mux, RevenueCat, Firebase
 - [ ] **Phase 2: Foundation** - Auth, Drift database, sync engine, download service, CQRS infrastructure
-- [ ] **Phase 3: US1 Enroll & Access** - Student signup, subscription, program browse and access
+- [x] **Phase 3: US1 Enroll & Access** - Student signup, subscription, program browse and access (completed 2026-05-26)
 - [ ] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking
 - [ ] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync
 - [ ] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks
@@ -67,7 +67,14 @@ Plans:
   2. Locked programs display paywall overlay; subscribed programs are accessible
   3. Subscription status is enforced via RevenueCat entitlement check
   4. Apple Sign-In and Google Sign-In buttons present and functional on iOS
-**Plans**: TBD
+**Plans**: 6 plans
+Plans:
+- [x] 03-01-PLAN.md — EnrollmentsDao fix + build_runner (Wave 1 blocker)
+- [x] 03-02-PLAN.md — Domain models (Student, Subscription) + auth datasources
+- [x] 03-03-PLAN.md — Auth screens (Login, Signup, Onboarding) + router wiring
+- [x] 03-04-PLAN.md — Subscription repository + Paywall screen + RevenueCat init
+- [x] 03-05-PLAN.md — Program domain model + datasources + repository
+- [x] 03-06-PLAN.md — Program UI screens (list, detail, card widget)
 
 ### Phase 4: US2 Session Player
 **Goal**: Subscribed enrolled student opens today's session, plays each exercise with a video player and 3D animation companion, tracks progress through the session, and reaches a completion screen.

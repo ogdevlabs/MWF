@@ -11,7 +11,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Mwf Mobile</string>
+	<string>Move With Fergie</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -51,6 +51,23 @@
 			</array>
 		</dict>
 	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- Reversed iOS client ID for Google Sign-In OAuth redirect.
+				     Format: com.googleusercontent.apps.<ios-client-id>
+				     This is the REVERSED form of your iOS OAuth client ID.
+				     Example: if iOS client ID is abc123.apps.googleusercontent.com
+				              the scheme is com.googleusercontent.apps.abc123
+				     Set GOOGLE_IOS_CLIENT_ID in local-dev/.env — run-mobile.sh patches this automatically. -->
+				<string>GOOGLE_IOS_URL_SCHEME_PLACEHOLDER</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

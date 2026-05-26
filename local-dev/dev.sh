@@ -18,6 +18,10 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPTS="$REPO_ROOT/local-dev"
+
+# Load local credentials (gitignored — never committed)
+# shellcheck source=/dev/null
+[[ -f "$REPO_ROOT/local-dev/.env" ]] && source "$REPO_ROOT/local-dev/.env"
 cd "$REPO_ROOT"
 
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; BOLD='\033[1m'; NC='\033[0m'
@@ -61,6 +65,15 @@ cd "$REPO_ROOT/mobile" && flutter pub get 2>&1 | grep -E "Changed|up to date|Res
 cd "$REPO_ROOT/admin"  && npm install --silent 2>/dev/null || npm install
 cd "$REPO_ROOT"
 
+# ── Patch iOS URL scheme ──────────────────────────────────────────────────────
+INFO_PLIST="$REPO_ROOT/mobile/ios/Runner/Info.plist"
+if [[ "$TARGET" != "android" ]] && [[ -n "$GOOGLE_IOS_CLIENT_ID" ]]; then
+  IOS_URL_SCHEME="com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}"
+  sed -i '' "s|GOOGLE_IOS_URL_SCHEME_PLACEHOLDER|$IOS_URL_SCHEME|g" "$INFO_PLIST"
+  sed -i '' "s|com\.googleusercontent\.apps\.[^<]*|$IOS_URL_SCHEME|g" "$INFO_PLIST"
+  echo "  Google iOS URL scheme: $IOS_URL_SCHEME"
+fi
+
 # ── iOS CocoaPods ─────────────────────────────────────────────────────────────
 if [[ "$TARGET" != "android" ]] && command -v pod >/dev/null 2>&1; then
   step "Running pod install (iOS)"
@@ -74,15 +87,20 @@ step "Starting local Supabase"
 npx supabase start
 npx supabase db push 2>/dev/null || warn "Migration push failed — DB may already be up to date."
 
-# Extract anon key from supabase status
+# Extract publishable key from supabase status
 SUPABASE_URL="http://localhost:54321"
-SUPABASE_ANON_KEY=$(npx supabase status 2>/dev/null \
-  | grep -E "anon key" | awk '{print $NF}' | tr -d '[:space:]' || echo "")
+SUPABASE_PUBLISHABLE_KEY=$(npx supabase status 2>/dev/null \
+  | grep -E "publishable key" | awk '{print $NF}' | tr -d '[:space:]' || echo "")
 
-if [[ -z "$SUPABASE_ANON_KEY" ]]; then
-  warn "Could not read anon key from supabase status — Flutter will use placeholder."
-  SUPABASE_ANON_KEY="placeholder"
+if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]]; then
+  warn "Could not read publishable key from supabase status — Flutter will use placeholder."
+  SUPABASE_PUBLISHABLE_KEY="placeholder"
 fi
+
+GOOGLE_WEB_CLIENT_ID="${GOOGLE_WEB_CLIENT_ID:-}"
+GOOGLE_IOS_CLIENT_ID="${GOOGLE_IOS_CLIENT_ID:-}"
+[[ -z "$GOOGLE_WEB_CLIENT_ID" ]] && warn "GOOGLE_WEB_CLIENT_ID not set — Google Sign-In will fail."
+[[ -z "$GOOGLE_IOS_CLIENT_ID" ]] && warn "GOOGLE_IOS_CLIENT_ID not set — Google Sign-In will fail."
 
 echo ""
 echo "  Supabase Studio: http://localhost:54323"
@@ -95,7 +113,7 @@ if [[ ! -f admin/.env.local ]]; then
   else
     cat > admin/.env.local << EOF
 NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=placeholder
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=placeholder
 SUPABASE_SERVICE_ROLE_KEY=placeholder
 MUX_TOKEN_ID=placeholder
 MUX_TOKEN_SECRET=placeholder
@@ -164,7 +182,10 @@ if [[ "$TARGET" != "admin-only" ]]; then
     # shellcheck disable=SC2086
     flutter run $DEVICE_FLAG \
       --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-      --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" &
+      --dart-define=SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY" \
+      --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID" \
+      --dart-define=GOOGLE_IOS_CLIENT_ID="$GOOGLE_IOS_CLIENT_ID" \
+      --dart-define=GOOGLE_IOS_URL_SCHEME="${GOOGLE_IOS_CLIENT_ID:+com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}}" &
     PIDS+=($!)
   fi
 fi

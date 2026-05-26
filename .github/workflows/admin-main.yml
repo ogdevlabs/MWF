@@ -67,7 +67,7 @@ jobs:
         working-directory: admin
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder' }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY || 'placeholder' }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder' }}
           MUX_TOKEN_ID: ${{ secrets.MUX_TOKEN_ID || 'placeholder' }}
           MUX_TOKEN_SECRET: ${{ secrets.MUX_TOKEN_SECRET || 'placeholder' }}

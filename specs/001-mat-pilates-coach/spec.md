@@ -1,4 +1,4 @@
-# Feature Specification: Mat Pilates Coach — Student Mobile App
+# Feature Specification: Move With Fergie — Student Mobile App
 
 **Feature Branch**: `001-mat-pilates-coach-student-app`
 

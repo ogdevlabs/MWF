@@ -1,4 +1,4 @@
-# Implementation Plan: Mat Pilates Coach — Student App
+# Implementation Plan: Move With Fergie — Student App
 
 **Branch**: `001-mat-pilates-coach-student-app` | **Date**: 2026-05-24 | **Spec**: `spec.md`
 

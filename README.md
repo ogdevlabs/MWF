@@ -1,4 +1,4 @@
-# MWF — Mat Pilates Coach
+# MWF — Move With Fergie
 
 An offline-first Flutter mobile app (iOS + Android) where students follow
 coach-designed multi-week Mat Pilates programs with video + 3D exercise playback,

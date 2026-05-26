@@ -51,7 +51,7 @@ The app reads config via `String.fromEnvironment`. You don't need a `.env` file 
 # Development (pointing to local Supabase)
 cd mobile && flutter run \
   --dart-define=SUPABASE_URL=http://localhost:54321 \
-  --dart-define=SUPABASE_ANON_KEY=YOUR_LOCAL_ANON_KEY \
+  --dart-define=SUPABASE_PUBLISHABLE_KEY=YOUR_LOCAL_ANON_KEY \
   --dart-define=REVENUECAT_APPLE_API_KEY=YOUR_KEY \
   --dart-define=REVENUECAT_GOOGLE_API_KEY=YOUR_KEY
 ```
@@ -70,7 +70,7 @@ Edit `admin/.env.local`:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_LOCAL_ANON_KEY
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_LOCAL_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY=YOUR_LOCAL_SERVICE_ROLE_KEY
 MUX_TOKEN_ID=YOUR_MUX_TOKEN_ID
 MUX_TOKEN_SECRET=YOUR_MUX_TOKEN_SECRET
@@ -93,7 +93,7 @@ npx supabase db push
 open http://localhost:54323
 ```
 
-The CLI will print your local `API URL`, `anon key`, and `service_role key` — use these in your env vars above.
+The CLI will print your local `API URL`, `publishable key`, and `service_role key` — use these in your env vars above.
 
 > **Docker required.** Install Docker Desktop: https://www.docker.com/products/docker-desktop
 

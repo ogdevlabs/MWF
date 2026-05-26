@@ -48,4 +48,4 @@ final class QueryGatewayProvider
   }
 }
 
-String _$queryGatewayHash() => r'73e2273cd367387e40f48ed9c567161430f26c40';
+String _$queryGatewayHash() => r'd6415cb050f9dfc41469d09a6a4e3920690237a5';

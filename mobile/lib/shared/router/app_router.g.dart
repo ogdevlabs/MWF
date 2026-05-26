@@ -10,24 +10,42 @@ part of 'app_router.dart';
 // ignore_for_file: type=lint, type=warning
 /// Provides the app router with reactive auth-based redirects.
 ///
-/// Uses refreshListenable pattern: router re-evaluates redirect whenever
-/// auth state changes (sign in, sign out, token refresh).
+/// Redirect logic:
+/// 1. Unauthenticated + not on auth route -> /login
+/// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
+/// 3. Authenticated + on auth route + onboarding seen -> /programs
+/// 4. Authenticated + on /onboarding + already seen -> /programs
+///
+/// Uses .value ?? true for onboardingSeenProvider to default to "seen"
+/// during async loading, preventing flash-redirect to /onboarding on every launch.
 
 @ProviderFor(appRouter)
 final appRouterProvider = AppRouterProvider._();
 
 /// Provides the app router with reactive auth-based redirects.
 ///
-/// Uses refreshListenable pattern: router re-evaluates redirect whenever
-/// auth state changes (sign in, sign out, token refresh).
+/// Redirect logic:
+/// 1. Unauthenticated + not on auth route -> /login
+/// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
+/// 3. Authenticated + on auth route + onboarding seen -> /programs
+/// 4. Authenticated + on /onboarding + already seen -> /programs
+///
+/// Uses .value ?? true for onboardingSeenProvider to default to "seen"
+/// during async loading, preventing flash-redirect to /onboarding on every launch.
 
 final class AppRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
   /// Provides the app router with reactive auth-based redirects.
   ///
-  /// Uses refreshListenable pattern: router re-evaluates redirect whenever
-  /// auth state changes (sign in, sign out, token refresh).
+  /// Redirect logic:
+  /// 1. Unauthenticated + not on auth route -> /login
+  /// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
+  /// 3. Authenticated + on auth route + onboarding seen -> /programs
+  /// 4. Authenticated + on /onboarding + already seen -> /programs
+  ///
+  /// Uses .value ?? true for onboardingSeenProvider to default to "seen"
+  /// during async loading, preventing flash-redirect to /onboarding on every launch.
   AppRouterProvider._()
     : super(
         from: null,
@@ -61,4 +79,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'366cf8079594a6f688fa7542b80081d36ce3d2db';
+String _$appRouterHash() => r'72ffcfcddea7207b5226988dbafaf87068e46531';

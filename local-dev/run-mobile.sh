@@ -13,6 +13,10 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# Load local credentials (gitignored — never committed)
+# shellcheck source=/dev/null
+[[ -f "$REPO_ROOT/local-dev/.env" ]] && source "$REPO_ROOT/local-dev/.env"
+
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; CYAN='\033[0;36m'; NC='\033[0m'
 step() { echo -e "\n${GREEN}▶ $*${NC}"; }
 warn() { echo -e "${YELLOW}⚠  $*${NC}"; }
@@ -53,19 +57,21 @@ find_android_device() {
 
 # ── resolve Supabase keys from running stack ──────────────────────────────────
 SUPABASE_URL="${SUPABASE_URL:-http://localhost:54321}"
-SUPABASE_ANON_KEY="${SUPABASE_ANON_KEY:-}"
+SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY:-}"
+GOOGLE_WEB_CLIENT_ID="${GOOGLE_WEB_CLIENT_ID:-}"
+GOOGLE_IOS_CLIENT_ID="${GOOGLE_IOS_CLIENT_ID:-}"
 
-if [[ -z "$SUPABASE_ANON_KEY" ]]; then
+if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]]; then
   STATUS_OUTPUT=$(npx supabase status 2>/dev/null || true)
   if [[ -n "$STATUS_OUTPUT" ]]; then
-    SUPABASE_ANON_KEY=$(echo "$STATUS_OUTPUT" | grep -E "anon key" | awk '{print $NF}' | tr -d '[:space:]')
+    SUPABASE_PUBLISHABLE_KEY=$(echo "$STATUS_OUTPUT" | grep -E "publishable key" | awk '{print $NF}' | tr -d '[:space:]')
   fi
 fi
 
-if [[ -z "$SUPABASE_ANON_KEY" ]]; then
-  warn "SUPABASE_ANON_KEY not set — Supabase calls will fail until Phase 2."
-  warn "Fix: ./local-dev/supabase.sh start, then export SUPABASE_ANON_KEY=<key>"
-  SUPABASE_ANON_KEY="placeholder"
+if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]]; then
+  warn "SUPABASE_PUBLISHABLE_KEY not set — Supabase calls will fail until Phase 2."
+  warn "Fix: ./local-dev/supabase.sh start, then export SUPABASE_PUBLISHABLE_KEY=<key>"
+  SUPABASE_PUBLISHABLE_KEY="placeholder"
 fi
 
 # ── ensure deps are installed ─────────────────────────────────────────────────
@@ -77,8 +83,25 @@ else
   echo "  pubspec.lock up to date — skipping"
 fi
 
-# ── iOS CocoaPods ─────────────────────────────────────────────────────────────
+# ── Patch iOS URL scheme in Info.plist ───────────────────────────────────────
+# Info.plist must contain the reversed iOS client ID as a literal string —
+# Xcode build setting variables ($(VAR)) are not populated by flutter run.
+# We patch the placeholder before every launch so the scheme stays current.
 TARGET_PEEK="${1:-ios}"
+INFO_PLIST="$REPO_ROOT/mobile/ios/Runner/Info.plist"
+if [[ "$TARGET_PEEK" != "android" ]] && [[ -n "$GOOGLE_IOS_CLIENT_ID" ]]; then
+  # Reversed client ID: strip .apps.googleusercontent.com suffix
+  IOS_URL_SCHEME="com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}"
+  # Replace placeholder OR any previously-set scheme — always idempotent
+  sed -i '' "s|GOOGLE_IOS_URL_SCHEME_PLACEHOLDER|$IOS_URL_SCHEME|g" "$INFO_PLIST"
+  sed -i '' "s|com\.googleusercontent\.apps\.[^<]*|$IOS_URL_SCHEME|g" "$INFO_PLIST"
+  info "Google iOS URL scheme: $IOS_URL_SCHEME"
+elif [[ "$TARGET_PEEK" != "android" ]]; then
+  warn "GOOGLE_IOS_CLIENT_ID not set — Google Sign-In redirect will fail on iOS."
+  warn "Set GOOGLE_IOS_CLIENT_ID in local-dev/.env"
+fi
+
+# ── iOS CocoaPods ─────────────────────────────────────────────────────────────
 if [[ "$TARGET_PEEK" != "android" ]] && command -v pod >/dev/null 2>&1; then
   step "Running pod install (iOS)"
   cd "$REPO_ROOT/mobile/ios"
@@ -131,11 +154,19 @@ case "$TARGET" in
 esac
 
 # ── run ───────────────────────────────────────────────────────────────────────
+[[ -z "$GOOGLE_WEB_CLIENT_ID" ]] && warn "GOOGLE_WEB_CLIENT_ID not set — Google Sign-In will show an error."
+[[ -z "$GOOGLE_IOS_CLIENT_ID" ]] && warn "GOOGLE_IOS_CLIENT_ID not set — Google Sign-In will show an error."
+
 echo ""
-info "SUPABASE_URL: $SUPABASE_URL"
+info "SUPABASE_URL:          $SUPABASE_URL"
+info "GOOGLE_WEB_CLIENT_ID:  ${GOOGLE_WEB_CLIENT_ID:-not set}"
+info "GOOGLE_IOS_CLIENT_ID:  ${GOOGLE_IOS_CLIENT_ID:-not set}"
 echo ""
 
 # shellcheck disable=SC2086
 flutter run $DEVICE_FLAG \
   --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-  --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
+  --dart-define=SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY" \
+  --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID" \
+  --dart-define=GOOGLE_IOS_CLIENT_ID="$GOOGLE_IOS_CLIENT_ID" \
+  --dart-define=GOOGLE_IOS_URL_SCHEME="${GOOGLE_IOS_CLIENT_ID:+com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}}"

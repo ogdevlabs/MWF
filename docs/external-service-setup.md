@@ -25,7 +25,7 @@ Manual configuration steps required outside of code before certain features func
 
 **Required for:** Phase 3 — Subscription gating
 
-1. Create project at https://app.revenuecat.com → name: `MWF Pilates`
+1. Create project at https://app.revenuecat.com → name: `Move With Fergie`
 2. Configure platforms (App Store Connect API key + Google Play service account)
 3. Create entitlement: `premium_access`
 4. Create products: `mwf_monthly_premium` (monthly), `mwf_annual_premium` (annual)
@@ -56,8 +56,8 @@ Manual configuration steps required outside of code before certain features func
 
 **Required for:** All phases
 
-1. Create project at https://supabase.com/dashboard → name: `mwf-pilates`
-2. Note: Project URL, Anon Key, Service Role Key (Settings → API)
+1. Create project at https://supabase.com/dashboard → name: `move-with-fergie`
+2. Note: Project URL, Publishable Key, Service Role Key (Settings → API)
 3. Run migration:
    ```bash
    npx supabase link --project-ref YOUR_PROJECT_REF
@@ -67,8 +67,8 @@ Manual configuration steps required outside of code before certain features func
    - `exercise-models` (GLB assets) — public read
    - `feedback-photos` (student feedback images) — authenticated read
    - `program-thumbnails` (cover images) — public read
-5. Set Flutter build vars: `--dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...`
-6. Set in `admin/.env.local`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+5. Set Flutter build vars: `--dart-define=SUPABASE_URL=... --dart-define=SUPABASE_PUBLISHABLE_KEY=...`
+6. Set in `admin/.env.local`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 
 ---
 

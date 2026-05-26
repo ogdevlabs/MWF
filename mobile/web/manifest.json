@@ -1,11 +1,11 @@
 {
-    "name": "mwf_mobile",
-    "short_name": "mwf_mobile",
+    "name": "Move With Fergie",
+    "short_name": "MWF",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#8FAE8B",
+    "theme_color": "#8FAE8B",
+    "description": "Follow coach-designed Pilates programs, track your progress, and stay connected with your coach.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

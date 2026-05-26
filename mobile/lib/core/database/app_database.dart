@@ -20,6 +20,7 @@ import 'daos/metric_logs_dao.dart';
 import 'daos/feedback_dao.dart';
 import 'daos/sync_queue_dao.dart';
 import 'daos/download_manifest_dao.dart';
+import 'daos/enrollments_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -44,6 +45,7 @@ part 'app_database.g.dart';
     FeedbackDao,
     SyncQueueDao,
     DownloadManifestDao,
+    EnrollmentsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
