@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'shared/theme/app_theme.dart';
 import 'shared/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // TODO Phase 2: Initialize Supabase
-  // await Supabase.initialize(
-  //   url: const String.fromEnvironment('SUPABASE_URL'),
-  //   anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
-  // );
+  await Supabase.initialize(
+    url: const String.fromEnvironment('SUPABASE_URL'),
+    anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
+  );
 
   // TODO Phase 7: Initialize Firebase
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
