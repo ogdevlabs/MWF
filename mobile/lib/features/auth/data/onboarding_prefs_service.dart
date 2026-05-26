@@ -20,7 +20,7 @@ class OnboardingPrefsService {
 }
 
 /// Whether onboarding has been seen. Resolves once at startup.
-/// Uses .valueOrNull ?? true in router to avoid redirect loop during loading.
+/// Uses .value ?? true in router to avoid redirect loop during loading.
 @Riverpod(keepAlive: true)
 Future<bool> onboardingSeen(Ref ref) async {
   final service = OnboardingPrefsService();
