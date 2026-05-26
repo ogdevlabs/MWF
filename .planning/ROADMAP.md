@@ -67,7 +67,14 @@ Plans:
   2. Locked programs display paywall overlay; subscribed programs are accessible
   3. Subscription status is enforced via RevenueCat entitlement check
   4. Apple Sign-In and Google Sign-In buttons present and functional on iOS
-**Plans**: TBD
+**Plans**: 6 plans
+Plans:
+- [ ] 03-01-PLAN.md — EnrollmentsDao fix + build_runner (Wave 1 blocker)
+- [ ] 03-02-PLAN.md — Domain models (Student, Subscription) + auth datasources
+- [ ] 03-03-PLAN.md — Auth screens (Login, Signup, Onboarding) + router wiring
+- [ ] 03-04-PLAN.md — Subscription repository + Paywall screen + RevenueCat init
+- [ ] 03-05-PLAN.md — Program domain model + datasources + repository
+- [ ] 03-06-PLAN.md — Program UI screens (list, detail, card widget)
 
 ### Phase 4: US2 Session Player
 **Goal**: Subscribed enrolled student opens today's session, plays each exercise with a video player and 3D animation companion, tracks progress through the session, and reaches a completion screen.
