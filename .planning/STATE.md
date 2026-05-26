@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-26T01:39:06.330Z"
+last_updated: "2026-05-26T01:45:10.961Z"
 progress:
   total_phases: 12
   completed_phases: 1
   total_plans: 16
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-26
 **Current Phase**: 3
-**Current Plan**: 03-04
+**Current Plan**: 03-05
 **Status**: in-progress
 
 ## Session Context
@@ -50,6 +50,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 03]: Default onboarding_seen=true during async loading to prevent flash-redirect to /onboarding on relaunch
 - [Phase 03]: PurchaseParams.package(pkg) named constructor — purchases_flutter 10.1.1 has no unnamed constructor
 - [Phase 03]: Purchases.configure() guarded by rcApiKey.isNotEmpty to allow dev runs without dart-define keys
+- [Phase 03]: uuid package added to pubspec for enrollment ID generation in ProgramsRepository
+- [Phase 03]: LocalProgramsCompanion.cacheProgram supplies createdAt/updatedAt = DateTime.now() for non-nullable Drift columns
 
 ## Blockers
 
@@ -79,7 +81,8 @@ None
 | 03 | 03-02 | 2m | 2 | 10 |
 | Phase 03 P03-03 | 157s | 2 tasks | 7 files |
 | Phase 03 P04 | 8m | 2 tasks | 6 files |
+| Phase 03 P03-05 | 205 | 2 tasks | 11 files |
 
 ## Stopped At
 
-Completed 03-03-PLAN.md
+Completed 03-05-PLAN.md
