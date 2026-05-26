@@ -1,0 +1,86 @@
+name: Mobile (Flutter) — Main Validation
+
+# ── Post-merge: full build validation after merging to main ──────────────────
+# Runs Android APK + iOS build. Not required to merge.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile-main.yml'
+
+concurrency:
+  group: mobile-main-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Code generation
+        working-directory: mobile
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build APK (debug)
+        working-directory: mobile
+        run: |
+          flutter build apk --debug \
+            --dart-define=SUPABASE_URL=${{ vars.SUPABASE_URL || 'https://placeholder.supabase.co' }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'placeholder' }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk-${{ github.sha }}
+          path: mobile/build/app/outputs/flutter-apk/app-debug.apk
+
+  build-ios:
+    name: Build iOS (no-codesign)
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Code generation
+        working-directory: mobile
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Install CocoaPods
+        working-directory: mobile/ios
+        run: pod install --repo-update
+
+      - name: Build iOS (no-codesign)
+        working-directory: mobile
+        run: |
+          flutter build ios --debug --no-codesign \
+            --dart-define=SUPABASE_URL=${{ vars.SUPABASE_URL || 'https://placeholder.supabase.co' }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY || 'placeholder' }}

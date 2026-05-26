@@ -1,20 +1,22 @@
-name: Admin Panel (Next.js)
+name: Admin Panel (Next.js) — Main Validation
 
-# ── PR check: fast feedback on every branch ──────────────────────────────────
-# Runs lint + type-check + build. Required to merge.
+# ── Post-merge: extended validation after merging to main ────────────────────
+# Currently the same steps as PR check. Placeholder for future additions
+# (e2e tests, Lighthouse, deploy preview) that are too slow or costly for PRs.
 on:
-  pull_request:
+  push:
+    branches: [main]
     paths:
       - 'admin/**'
-      - '.github/workflows/admin.yml'
+      - '.github/workflows/admin-main.yml'
 
 concurrency:
-  group: admin-pr-${{ github.ref }}
-  cancel-in-progress: true
+  group: admin-main-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
-  lint-typecheck-build:
-    name: Lint, Type-check & Build
+  validate:
+    name: Full Validation
     runs-on: ubuntu-latest
 
     steps:
@@ -47,3 +49,9 @@ jobs:
           MUX_TOKEN_ID: ${{ secrets.MUX_TOKEN_ID || 'placeholder' }}
           MUX_TOKEN_SECRET: ${{ secrets.MUX_TOKEN_SECRET || 'placeholder' }}
         run: npm run build
+
+      # ── Future additions (Phase 9 Polish) ───────────────────────────────────
+      # - name: E2E tests (Playwright)
+      #   run: npm run test:e2e
+      # - name: Lighthouse CI
+      #   uses: treosh/lighthouse-ci-action@v10
