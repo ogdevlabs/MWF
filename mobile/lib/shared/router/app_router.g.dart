@@ -16,7 +16,7 @@ part of 'app_router.dart';
 /// 3. Authenticated + on auth route + onboarding seen -> /programs
 /// 4. Authenticated + on /onboarding + already seen -> /programs
 ///
-/// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
+/// Uses .value ?? true for onboardingSeenProvider to default to "seen"
 /// during async loading, preventing flash-redirect to /onboarding on every launch.
 
 @ProviderFor(appRouter)
@@ -30,7 +30,7 @@ final appRouterProvider = AppRouterProvider._();
 /// 3. Authenticated + on auth route + onboarding seen -> /programs
 /// 4. Authenticated + on /onboarding + already seen -> /programs
 ///
-/// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
+/// Uses .value ?? true for onboardingSeenProvider to default to "seen"
 /// during async loading, preventing flash-redirect to /onboarding on every launch.
 
 final class AppRouterProvider
@@ -44,7 +44,7 @@ final class AppRouterProvider
   /// 3. Authenticated + on auth route + onboarding seen -> /programs
   /// 4. Authenticated + on /onboarding + already seen -> /programs
   ///
-  /// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
+  /// Uses .value ?? true for onboardingSeenProvider to default to "seen"
   /// during async loading, preventing flash-redirect to /onboarding on every launch.
   AppRouterProvider._()
     : super(
@@ -79,4 +79,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'd9c17acdc8cd17e035fdeeaf00f93d2991898f8f';
+String _$appRouterHash() => r'72ffcfcddea7207b5226988dbafaf87068e46531';

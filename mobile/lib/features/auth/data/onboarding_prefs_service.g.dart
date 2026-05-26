@@ -9,19 +9,19 @@ part of 'onboarding_prefs_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Whether onboarding has been seen. Resolves once at startup.
-/// Uses .valueOrNull ?? true in router to avoid redirect loop during loading.
+/// Uses .value ?? true in router to avoid redirect loop during loading.
 
 @ProviderFor(onboardingSeen)
 final onboardingSeenProvider = OnboardingSeenProvider._();
 
 /// Whether onboarding has been seen. Resolves once at startup.
-/// Uses .valueOrNull ?? true in router to avoid redirect loop during loading.
+/// Uses .value ?? true in router to avoid redirect loop during loading.
 
 final class OnboardingSeenProvider
     extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
     with $FutureModifier<bool>, $FutureProvider<bool> {
   /// Whether onboarding has been seen. Resolves once at startup.
-  /// Uses .valueOrNull ?? true in router to avoid redirect loop during loading.
+  /// Uses .value ?? true in router to avoid redirect loop during loading.
   OnboardingSeenProvider._()
     : super(
         from: null,

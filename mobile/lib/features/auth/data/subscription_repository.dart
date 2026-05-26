@@ -4,7 +4,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../core/auth/auth_provider.dart';
 import '../../../core/network/supabase_client.dart';
 import '../domain/subscription_model.dart';
 
