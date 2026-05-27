@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-27T02:55:44.935Z"
+last_updated: "2026-05-27T03:04:53.719Z"
 progress:
-  total_phases: 13
-  completed_phases: 2
+  total_phases: 9
+  completed_phases: 3
   total_plans: 22
-  completed_plans: 18
+  completed_plans: 19
 ---
 
 # GSD State
@@ -61,6 +61,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 04]: RepCounterOverlay uses _targetHit bool guard to prevent double-firing onTargetReached callback
 - [Phase 04]: TimerCountdownOverlay cancels Timer in dispose to prevent setState-after-dispose
 - [Phase 04]: ModelViewerSheet resolves localModelPath via getApplicationDocumentsDirectory for file:// URI, no-ops if both model fields null
+- [Phase 04]: Streak computed synchronously after Drift write inside SessionCompletionService, not via reactive stream
+- [Phase 04]: mocktail registerFallbackValue required for CommandType enum in tests
+- [Phase 04]: drift isNull/isNotNull must be hidden in test imports to avoid matcher ambiguity
 
 ## Blockers
 
@@ -95,6 +98,7 @@ None
 | Phase 04 P04-02 | 8m | 2 tasks | 8 files |
 | Phase 04 P04 | 3min | 2 tasks | 4 files |
 | Phase 04 P04-05 | 122s | 2 tasks | 4 files |
+| Phase 04 P04-06 | 306s | 3 tasks | 10 files |
 
 ## Stopped At
 
