@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../core/auth/auth_provider.dart';
 import '../data/programs_repository.dart';
 import '../domain/program_model.dart';
+import '../../session/domain/session_model.dart';
+import '../../session/data/session_providers.dart';
+import '../../session/presentation/session_list_tile.dart';
 
 /// Program detail screen showing:
 /// - Header image/thumbnail
@@ -127,21 +130,64 @@ class _ProgramDetailBody extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                 ],
-                // Session list placeholder
+                // Session list header
                 Text('Sessions',
                     style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'Session list will be available in the next update.',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                // Real session list (FR-004, D-09)
+                if (program.isEnrolled)
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final sessionsAsync = ref.watch(
+                        sessionsWithStateProvider(
+                          programId: program.id,
+                          currentDay: program.currentDay,
+                        ),
+                      );
+                      return sessionsAsync.when(
+                        loading: () => const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: CircularProgressIndicator(),
                           ),
+                        ),
+                        error: (e, _) => Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text('Error loading sessions: $e'),
+                          ),
+                        ),
+                        data: (sessions) => Column(
+                          children: sessions
+                              .map((session) => SessionListTile(
+                                    session: session,
+                                    onTap: () => context.goNamed(
+                                      'session-player',
+                                      pathParameters: {
+                                        'programId': program.id,
+                                        'sessionId': session.id,
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      );
+                    },
+                  )
+                else
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        'Enroll to see sessions.',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                            ),
+                      ),
                     ),
                   ),
-                ),
               ]),
             ),
           ),
@@ -165,15 +211,40 @@ class _ProgramDetailBody extends ConsumerWidget {
       );
     }
     if (program.isEnrolled) {
-      return FilledButton(
-        onPressed: () {
-          // Phase 4 will wire to session player
-          // For now, no-op with feedback
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Session player coming in Phase 4')),
+      final sessionsAsync = ref.watch(
+        sessionsWithStateProvider(
+          programId: program.id,
+          currentDay: program.currentDay,
+        ),
+      );
+      return sessionsAsync.when(
+        loading: () => const FilledButton(
+          onPressed: null,
+          child: Text('Loading...'),
+        ),
+        error: (_, _) => const FilledButton(
+          onPressed: null,
+          child: Text('Continue Program'),
+        ),
+        data: (sessions) {
+          final currentSession = sessions
+              .where((s) => s.state == SessionState.current)
+              .firstOrNull;
+          return FilledButton(
+            onPressed: currentSession != null
+                ? () => context.goNamed(
+                      'session-player',
+                      pathParameters: {
+                        'programId': program.id,
+                        'sessionId': currentSession.id,
+                      },
+                    )
+                : null,
+            child: Text(
+              program.currentDay == 1 ? 'Start Program' : 'Continue Program',
+            ),
           );
         },
-        child: const Text('Continue Program'),
       );
     }
     // Subscribed but not enrolled
