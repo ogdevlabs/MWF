@@ -8,6 +8,9 @@ import '../data/session_datasource.dart';
 import '../domain/session_model.dart';
 import 'cue_text_strip.dart';
 import 'exercise_video_player.dart';
+import 'model_viewer_sheet.dart';
+import 'rep_counter_overlay.dart';
+import 'timer_countdown_overlay.dart';
 
 /// Main session player screen (FR-005, FR-013).
 /// ConsumerStatefulWidget needed for VideoPlayerController lifecycle.
@@ -84,6 +87,12 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen> {
       _exercises.isNotEmpty ? _exercises[_currentIndex] : null;
 
   bool get _isLastExercise => _currentIndex == _exercises.length - 1;
+
+  /// Called by RepCounterOverlay (when target reps reached) or
+  /// TimerCountdownOverlay (when countdown hits zero). Enables Next button.
+  void _onOverlayTargetReached() {
+    setState(() => _nextEnabled = true);
+  }
 
   void _onNextTapped() {
     if (_isLastExercise) {
@@ -168,6 +177,23 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen> {
                     exercise: exercise,
                     db: _db,
                   ),
+                  // Rep/Timer overlay (D-06, D-07)
+                  if (exercise.repCount != null)
+                    Positioned.fill(
+                      child: RepCounterOverlay(
+                        key: ValueKey('rep-${exercise.id}'),
+                        target: exercise.repCount!,
+                        onTargetReached: _onOverlayTargetReached,
+                      ),
+                    )
+                  else if (exercise.durationSeconds != null)
+                    Positioned.fill(
+                      child: TimerCountdownOverlay(
+                        key: ValueKey('timer-${exercise.id}'),
+                        durationSeconds: exercise.durationSeconds!,
+                        onComplete: _onOverlayTargetReached,
+                      ),
+                    ),
                   // Close button (top-right)
                   Positioned(
                     top: 8,
@@ -240,12 +266,11 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen> {
       ),
       child: IconButton(
         icon: const Icon(Icons.view_in_ar, color: Colors.white),
-        onPressed: () {
-          // Plan 05 implements the 3D model bottom sheet
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('3D model viewer loading...')),
-          );
-        },
+        onPressed: () => showModelViewerSheet(
+          context,
+          modelAssetUrl: _currentExercise?.modelAssetUrl,
+          localModelPath: _currentExercise?.localModelPath,
+        ),
         tooltip: '3D form reference',
       ),
     );
