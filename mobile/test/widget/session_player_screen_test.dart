@@ -1,23 +1,97 @@
+import 'package:drift/native.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
-// Widget test stub for SessionPlayerScreen (FR-005)
-// Verifies the screen builds without crashing given mocked dependencies.
-// Real assertions added in Plan 06 after all overlays and completion logic are wired.
+import 'package:mwf_mobile/core/database/app_database.dart';
+import 'package:mwf_mobile/features/session/data/session_datasource.dart';
+import 'package:mwf_mobile/features/session/domain/session_model.dart';
+import 'package:mwf_mobile/features/session/presentation/session_player_screen.dart';
+
+class _FakeDatasource extends Fake implements SessionDatasource {
+  final List<ExerciseModel> exercises;
+  _FakeDatasource(this.exercises);
+
+  @override
+  Future<List<ExerciseModel>> getExercisesBySession(String sessionId) async =>
+      exercises;
+
+  @override
+  Future<List<SessionModel>> getSessionsWithState({
+    required String programId,
+    required int currentDay,
+  }) async =>
+      [];
+}
 
 void main() {
+  late AppDatabase db;
+
+  setUp(() {
+    db = AppDatabase(NativeDatabase.memory());
+  });
+
+  tearDown(() async {
+    await db.close();
+  });
+
+  // Rep-based exercise so Next starts disabled (counter overlay shows)
+  const repExercise = ExerciseModel(
+    id: 'ex-1',
+    sessionId: 'sess-1',
+    displayOrder: 1,
+    title: 'Test Exercise',
+    cueText: 'Keep your core tight.',
+    repCount: 10,
+    durationSeconds: null,
+    muxPlaybackId: null,
+    localVideoPath: null,
+    modelAssetUrl: null,
+    localModelPath: null,
+  );
+
+  Widget buildSubject(AppDatabase database) {
+    return ProviderScope(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(database),
+        sessionDatasourceProvider.overrideWithValue(
+          _FakeDatasource([repExercise]),
+        ),
+      ],
+      child: MaterialApp(
+        home: const SessionPlayerScreen(
+          programId: 'prog-1',
+          sessionId: 'sess-1',
+        ),
+      ),
+    );
+  }
+
   group('SessionPlayerScreen widget', () {
-    test('screen builds without crashing', () {
-      // Will be implemented when SessionPlayerScreen and all its dependencies exist.
-      // This stub validates the test file compiles and the test runner picks it up.
-      expect(true, isTrue, reason: 'Stub — real widget test added in Plan 06');
+    testWidgets('screen builds and loads without crashing', (tester) async {
+      await tester.pumpWidget(buildSubject(db));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      expect(find.byType(SessionPlayerScreen), findsOneWidget);
     });
 
-    test('displays exercise video player area', () {
-      expect(true, isTrue, reason: 'Stub — real widget test added in Plan 06');
+    testWidgets('Next button is present after exercises load', (tester) async {
+      await tester.pumpWidget(buildSubject(db));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      expect(
+        find.byWidgetPredicate(
+          (w) =>
+              w is Text &&
+              (w.data == 'Next Exercise' || w.data == 'Finish Session'),
+        ),
+        findsOneWidget,
+      );
     });
 
-    test('Next button is present', () {
-      expect(true, isTrue, reason: 'Stub — real widget test added in Plan 06');
+    testWidgets('cue text is displayed when present', (tester) async {
+      await tester.pumpWidget(buildSubject(db));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      expect(find.text('Keep your core tight.'), findsOneWidget);
     });
   });
 }
