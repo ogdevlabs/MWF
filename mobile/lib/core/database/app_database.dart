@@ -11,6 +11,7 @@ import 'tables/metric_logs_table.dart';
 import 'tables/feedback_threads_table.dart';
 import 'tables/sync_queue_table.dart';
 import 'tables/download_manifest_table.dart';
+import 'tables/session_resume_state_table.dart';
 
 import 'daos/programs_dao.dart';
 import 'daos/sessions_dao.dart';
@@ -21,6 +22,7 @@ import 'daos/feedback_dao.dart';
 import 'daos/sync_queue_dao.dart';
 import 'daos/download_manifest_dao.dart';
 import 'daos/enrollments_dao.dart';
+import 'daos/session_resume_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -35,6 +37,7 @@ part 'app_database.g.dart';
     LocalFeedbackThreads,
     SyncQueue,
     DownloadManifest,
+    SessionResumeState,
   ],
   daos: [
     ProgramsDao,
@@ -46,6 +49,7 @@ part 'app_database.g.dart';
     SyncQueueDao,
     DownloadManifestDao,
     EnrollmentsDao,
+    SessionResumeDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -58,7 +62,17 @@ class AppDatabase extends _$AppDatabase {
       : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.createTable(sessionResumeState);
+          }
+        },
+      );
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'mwf_local');

@@ -13,7 +13,7 @@ coach create/publish programs and reply to student messages.
 - [ ] **Phase 1: Setup & Scaffold** - Initialize Flutter + Next.js projects, provision Supabase, Mux, RevenueCat, Firebase
 - [ ] **Phase 2: Foundation** - Auth, Drift database, sync engine, download service, CQRS infrastructure
 - [x] **Phase 3: US1 Enroll & Access** - Student signup, subscription, program browse and access (completed 2026-05-26)
-- [ ] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking
+- [x] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking (completed 2026-05-27)
 - [ ] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync
 - [ ] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks
 - [ ] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading
@@ -85,7 +85,14 @@ Plans:
   2. Session is marked done in program calendar after completion
   3. Re-opening a mid-session app resumes from last incomplete exercise
   4. Streak counter increments after session completion
-**Plans**: TBD
+**Plans**: 6 plans
+Plans:
+- [x] 04-01-PLAN.md — Drift migration (session_resume_state, schemaVersion 2) + test stubs
+- [x] 04-02-PLAN.md — Session domain models (Freezed) + datasource + providers
+- [x] 04-03-PLAN.md — Session list UI (ProgramDetailScreen enhancement with lock state)
+- [x] 04-04-PLAN.md — Session player screen core (Chewie video, exercise navigation, resume)
+- [x] 04-05-PLAN.md — Rep/timer overlays + 3D model bottom sheet
+- [x] 04-06-PLAN.md — Completion screen + streak calculator + completion service + tests
 
 ### Phase 5: US3 Offline-First
 **Goal**: Student pre-downloads session content on Wi-Fi, completes a full session in airplane mode, and has progress automatically synced to the server when connectivity is restored.

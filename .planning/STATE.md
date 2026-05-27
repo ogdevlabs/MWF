@@ -2,20 +2,20 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-05-26T01:51:01.218Z"
+status: Ready to plan
+last_updated: "2026-05-27T03:15:58.085Z"
 progress:
-  total_phases: 12
-  completed_phases: 2
-  total_plans: 16
-  completed_plans: 13
+  total_phases: 13
+  completed_phases: 3
+  total_plans: 22
+  completed_plans: 19
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-26
-**Current Phase**: 3
-**Current Plan**: 03-06
+**Current Phase**: 4
+**Current Plan**: 04-02
 **Status**: in-progress
 
 ## Session Context
@@ -54,6 +54,16 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 03]: LocalProgramsCompanion.cacheProgram supplies createdAt/updatedAt = DateTime.now() for non-nullable Drift columns
 - [Phase 03]: AsyncValue.value ?? true (not .valueOrNull) for onboardingSeenProvider — Riverpod 3.x dropped .valueOrNull
 - [Phase 03]: errorBuilder uses (_, _, _) all-underscore wildcards to satisfy unnecessary_underscores lint
+- [Phase 04]: SessionState lock derivation is a pure function (deriveSessionState) decoupled from DB — easy to unit test
+- [Phase 04]: Riverpod family providers use named params (programId/currentDay) for sessionsWithState and sessionExercises — matches plan spec
+- [Phase 04]: _onOverlayTargetReached removed from SessionPlayerScreen until Plan 05 adds rep/timer overlays
+- [Phase 04]: session-complete placeholder route added to router; Plan 06 builds SessionCompletionScreen
+- [Phase 04]: RepCounterOverlay uses _targetHit bool guard to prevent double-firing onTargetReached callback
+- [Phase 04]: TimerCountdownOverlay cancels Timer in dispose to prevent setState-after-dispose
+- [Phase 04]: ModelViewerSheet resolves localModelPath via getApplicationDocumentsDirectory for file:// URI, no-ops if both model fields null
+- [Phase 04]: Streak computed synchronously after Drift write inside SessionCompletionService, not via reactive stream
+- [Phase 04]: mocktail registerFallbackValue required for CommandType enum in tests
+- [Phase 04]: drift isNull/isNotNull must be hidden in test imports to avoid matcher ambiguity
 
 ## Blockers
 
@@ -85,7 +95,11 @@ None
 | Phase 03 P04 | 8m | 2 tasks | 6 files |
 | Phase 03 P03-05 | 205 | 2 tasks | 11 files |
 | Phase 03 P03-06 | 183s | 2 tasks | 4 files |
+| Phase 04 P04-02 | 8m | 2 tasks | 8 files |
+| Phase 04 P04 | 3min | 2 tasks | 4 files |
+| Phase 04 P04-05 | 122s | 2 tasks | 4 files |
+| Phase 04 P04-06 | 306s | 3 tasks | 10 files |
 
 ## Stopped At
 
-Completed 03-06-PLAN.md
+Completed 04-05-PLAN.md
