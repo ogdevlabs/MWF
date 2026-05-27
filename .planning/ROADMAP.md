@@ -89,9 +89,9 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — Drift migration (session_resume_state, schemaVersion 2) + test stubs
 - [x] 04-02-PLAN.md — Session domain models (Freezed) + datasource + providers
-- [ ] 04-03-PLAN.md — Session list UI (ProgramDetailScreen enhancement with lock state)
+- [x] 04-03-PLAN.md — Session list UI (ProgramDetailScreen enhancement with lock state)
 - [x] 04-04-PLAN.md — Session player screen core (Chewie video, exercise navigation, resume)
-- [ ] 04-05-PLAN.md — Rep/timer overlays + 3D model bottom sheet
+- [x] 04-05-PLAN.md — Rep/timer overlays + 3D model bottom sheet
 - [ ] 04-06-PLAN.md — Completion screen + streak calculator + completion service + tests
 
 ### Phase 5: US3 Offline-First
