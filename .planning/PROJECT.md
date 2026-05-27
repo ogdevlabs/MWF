@@ -42,6 +42,10 @@ and respond to individual student messages.
 - Riverpod (state management)
 - Next.js 15 + shadcn/ui (admin panel)
 
+## Current State
+
+Phase 4 complete — Session player with video, 3D companion, rep/timer overlays, completion screen, and streak tracking.
+
 ## Source Artifacts
 
 - `specs/001-mat-pilates-coach/spec.md` — user stories, requirements, success criteria
