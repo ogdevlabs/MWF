@@ -10,8 +10,8 @@ coach create/publish programs and reply to student messages.
 
 ## Phases
 
-- [ ] **Phase 1: Setup & Scaffold** - Initialize Flutter + Next.js projects, provision Supabase, Mux, RevenueCat, Firebase
-- [ ] **Phase 2: Foundation** - Auth, Drift database, sync engine, download service, CQRS infrastructure
+- [x] **Phase 1: Setup & Scaffold** - Initialize Flutter + Next.js projects, provision Supabase, Mux, RevenueCat, Firebase (completed 2026-05-25)
+- [x] **Phase 2: Foundation** - Auth, Drift database, sync engine, download service, CQRS infrastructure (completed 2026-05-25)
 - [x] **Phase 3: US1 Enroll & Access** - Student signup, subscription, program browse and access (completed 2026-05-26)
 - [x] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking (completed 2026-05-27)
 - [ ] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync
@@ -34,9 +34,9 @@ coach create/publish programs and reply to student messages.
   5. Supabase edge functions directory exists with webhook stubs for RevenueCat and Mux
 **Plans**: 3 plans
 Plans:
-- [ ] 01-01-PLAN.md — Project initializations (Flutter, Next.js, Supabase)
-- [ ] 01-02-PLAN.md — Dependencies, schema migration, and edge function stubs
-- [ ] 01-03-PLAN.md — Flutter skeleton (main.dart, theme, router) + service stubs
+- [x] 01-01-PLAN.md — Project initializations (Flutter, Next.js, Supabase)
+- [x] 01-02-PLAN.md — Dependencies, schema migration, and edge function stubs
+- [x] 01-03-PLAN.md — Flutter skeleton (main.dart, theme, router) + service stubs
 
 ### Phase 2: Foundation
 **Goal**: Implement Drift local database, Supabase client, auth repository, offline sync queue, download service, and CQRS infrastructure. This phase blocks all feature phases.
