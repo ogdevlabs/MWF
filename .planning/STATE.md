@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-26T01:51:01.218Z"
+last_updated: "2026-05-27T02:43:05.400Z"
 progress:
-  total_phases: 12
+  total_phases: 9
   completed_phases: 2
   total_plans: 16
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-26
-**Current Phase**: 3
-**Current Plan**: 03-06
+**Current Phase**: 4
+**Current Plan**: 04-02
 **Status**: in-progress
 
 ## Session Context
@@ -54,6 +54,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 03]: LocalProgramsCompanion.cacheProgram supplies createdAt/updatedAt = DateTime.now() for non-nullable Drift columns
 - [Phase 03]: AsyncValue.value ?? true (not .valueOrNull) for onboardingSeenProvider — Riverpod 3.x dropped .valueOrNull
 - [Phase 03]: errorBuilder uses (_, _, _) all-underscore wildcards to satisfy unnecessary_underscores lint
+- [Phase 04]: SessionState lock derivation is a pure function (deriveSessionState) decoupled from DB — easy to unit test
+- [Phase 04]: Riverpod family providers use named params (programId/currentDay) for sessionsWithState and sessionExercises — matches plan spec
 
 ## Blockers
 
@@ -85,7 +87,8 @@ None
 | Phase 03 P04 | 8m | 2 tasks | 6 files |
 | Phase 03 P03-05 | 205 | 2 tasks | 11 files |
 | Phase 03 P03-06 | 183s | 2 tasks | 4 files |
+| Phase 04 P04-02 | 8m | 2 tasks | 8 files |
 
 ## Stopped At
 
-Completed 03-06-PLAN.md
+Completed 04-02-PLAN.md
