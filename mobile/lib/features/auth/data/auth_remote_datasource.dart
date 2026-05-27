@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -44,7 +45,7 @@ class AuthRemoteDatasource {
         email: email,
         displayName: displayName,
       );
-      await Purchases.logIn(user.id);
+      try { await Purchases.logIn(user.id); } on PlatformException catch (_) {}
     }
 
     return response;
@@ -67,7 +68,7 @@ class AuthRemoteDatasource {
         userId: user.id,
         email: user.email ?? email,
       );
-      await Purchases.logIn(user.id);
+      try { await Purchases.logIn(user.id); } on PlatformException catch (_) {}
     }
 
     return response;
@@ -85,7 +86,7 @@ class AuthRemoteDatasource {
         email: user.email ?? '',
         displayName: user.userMetadata?['full_name'] as String?,
       );
-      await Purchases.logIn(user.id);
+      try { await Purchases.logIn(user.id); } on PlatformException catch (_) {}
     }
 
     return response;
@@ -104,7 +105,7 @@ class AuthRemoteDatasource {
         displayName: user.userMetadata?['full_name'] as String?,
         avatarUrl: user.userMetadata?['avatar_url'] as String?,
       );
-      await Purchases.logIn(user.id);
+      try { await Purchases.logIn(user.id); } on PlatformException catch (_) {}
     }
 
     return response;
@@ -112,7 +113,7 @@ class AuthRemoteDatasource {
 
   /// Sign out: RevenueCat logOut + Supabase sign out.
   Future<void> signOut() async {
-    await Purchases.logOut();
+    try { await Purchases.logOut(); } on PlatformException catch (_) {}
     await authRepository.signOut();
   }
 }
