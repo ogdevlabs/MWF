@@ -10,6 +10,7 @@ import '../../features/auth/presentation/onboarding_screen.dart';
 import '../../features/auth/presentation/paywall_screen.dart';
 import '../../features/programs/presentation/program_list_screen.dart';
 import '../../features/programs/presentation/program_detail_screen.dart';
+import '../../features/session/presentation/session_player_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -79,8 +80,16 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: 'session/:sessionId',
                 name: 'session-player',
+                builder: (context, state) => SessionPlayerScreen(
+                  programId: state.pathParameters['programId']!,
+                  sessionId: state.pathParameters['sessionId']!,
+                ),
+              ),
+              GoRoute(
+                path: 'session/:sessionId/complete',
+                name: 'session-complete',
                 builder: (context, state) =>
-                    const _PlaceholderScreen(title: 'Session Player'),
+                    const _PlaceholderScreen(title: 'Session Complete'),
               ),
             ],
           ),
