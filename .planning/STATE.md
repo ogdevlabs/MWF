@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-05-27T02:43:05.400Z"
+last_updated: "2026-05-27T02:51:02.434Z"
 progress:
-  total_phases: 9
+  total_phases: 13
   completed_phases: 2
-  total_plans: 16
-  completed_plans: 14
+  total_plans: 22
+  completed_plans: 16
 ---
 
 # GSD State
@@ -56,6 +56,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 03]: errorBuilder uses (_, _, _) all-underscore wildcards to satisfy unnecessary_underscores lint
 - [Phase 04]: SessionState lock derivation is a pure function (deriveSessionState) decoupled from DB — easy to unit test
 - [Phase 04]: Riverpod family providers use named params (programId/currentDay) for sessionsWithState and sessionExercises — matches plan spec
+- [Phase 04]: _onOverlayTargetReached removed from SessionPlayerScreen until Plan 05 adds rep/timer overlays
+- [Phase 04]: session-complete placeholder route added to router; Plan 06 builds SessionCompletionScreen
 
 ## Blockers
 
@@ -88,6 +90,7 @@ None
 | Phase 03 P03-05 | 205 | 2 tasks | 11 files |
 | Phase 03 P03-06 | 183s | 2 tasks | 4 files |
 | Phase 04 P04-02 | 8m | 2 tasks | 8 files |
+| Phase 04 P04 | 3min | 2 tasks | 4 files |
 
 ## Stopped At
 
