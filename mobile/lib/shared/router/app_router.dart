@@ -10,6 +10,7 @@ import '../../features/auth/presentation/onboarding_screen.dart';
 import '../../features/auth/presentation/paywall_screen.dart';
 import '../../features/programs/presentation/program_list_screen.dart';
 import '../../features/programs/presentation/program_detail_screen.dart';
+import '../../features/session/presentation/session_completion_screen.dart';
 import '../../features/session/presentation/session_player_screen.dart';
 
 part 'app_router.g.dart';
@@ -88,8 +89,17 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: 'session/:sessionId/complete',
                 name: 'session-complete',
-                builder: (context, state) =>
-                    const _PlaceholderScreen(title: 'Session Complete'),
+                builder: (context, state) {
+                  final extra = state.extra as Map<String, dynamic>? ?? {};
+                  return SessionCompletionScreen(
+                    programId: state.pathParameters['programId']!,
+                    sessionId: state.pathParameters['sessionId']!,
+                    sessionTitle: extra['sessionTitle'] as String? ?? 'Session',
+                    durationSeconds: extra['durationSeconds'] as int? ?? 0,
+                    exerciseCount: extra['exerciseCount'] as int? ?? 0,
+                    streak: extra['streak'] as int? ?? 0,
+                  );
+                },
               ),
             ],
           ),

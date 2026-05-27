@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_provider.dart';
 import '../../../core/database/app_database.dart';
+import '../data/session_completion_service.dart';
 import '../data/session_datasource.dart';
 import '../domain/session_model.dart';
 import 'cue_text_strip.dart';
@@ -120,14 +121,34 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen> {
   }
 
   Future<void> _completeSession() async {
+    final user = ref.read(currentUserProvider);
+    if (user == null) return;
+
     final durationSeconds = _sessionStartTime != null
         ? DateTime.now().difference(_sessionStartTime!).inSeconds
         : 0;
 
-    // Clear resume state on completion
-    await _db.sessionResumeDao.clearResumeState(widget.sessionId);
+    // Get enrollment for current_day increment
+    final enrollment = await _db.enrollmentsDao.getEnrollment(
+      studentId: user.id,
+      programId: widget.programId,
+    );
+    if (enrollment == null) return;
 
-    // Navigate to completion screen with data
+    // Run completion service (D-13)
+    final completionService = ref.read(sessionCompletionServiceProvider);
+    final streak = await completionService.completeSession(
+      studentId: user.id,
+      sessionId: widget.sessionId,
+      enrollmentId: enrollment.id,
+      currentDay: enrollment.currentDay,
+      durationSeconds: durationSeconds,
+    );
+
+    // Get session title for completion screen
+    final session = await _db.sessionsDao.getSessionById(widget.sessionId);
+    final sessionTitle = session?.title ?? 'Session';
+
     if (mounted) {
       context.goNamed(
         'session-complete',
@@ -136,8 +157,10 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen> {
           'sessionId': widget.sessionId,
         },
         extra: {
+          'sessionTitle': sessionTitle,
           'exerciseCount': _exercises.length,
           'durationSeconds': durationSeconds,
+          'streak': streak,
         },
       );
     }
