@@ -85,7 +85,14 @@ Plans:
   2. Session is marked done in program calendar after completion
   3. Re-opening a mid-session app resumes from last incomplete exercise
   4. Streak counter increments after session completion
-**Plans**: TBD
+**Plans**: 6 plans
+Plans:
+- [ ] 04-01-PLAN.md — Drift migration (session_resume_state, schemaVersion 2) + test stubs
+- [ ] 04-02-PLAN.md — Session domain models (Freezed) + datasource + providers
+- [ ] 04-03-PLAN.md — Session list UI (ProgramDetailScreen enhancement with lock state)
+- [ ] 04-04-PLAN.md — Session player screen core (Chewie video, exercise navigation, resume)
+- [ ] 04-05-PLAN.md — Rep/timer overlays + 3D model bottom sheet
+- [ ] 04-06-PLAN.md — Completion screen + streak calculator + completion service + tests
 
 ### Phase 5: US3 Offline-First
 **Goal**: Student pre-downloads session content on Wi-Fi, completes a full session in airplane mode, and has progress automatically synced to the server when connectivity is restored.
