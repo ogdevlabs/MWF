@@ -28,4 +28,14 @@ class ExercisesDao extends DatabaseAccessor<AppDatabase> with _$ExercisesDaoMixi
 
   Future<int> deleteExerciseById(String id) =>
       (delete(localExercises)..where((t) => t.id.equals(id))).go();
+
+  /// Returns the number of exercises belonging to [sessionId].
+  Future<int> getExerciseCountBySession(String sessionId) async {
+    final countExpr = countAll();
+    final query = selectOnly(localExercises)
+      ..where(localExercises.sessionId.equals(sessionId))
+      ..addColumns([countExpr]);
+    final count = await query.map((row) => row.read(countExpr)).getSingle();
+    return count ?? 0;
+  }
 }
