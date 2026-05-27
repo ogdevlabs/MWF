@@ -87,7 +87,7 @@ Plans:
   4. Streak counter increments after session completion
 **Plans**: 6 plans
 Plans:
-- [ ] 04-01-PLAN.md — Drift migration (session_resume_state, schemaVersion 2) + test stubs
+- [x] 04-01-PLAN.md — Drift migration (session_resume_state, schemaVersion 2) + test stubs
 - [ ] 04-02-PLAN.md — Session domain models (Freezed) + datasource + providers
 - [ ] 04-03-PLAN.md — Session list UI (ProgramDetailScreen enhancement with lock state)
 - [ ] 04-04-PLAN.md — Session player screen core (Chewie video, exercise navigation, resume)

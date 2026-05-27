@@ -5018,6 +5018,332 @@ class DownloadManifestCompanion extends UpdateCompanion<DownloadManifestData> {
   }
 }
 
+class $SessionResumeStateTable extends SessionResumeState
+    with TableInfo<$SessionResumeStateTable, SessionResumeStateData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SessionResumeStateTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
+  );
+  @override
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _studentIdMeta = const VerificationMeta(
+    'studentId',
+  );
+  @override
+  late final GeneratedColumn<String> studentId = GeneratedColumn<String>(
+    'student_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _exerciseIndexMeta = const VerificationMeta(
+    'exerciseIndex',
+  );
+  @override
+  late final GeneratedColumn<int> exerciseIndex = GeneratedColumn<int>(
+    'exercise_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    sessionId,
+    studentId,
+    exerciseIndex,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'session_resume_state';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SessionResumeStateData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('session_id')) {
+      context.handle(
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionIdMeta);
+    }
+    if (data.containsKey('student_id')) {
+      context.handle(
+        _studentIdMeta,
+        studentId.isAcceptableOrUnknown(data['student_id']!, _studentIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_studentIdMeta);
+    }
+    if (data.containsKey('exercise_index')) {
+      context.handle(
+        _exerciseIndexMeta,
+        exerciseIndex.isAcceptableOrUnknown(
+          data['exercise_index']!,
+          _exerciseIndexMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {sessionId};
+  @override
+  SessionResumeStateData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SessionResumeStateData(
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      studentId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}student_id'],
+      )!,
+      exerciseIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}exercise_index'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SessionResumeStateTable createAlias(String alias) {
+    return $SessionResumeStateTable(attachedDatabase, alias);
+  }
+}
+
+class SessionResumeStateData extends DataClass
+    implements Insertable<SessionResumeStateData> {
+  final String sessionId;
+  final String studentId;
+  final int exerciseIndex;
+  final DateTime updatedAt;
+  const SessionResumeStateData({
+    required this.sessionId,
+    required this.studentId,
+    required this.exerciseIndex,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['session_id'] = Variable<String>(sessionId);
+    map['student_id'] = Variable<String>(studentId);
+    map['exercise_index'] = Variable<int>(exerciseIndex);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  SessionResumeStateCompanion toCompanion(bool nullToAbsent) {
+    return SessionResumeStateCompanion(
+      sessionId: Value(sessionId),
+      studentId: Value(studentId),
+      exerciseIndex: Value(exerciseIndex),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory SessionResumeStateData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SessionResumeStateData(
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      studentId: serializer.fromJson<String>(json['studentId']),
+      exerciseIndex: serializer.fromJson<int>(json['exerciseIndex']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'sessionId': serializer.toJson<String>(sessionId),
+      'studentId': serializer.toJson<String>(studentId),
+      'exerciseIndex': serializer.toJson<int>(exerciseIndex),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  SessionResumeStateData copyWith({
+    String? sessionId,
+    String? studentId,
+    int? exerciseIndex,
+    DateTime? updatedAt,
+  }) => SessionResumeStateData(
+    sessionId: sessionId ?? this.sessionId,
+    studentId: studentId ?? this.studentId,
+    exerciseIndex: exerciseIndex ?? this.exerciseIndex,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  SessionResumeStateData copyWithCompanion(SessionResumeStateCompanion data) {
+    return SessionResumeStateData(
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      studentId: data.studentId.present ? data.studentId.value : this.studentId,
+      exerciseIndex: data.exerciseIndex.present
+          ? data.exerciseIndex.value
+          : this.exerciseIndex,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SessionResumeStateData(')
+          ..write('sessionId: $sessionId, ')
+          ..write('studentId: $studentId, ')
+          ..write('exerciseIndex: $exerciseIndex, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(sessionId, studentId, exerciseIndex, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SessionResumeStateData &&
+          other.sessionId == this.sessionId &&
+          other.studentId == this.studentId &&
+          other.exerciseIndex == this.exerciseIndex &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SessionResumeStateCompanion
+    extends UpdateCompanion<SessionResumeStateData> {
+  final Value<String> sessionId;
+  final Value<String> studentId;
+  final Value<int> exerciseIndex;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const SessionResumeStateCompanion({
+    this.sessionId = const Value.absent(),
+    this.studentId = const Value.absent(),
+    this.exerciseIndex = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SessionResumeStateCompanion.insert({
+    required String sessionId,
+    required String studentId,
+    this.exerciseIndex = const Value.absent(),
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : sessionId = Value(sessionId),
+       studentId = Value(studentId),
+       updatedAt = Value(updatedAt);
+  static Insertable<SessionResumeStateData> custom({
+    Expression<String>? sessionId,
+    Expression<String>? studentId,
+    Expression<int>? exerciseIndex,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (sessionId != null) 'session_id': sessionId,
+      if (studentId != null) 'student_id': studentId,
+      if (exerciseIndex != null) 'exercise_index': exerciseIndex,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SessionResumeStateCompanion copyWith({
+    Value<String>? sessionId,
+    Value<String>? studentId,
+    Value<int>? exerciseIndex,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return SessionResumeStateCompanion(
+      sessionId: sessionId ?? this.sessionId,
+      studentId: studentId ?? this.studentId,
+      exerciseIndex: exerciseIndex ?? this.exerciseIndex,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (studentId.present) {
+      map['student_id'] = Variable<String>(studentId.value);
+    }
+    if (exerciseIndex.present) {
+      map['exercise_index'] = Variable<int>(exerciseIndex.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SessionResumeStateCompanion(')
+          ..write('sessionId: $sessionId, ')
+          ..write('studentId: $studentId, ')
+          ..write('exerciseIndex: $exerciseIndex, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -5038,6 +5364,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DownloadManifestTable downloadManifest = $DownloadManifestTable(
     this,
   );
+  late final $SessionResumeStateTable sessionResumeState =
+      $SessionResumeStateTable(this);
   late final ProgramsDao programsDao = ProgramsDao(this as AppDatabase);
   late final SessionsDao sessionsDao = SessionsDao(this as AppDatabase);
   late final ExercisesDao exercisesDao = ExercisesDao(this as AppDatabase);
@@ -5049,6 +5377,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this as AppDatabase,
   );
   late final EnrollmentsDao enrollmentsDao = EnrollmentsDao(
+    this as AppDatabase,
+  );
+  late final SessionResumeDao sessionResumeDao = SessionResumeDao(
     this as AppDatabase,
   );
   @override
@@ -5065,6 +5396,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     localFeedbackThreads,
     syncQueue,
     downloadManifest,
+    sessionResumeState,
   ];
 }
 
@@ -7592,6 +7924,202 @@ typedef $$DownloadManifestTableProcessedTableManager =
       DownloadManifestData,
       PrefetchHooks Function()
     >;
+typedef $$SessionResumeStateTableCreateCompanionBuilder =
+    SessionResumeStateCompanion Function({
+      required String sessionId,
+      required String studentId,
+      Value<int> exerciseIndex,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$SessionResumeStateTableUpdateCompanionBuilder =
+    SessionResumeStateCompanion Function({
+      Value<String> sessionId,
+      Value<String> studentId,
+      Value<int> exerciseIndex,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$SessionResumeStateTableFilterComposer
+    extends Composer<_$AppDatabase, $SessionResumeStateTable> {
+  $$SessionResumeStateTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get exerciseIndex => $composableBuilder(
+    column: $table.exerciseIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SessionResumeStateTableOrderingComposer
+    extends Composer<_$AppDatabase, $SessionResumeStateTable> {
+  $$SessionResumeStateTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get studentId => $composableBuilder(
+    column: $table.studentId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get exerciseIndex => $composableBuilder(
+    column: $table.exerciseIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SessionResumeStateTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SessionResumeStateTable> {
+  $$SessionResumeStateTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => column);
+
+  GeneratedColumn<String> get studentId =>
+      $composableBuilder(column: $table.studentId, builder: (column) => column);
+
+  GeneratedColumn<int> get exerciseIndex => $composableBuilder(
+    column: $table.exerciseIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$SessionResumeStateTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SessionResumeStateTable,
+          SessionResumeStateData,
+          $$SessionResumeStateTableFilterComposer,
+          $$SessionResumeStateTableOrderingComposer,
+          $$SessionResumeStateTableAnnotationComposer,
+          $$SessionResumeStateTableCreateCompanionBuilder,
+          $$SessionResumeStateTableUpdateCompanionBuilder,
+          (
+            SessionResumeStateData,
+            BaseReferences<
+              _$AppDatabase,
+              $SessionResumeStateTable,
+              SessionResumeStateData
+            >,
+          ),
+          SessionResumeStateData,
+          PrefetchHooks Function()
+        > {
+  $$SessionResumeStateTableTableManager(
+    _$AppDatabase db,
+    $SessionResumeStateTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SessionResumeStateTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SessionResumeStateTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SessionResumeStateTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> sessionId = const Value.absent(),
+                Value<String> studentId = const Value.absent(),
+                Value<int> exerciseIndex = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SessionResumeStateCompanion(
+                sessionId: sessionId,
+                studentId: studentId,
+                exerciseIndex: exerciseIndex,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String sessionId,
+                required String studentId,
+                Value<int> exerciseIndex = const Value.absent(),
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => SessionResumeStateCompanion.insert(
+                sessionId: sessionId,
+                studentId: studentId,
+                exerciseIndex: exerciseIndex,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SessionResumeStateTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SessionResumeStateTable,
+      SessionResumeStateData,
+      $$SessionResumeStateTableFilterComposer,
+      $$SessionResumeStateTableOrderingComposer,
+      $$SessionResumeStateTableAnnotationComposer,
+      $$SessionResumeStateTableCreateCompanionBuilder,
+      $$SessionResumeStateTableUpdateCompanionBuilder,
+      (
+        SessionResumeStateData,
+        BaseReferences<
+          _$AppDatabase,
+          $SessionResumeStateTable,
+          SessionResumeStateData
+        >,
+      ),
+      SessionResumeStateData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7614,6 +8142,8 @@ class $AppDatabaseManager {
       $$SyncQueueTableTableManager(_db, _db.syncQueue);
   $$DownloadManifestTableTableManager get downloadManifest =>
       $$DownloadManifestTableTableManager(_db, _db.downloadManifest);
+  $$SessionResumeStateTableTableManager get sessionResumeState =>
+      $$SessionResumeStateTableTableManager(_db, _db.sessionResumeState);
 }
 
 // **************************************************************************
