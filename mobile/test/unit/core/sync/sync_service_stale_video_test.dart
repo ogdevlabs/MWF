@@ -1,10 +1,6 @@
 // Wave 0 test stub — tests document expected behavior for Plan 05-02.
 // All tests are in a skip group so flutter test exits 0 without production code.
-// Plan 05-02 will implement SyncService stale video detection and turn these green.
-//
-// Note: Supabase query chain mocking requires SupabaseQueryBuilder which has no
-// public constructor. Skip is the correct Wave 0 approach; real integration tests
-// use the existing _pullTable dynamic pattern in Plan 05-02.
+// ignore_for_file: unused_import, unused_local_variable
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,12 +42,6 @@ void main() {
     'Stale video detection',
     skip: 'Wave 0 stub — production code not yet created',
     () {
-      /// Behavior (D-15, D-16): when _pullRemoteChanges() pulls an exercise row
-      /// where remote video_version > manifest videoVersion, the manifest entry
-      /// should be reset to downloadStatus='pending' and videoLocalPath=null.
-      ///
-      /// Implementation: Plan 05-02 extends SyncService._pullRemoteChanges()
-      /// to compare exercise.video_version against manifest.videoVersion.
       test('resets manifest to pending when remote video_version > local',
           () async {
         await db.downloadManifestDao.upsertEntry(DownloadManifestCompanion(
@@ -61,7 +51,6 @@ void main() {
           videoLocalPath: const Value('exercises/ex-1/ex-1_video.mp4'),
         ));
 
-        // Plan 05-02: stub Supabase to return exercise with video_version=2
         await syncService.sync();
 
         final manifest = await db.downloadManifestDao.getByExerciseId('ex-1');
@@ -79,7 +68,6 @@ void main() {
         await syncService.sync();
 
         final manifest = await db.downloadManifestDao.getByExerciseId('ex-1');
-        // Must use Value(null) explicitly to clear — Value.absent() is a no-op
         expect(manifest!.videoLocalPath, isNull);
       });
 
