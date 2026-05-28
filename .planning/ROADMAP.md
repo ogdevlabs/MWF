@@ -14,7 +14,7 @@ coach create/publish programs and reply to student messages.
 - [x] **Phase 2: Foundation** - Auth, Drift database, sync engine, download service, CQRS infrastructure (completed 2026-05-25)
 - [x] **Phase 3: US1 Enroll & Access** - Student signup, subscription, program browse and access (completed 2026-05-26)
 - [x] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking (completed 2026-05-27)
-- [ ] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync
+- [x] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync (completed 2026-05-28)
 - [ ] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks
 - [ ] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading
 - [ ] **Phase 8: US6 Admin Panel** - Coach content creation, program publishing, private feedback replies
