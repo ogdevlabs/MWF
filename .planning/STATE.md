@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 05
-last_updated: "2026-05-28T23:35:16.888Z"
+last_updated: "2026-05-28T23:42:00.699Z"
 progress:
   total_phases: 14
   completed_phases: 3
   total_plans: 26
-  completed_plans: 21
+  completed_plans: 22
 ---
 
 # GSD State
@@ -68,6 +68,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 05]: Wave 0 skip stubs: group(..., skip: 'Wave 0 stub ...', () {...}) pattern ensures flutter test exits 0 before production code exists
 - [Phase 05]: SessionDownloadState stub enum created in session/domain/ with unimplemented derive() for Wave 0 compilation
 - [Phase 05]: SessionListTile.downloadState + isOnline added as optional stub params to enable widget test compilation (full implementation in Plan 05-03)
+- [Phase 05]: Per-table mock pairs for Supabase chain: each _stubTable() creates its own MockQueryBuilder + MockFilterBuilder to prevent then() stub collision
+- [Phase 05]: Value(null) vs Value.absent() in stale manifest reset: Value(null) explicitly clears column; Value.absent() is no-op in Drift upserts
 
 ## Blockers
 
@@ -105,7 +107,8 @@ None
 | Phase 04 P04-06 | 306s | 3 tasks | 10 files |
 | Phase 05 P05-02 | 196s | 2 tasks | 5 files |
 | Phase 05 P05-01 | 335s | 2 tasks | 7 files |
+| Phase 05 P05-03 | 806s | 2 tasks | 3 files |
 
 ## Stopped At
 
-Completed 04-05-PLAN.md
+Completed 05-03-PLAN.md
