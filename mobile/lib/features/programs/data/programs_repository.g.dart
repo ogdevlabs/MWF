@@ -55,7 +55,7 @@ final class ProgramsRepositoryProvider
 }
 
 String _$programsRepositoryHash() =>
-    r'd611f78509d42ecc6bb48030649f4f412de6bf9f';
+    r'9f8873151434d70ebe8dbe98ae97007e8182d6ed';
 
 /// Provides the list of programs for UI consumption.
 /// Auto-refreshes when dependencies change.
