@@ -106,7 +106,7 @@ Plans:
 **Plans**: 4 plans
 Plans:
 - [ ] 05-01-PLAN.md — Wave 0 test stubs (Nyquist: StorageGuard, stale video, download state, offline sync, widget)
-- [ ] 05-02-PLAN.md — Core downloads: requiresWiFi fix, StorageGuard, resumeQueue, enrollment trigger
+- [x] 05-02-PLAN.md — Core downloads: requiresWiFi fix, StorageGuard, resumeQueue, enrollment trigger
 - [ ] 05-03-PLAN.md — Stale video detection in SyncService + dead-letter/FIFO tests
 - [ ] 05-04-PLAN.md — UI layer: download state provider, session tile badge, offline guard, ProgramDetailScreen wiring
 
