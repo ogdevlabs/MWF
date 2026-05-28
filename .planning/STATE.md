@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 05
-last_updated: "2026-05-28T23:32:16.595Z"
+last_updated: "2026-05-28T23:35:16.888Z"
 progress:
   total_phases: 14
   completed_phases: 3
   total_plans: 26
-  completed_plans: 20
+  completed_plans: 21
 ---
 
 # GSD State
@@ -65,6 +65,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 04]: mocktail registerFallbackValue required for CommandType enum in tests
 - [Phase 04]: drift isNull/isNotNull must be hidden in test imports to avoid matcher ambiguity
 - [Phase 05]: StorageGuard is a static utility with injectable freeSpaceProvider — production path is fail-open (no platform StatFs in dart:io); requiresWiFi: true fixed on all DownloadTask instances
+- [Phase 05]: Wave 0 skip stubs: group(..., skip: 'Wave 0 stub ...', () {...}) pattern ensures flutter test exits 0 before production code exists
+- [Phase 05]: SessionDownloadState stub enum created in session/domain/ with unimplemented derive() for Wave 0 compilation
+- [Phase 05]: SessionListTile.downloadState + isOnline added as optional stub params to enable widget test compilation (full implementation in Plan 05-03)
 
 ## Blockers
 
@@ -101,6 +104,7 @@ None
 | Phase 04 P04-05 | 122s | 2 tasks | 4 files |
 | Phase 04 P04-06 | 306s | 3 tasks | 10 files |
 | Phase 05 P05-02 | 196s | 2 tasks | 5 files |
+| Phase 05 P05-01 | 335s | 2 tasks | 7 files |
 
 ## Stopped At
 
