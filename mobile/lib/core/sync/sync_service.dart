@@ -111,8 +111,11 @@ class SyncService {
       since: lastSync,
       upsert: (rows) async {
         for (final row in rows) {
+          final exerciseId = row['id'] as String;
+          final remoteVersion = row['video_version'] as int? ?? 1;
+
           await db.exercisesDao.upsertExercise(LocalExercisesCompanion(
-            id: Value(row['id'] as String),
+            id: Value(exerciseId),
             sessionId: Value(row['session_id'] as String),
             displayOrder: Value(row['display_order'] as int),
             title: Value(row['title'] as String),
@@ -123,10 +126,23 @@ class SyncService {
             modelAssetUrl: Value(row['model_asset_url'] as String?),
             repCount: Value(row['rep_count'] as int?),
             durationSeconds: Value(row['duration_seconds'] as int?),
-            videoVersion: Value(row['video_version'] as int? ?? 1),
+            videoVersion: Value(remoteVersion),
             createdAt: Value(DateTime.parse(row['created_at'] as String)),
             updatedAt: Value(DateTime.parse(row['updated_at'] as String)),
           ));
+
+          // D-15: Stale video detection — reset manifest if remote version is newer
+          final manifest =
+              await db.downloadManifestDao.getByExerciseId(exerciseId);
+          if (manifest != null && remoteVersion > manifest.videoVersion) {
+            await db.downloadManifestDao.upsertEntry(DownloadManifestCompanion(
+              exerciseId: Value(exerciseId),
+              videoVersion: Value(remoteVersion),
+              downloadStatus: const Value('pending'),
+              videoLocalPath: const Value(null), // explicit null to clear stale path
+              modelLocalPath: const Value(null), // clear model too
+            ));
+          }
         }
       },
     );
