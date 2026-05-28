@@ -103,7 +103,12 @@ Plans:
   2. Storage guard pauses downloads when free space < 500 MB
   3. Stale video versions are detected and re-queued for download on sync
   4. Sync queue replays in order on reconnect; retry_count stops at 5 failures
-**Plans**: TBD
+**Plans**: 4+ plans
+Plans:
+- [ ] 05-01-PLAN.md — (Wave 0) Test stubs
+- [ ] 05-02-PLAN.md — Download queue + Mux signed URL fetch
+- [ ] 05-03-PLAN.md — Reconnect sync trigger + stale version detection
+- [x] 05-04-PLAN.md — Session download badge UI + offline guard + ProgramDetailScreen wiring
 
 ### Phase 6: US4 Metrics & Progress
 **Goal**: Student can log body metrics (weight, measurements, flexibility) with date stamps, view trend line charts with delta badge, and see session completion streaks on a progress dashboard.
