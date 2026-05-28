@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../domain/session_download_state.dart';
 import '../domain/session_model.dart';
 
 /// A list tile displaying a session row with visual state indicators.
@@ -9,15 +10,29 @@ import '../domain/session_model.dart';
 /// - Complete: green check_circle, transparent bg, tappable
 /// - Current: primary play_circle_filled, primaryContainer bg (alpha 0.3), tappable
 /// - Locked: grey lock, transparent bg, non-tappable, opacity 0.6
+///
+/// Download state badge (Phase 5, Plan 05-03):
+/// - notDownloaded: download_outlined icon (online) / "Not available offline" (offline)
+/// - inProgress: CircularProgressIndicator
+/// - downloaded: download_done icon
 class SessionListTile extends StatelessWidget {
   const SessionListTile({
     super.key,
     required this.session,
     this.onTap,
+    this.downloadState,
+    this.isOnline = true,
   });
 
   final SessionModel session;
   final VoidCallback? onTap;
+
+  /// Download state for the download badge (Phase 5). Null = badge not shown.
+  final SessionDownloadState? downloadState;
+
+  /// Whether the device currently has network connectivity.
+  /// When false and [downloadState] is notDownloaded, the tile is disabled.
+  final bool isOnline;
 
   @override
   Widget build(BuildContext context) {
