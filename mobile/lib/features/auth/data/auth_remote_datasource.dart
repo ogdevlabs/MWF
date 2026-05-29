@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -63,10 +65,11 @@ class AuthRemoteDatasource {
 
     final user = response.user;
     if (user != null) {
-      await studentDatasource.upsertStudentProfile(
+      // Best-effort: don't let profile upsert block or fail the login.
+      unawaited(studentDatasource.upsertStudentProfile(
         userId: user.id,
         email: user.email ?? email,
-      );
+      ).catchError((_) {}));
       if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
     }
 
