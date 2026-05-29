@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../coach_chat/presentation/feedback_compose_bottom_sheet.dart';
 import '../../metrics/presentation/metric_log_bottom_sheet.dart';
 
 /// Full-screen session completion screen (D-12, FR-012).
@@ -157,10 +158,14 @@ class _SessionCompletionScreenState
                   height: 48,
                   child: FilledButton(
                     onPressed: () {
-                      // Phase 7 placeholder — routes to feedback screen
-                      context.goNamed(
-                        'feedback',
-                        pathParameters: {'sessionId': widget.sessionId},
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (sheetContext) => FeedbackComposeBottomSheet(
+                          sessionId: widget.sessionId,
+                          sessionTitle: widget.sessionTitle,
+                        ),
                       );
                     },
                     child: const Text('Send Feedback to Coach'),
