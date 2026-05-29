@@ -15,7 +15,7 @@ progress:
 
 **Last Updated**: 2026-05-29
 **Current Phase**: 8
-**Current Plan**: 08-02 (complete)
+**Current Plan**: 08-02, 08-03 (both complete)
 **Status**: in-progress
 
 ## Session Context
@@ -94,6 +94,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 08-us6-admin-panel]: [Phase 08-02]: export const dynamic='force-dynamic' required on RSC pages calling createServiceClient() — Next.js static prerender fails without runtime env vars
 - [Phase 08-us6-admin-panel]: [Phase 08-02]: publish/unpublish uses form action={fn.bind(null, id)} in RSC — no client component needed for simple toggle
 - [Phase 08-us6-admin-panel]: [Phase 08-02]: ThumbnailUploader rendered only in edit mode — programId required for upload path, program must exist first
+- [Phase 08]: [Phase 08-03]: RSC pages calling createServiceClient() require export const dynamic = 'force-dynamic' — Next.js 16 prerender at build time throws 'supabaseUrl is required' without env vars
+- [Phase 08]: [Phase 08-03]: FCM failure in send-fcm is non-fatal — coach_reply DB write succeeds unconditionally; push errors only logged
+- [Phase 08]: [Phase 08-03]: send-fcm uses crypto.subtle RSASSA-PKCS1-v1_5 (no third-party JWT lib) — Deno edge runtime compatible
 
 ## Blockers
 
@@ -140,7 +143,7 @@ None
 | Phase 07 P07-05 | 295s | 3 tasks | 6 files |
 | Phase 08 P08-01 | 202 | 2 tasks | 24 files |
 | Phase 08-us6-admin-panel P08-02 | 194s | 2 tasks | 7 files |
-
 ## Stopped At
-
 Completed 08-02-PLAN.md
+| 08 | 08-03 | 10m | 2 | 5 |
+Completed 08-03-PLAN.md
