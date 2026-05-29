@@ -72,8 +72,16 @@ if [[ -n "$SUPABASE_URL" ]] && [[ "$SUPABASE_URL" == https://* ]]; then
   echo -e "  ${GREEN}${BOLD}Mode: HOSTED Supabase${NC}"
   info "URL: $SUPABASE_URL"
 
-  if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]]; then
-    die "SUPABASE_PUBLISHABLE_KEY is required in local-dev/.env when using hosted Supabase."
+  if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]] || [[ "$SUPABASE_PUBLISHABLE_KEY" == "PASTE_YOUR_ANON_KEY_HERE" ]]; then
+    echo ""
+    echo -e "${RED}${BOLD}✗  SUPABASE_PUBLISHABLE_KEY not set.${NC}"
+    echo ""
+    echo "  1. Go to: https://supabase.com/dashboard/project/rlcgtqagfdweisnxrasn/settings/api"
+    echo "  2. Copy the 'anon public' key (starts with eyJ...)"
+    echo "  3. Paste it in local-dev/.env:"
+    echo "     SUPABASE_PUBLISHABLE_KEY=eyJ..."
+    echo ""
+    exit 1
   fi
   info "Anon key: ${SUPABASE_PUBLISHABLE_KEY:0:20}..."
   echo ""
