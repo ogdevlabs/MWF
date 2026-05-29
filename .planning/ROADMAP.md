@@ -121,9 +121,9 @@ Plans:
   4. Offline metric logs enqueue in sync_queue and sync on reconnect
 **Plans**: 4 plans
 Plans:
-- [ ] 06-01-PLAN.md — Wave 0 test stubs (unit + widget tests for all new code)
-- [ ] 06-02-PLAN.md — Pure functions (computeLongestStreak, computeMetricDelta) + MetricRepository + SyncService pull
-- [ ] 06-03-PLAN.md — Progress screen UI (StreakCard, MetricLineChart, DeltaBadge, tab bar, router)
+- [x] 06-01-PLAN.md — Wave 0 test stubs (unit + widget tests for all new code)
+- [x] 06-02-PLAN.md — Pure functions (computeLongestStreak, computeMetricDelta) + MetricRepository + SyncService pull
+- [x] 06-03-PLAN.md — Progress screen UI (StreakCard, MetricLineChart, DeltaBadge, tab bar, router)
 - [ ] 06-04-PLAN.md — MetricLogBottomSheet + session completion prompt wiring
 
 ### Phase 7: US5 Private Feedback
