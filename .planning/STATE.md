@@ -3,20 +3,20 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 08
-last_updated: "2026-05-29T22:43:59.497Z"
+last_updated: "2026-05-29T22:49:00.000Z"
 progress:
   total_phases: 17
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 40
-  completed_plans: 36
+  completed_plans: 37
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-29
-**Current Phase**: 8
-**Current Plan**: 08-04 (complete)
-**Status**: in-progress
+**Current Phase**: 8 (complete)
+**Current Plan**: 08-05 (complete)
+**Status**: Phase 8 complete — ready for Phase 9
 
 ## Session Context
 
@@ -100,6 +100,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 08-us6-admin-panel]: [Phase 08-04]: Mux webhook uses upload_id (stored in mux_asset_id) to find exercise — upload_id is written at upload time; asset_id only known after Mux processing
 - [Phase 08-us6-admin-panel]: [Phase 08-04]: VideoUploader and GlbUploader rendered only in exercise edit mode — exercise ID required for updateExerciseVideo path construction
 - [Phase 08-us6-admin-panel]: [Phase 08-04]: Empty string form fields for optional numeric inputs stripped to undefined before Zod parse to allow nullable coerce to work correctly
+- [Phase 08-us6-admin-panel]: [Phase 08-05]: Dashboard placed in (admin) route group; root app/page.tsx handles redirect — proxy.ts auth guard protects the (admin) group
+- [Phase 08-us6-admin-panel]: [Phase 08-05]: Dashboard counts pending feedback via .is('coach_reply', null) — matches the column used in feedback reply flow
 
 ## Blockers
 
@@ -147,9 +149,8 @@ None
 | Phase 08 P08-01 | 202 | 2 tasks | 24 files |
 | Phase 08-us6-admin-panel P08-02 | 194s | 2 tasks | 7 files |
 | Phase 08-us6-admin-panel P08-04 | 3min | 2 tasks | 11 files |
+| Phase 08-us6-admin-panel P08-05 | 2min | 1 task | 3 files |
 
 ## Stopped At
 
-Completed 08-02-PLAN.md
-| 08 | 08-03 | 10m | 2 | 5 |
-Completed 08-03-PLAN.md
+Completed 08-05-PLAN.md — Phase 8 complete

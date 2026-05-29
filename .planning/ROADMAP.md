@@ -17,7 +17,7 @@ coach create/publish programs and reply to student messages.
 - [x] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync (completed 2026-05-28)
 - [x] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks (completed 2026-05-29)
 - [x] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading (completed 2026-05-29)
-- [ ] **Phase 8: US6 Admin Panel** - Coach content creation, program publishing, private feedback replies
+- [x] **Phase 8: US6 Admin Panel** - Coach content creation, program publishing, private feedback replies (completed 2026-05-29)
 - [ ] **Phase 9: Polish & QA** - Accessibility, error handling, performance benchmarks, analytics, final QA
 
 ## Phase Details
@@ -159,7 +159,7 @@ Plans:
 - [x] 08-03-PLAN.md — Feedback: thread list, detail, coach reply form + send-fcm Edge Function
 
 - [x] 08-04-PLAN.md — Sessions & Exercises: editors, Mux video upload, GLB upload, mux-webhook completion
-- [ ] 08-05-PLAN.md — Integration: dashboard, root redirect, publish toggle wiring, final verification
+- [x] 08-05-PLAN.md — Integration: dashboard, root redirect, publish toggle wiring, final verification
 
 ### Phase 9: Polish & QA
 **Goal**: Accessibility, comprehensive error handling, edge case coverage, performance benchmark tests for all SC-001..SC-008 success criteria, analytics scaffolding, localization scaffold, and final zero-error QA pass.
