@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-05-27T03:15:58.085Z"
+last_updated: "2026-05-28T23:59:44.364Z"
 progress:
-  total_phases: 13
-  completed_phases: 3
-  total_plans: 22
-  completed_plans: 19
+  total_phases: 14
+  completed_phases: 4
+  total_plans: 26
+  completed_plans: 23
 ---
 
 # GSD State
 
-**Last Updated**: 2026-05-26
-**Current Phase**: 4
-**Current Plan**: 04-02
+**Last Updated**: 2026-05-28
+**Current Phase**: 5
+**Current Plan**: 05-04
 **Status**: in-progress
 
 ## Session Context
@@ -64,6 +64,10 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 04]: Streak computed synchronously after Drift write inside SessionCompletionService, not via reactive stream
 - [Phase 04]: mocktail registerFallbackValue required for CommandType enum in tests
 - [Phase 04]: drift isNull/isNotNull must be hidden in test imports to avoid matcher ambiguity
+- [Phase 05]: SessionDownloadState placed in domain/ for pure testability; provider in data/ re-exports it
+- [Phase 05]: connectivityProvider (not connectivityNotifierProvider) — Riverpod 4.x drops Notifier suffix
+- [Phase 05]: dlStateAsync.value (not .valueOrNull) — Riverpod 3.x removed .valueOrNull
+- [Phase 05]: Fake stub for PostgrestFilterBuilder — Future-implementing class requires Fake not Mock + thenAnswer not thenReturn
 
 ## Blockers
 
@@ -99,7 +103,8 @@ None
 | Phase 04 P04 | 3min | 2 tasks | 4 files |
 | Phase 04 P04-05 | 122s | 2 tasks | 4 files |
 | Phase 04 P04-06 | 306s | 3 tasks | 10 files |
+| 05 | 05-04 | 469s | 2 tasks | 8 files |
 
 ## Stopped At
 
-Completed 04-05-PLAN.md
+Completed 05-04-PLAN.md

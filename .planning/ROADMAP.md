@@ -14,7 +14,7 @@ coach create/publish programs and reply to student messages.
 - [x] **Phase 2: Foundation** - Auth, Drift database, sync engine, download service, CQRS infrastructure (completed 2026-05-25)
 - [x] **Phase 3: US1 Enroll & Access** - Student signup, subscription, program browse and access (completed 2026-05-26)
 - [x] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking (completed 2026-05-27)
-- [ ] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync
+- [x] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync (completed 2026-05-28)
 - [ ] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks
 - [ ] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading
 - [ ] **Phase 8: US6 Admin Panel** - Coach content creation, program publishing, private feedback replies
@@ -103,7 +103,12 @@ Plans:
   2. Storage guard pauses downloads when free space < 500 MB
   3. Stale video versions are detected and re-queued for download on sync
   4. Sync queue replays in order on reconnect; retry_count stops at 5 failures
-**Plans**: TBD
+**Plans**: 4+ plans
+Plans:
+- [ ] 05-01-PLAN.md — (Wave 0) Test stubs
+- [ ] 05-02-PLAN.md — Download queue + Mux signed URL fetch
+- [ ] 05-03-PLAN.md — Reconnect sync trigger + stale version detection
+- [x] 05-04-PLAN.md — Session download badge UI + offline guard + ProgramDetailScreen wiring
 
 ### Phase 6: US4 Metrics & Progress
 **Goal**: Student can log body metrics (weight, measurements, flexibility) with date stamps, view trend line charts with delta badge, and see session completion streaks on a progress dashboard.

@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_provider.dart';
+import '../../../core/sync/connectivity_provider.dart';
 import '../data/programs_repository.dart';
 import '../domain/program_model.dart';
-import '../../session/domain/session_model.dart';
+import '../../session/data/download_state_provider.dart';
 import '../../session/data/session_providers.dart';
+import '../../session/domain/session_model.dart';
 import '../../session/presentation/session_list_tile.dart';
 
 /// Program detail screen showing:
@@ -157,20 +159,31 @@ class _ProgramDetailBody extends ConsumerWidget {
                             child: Text('Error loading sessions: $e'),
                           ),
                         ),
-                        data: (sessions) => Column(
-                          children: sessions
-                              .map((session) => SessionListTile(
-                                    session: session,
-                                    onTap: () => context.goNamed(
-                                      'session-player',
-                                      pathParameters: {
-                                        'programId': program.id,
-                                        'sessionId': session.id,
-                                      },
-                                    ),
-                                  ))
-                              .toList(),
-                        ),
+                        data: (sessions) {
+                          final isOnline =
+                              ref.watch(connectivityProvider);
+                          return Column(
+                            children: sessions.map((session) {
+                              final dlStateAsync = ref.watch(
+                                sessionDownloadStateProvider(
+                                    sessionId: session.id),
+                              );
+                              final downloadState = dlStateAsync.value;
+                              return SessionListTile(
+                                session: session,
+                                downloadState: downloadState,
+                                isOnline: isOnline,
+                                onTap: () => context.goNamed(
+                                  'session-player',
+                                  pathParameters: {
+                                    'programId': program.id,
+                                    'sessionId': session.id,
+                                  },
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
                       );
                     },
                   )

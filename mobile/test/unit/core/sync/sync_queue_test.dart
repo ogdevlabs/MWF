@@ -55,4 +55,47 @@ void main() {
     final result = await syncQueue.processQueue();
     expect(result, 0);
   });
+
+  test('processQueue skips items with retry_count >= 5 (dead-letter)', () async {
+    // Insert directly with retryCount=5 to simulate a dead-lettered item.
+    await db.syncQueueDao.enqueue(SyncQueueCompanion(
+      operation: const Value('insert'),
+      targetTable: const Value('progress_records'),
+      payload: const Value('{"id":"dead-letter-uuid"}'),
+      createdAt: Value(DateTime.now().millisecondsSinceEpoch),
+      retryCount: const Value(5),
+    ));
+
+    final result = await syncQueue.processQueue();
+    expect(result, 0); // Dead-lettered item must not be processed
+
+    // getPendingItems also filters it out
+    final items = await db.syncQueueDao.getPendingItems();
+    expect(items, isEmpty);
+  });
+
+  test('processQueue processes items in FIFO order by createdAt', () async {
+    final earlier = DateTime.now().millisecondsSinceEpoch - 10000;
+    final later = DateTime.now().millisecondsSinceEpoch;
+
+    // Insert second item first, first item second — to verify ordering
+    await db.syncQueueDao.enqueue(SyncQueueCompanion(
+      operation: const Value('insert'),
+      targetTable: const Value('progress_records'),
+      payload: const Value('{"id":"second-item","order":2}'),
+      createdAt: Value(later),
+    ));
+    await db.syncQueueDao.enqueue(SyncQueueCompanion(
+      operation: const Value('insert'),
+      targetTable: const Value('progress_records'),
+      payload: const Value('{"id":"first-item","order":1}'),
+      createdAt: Value(earlier),
+    ));
+
+    // getPendingItems must return items in FIFO (createdAt ASC) order
+    final items = await db.syncQueueDao.getPendingItems();
+    expect(items.length, 2);
+    expect(items[0].payload, contains('first-item'));
+    expect(items[1].payload, contains('second-item'));
+  });
 }

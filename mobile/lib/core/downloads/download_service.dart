@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../database/app_database.dart';
+import 'storage_guard.dart';
 
 part 'download_service.g.dart';
 
@@ -53,6 +54,10 @@ class DownloadService {
     String? modelUrl,
     required int videoVersion,
   }) async {
+    // D-13/D-14: Check storage before queuing
+    final hasSpace = await StorageGuard.hasEnoughSpace();
+    if (!hasSpace) return;
+
     // Update manifest to in_progress
     await db.downloadManifestDao.upsertEntry(DownloadManifestCompanion(
       exerciseId: Value(exerciseId),
@@ -69,7 +74,7 @@ class DownloadService {
         directory: 'exercises/$exerciseId',
         baseDirectory: BaseDirectory.applicationDocuments,
         updates: Updates.statusAndProgress,
-        requiresWiFi: false,
+        requiresWiFi: true,
         retries: 3,
         allowPause: true,
         metaData: exerciseId,
@@ -86,7 +91,7 @@ class DownloadService {
         directory: 'exercises/$exerciseId',
         baseDirectory: BaseDirectory.applicationDocuments,
         updates: Updates.statusAndProgress,
-        requiresWiFi: false,
+        requiresWiFi: true,
         retries: 3,
         allowPause: true,
         metaData: exerciseId,
@@ -105,13 +110,20 @@ class DownloadService {
   /// Resume all paused/pending downloads.
   /// Called on reconnect via ConnectivityProvider.
   ///
-  /// Actual re-download logic requires URLs from exercise data and is
-  /// implemented in SyncService.sync() in Phase 2-06.
-  /// This method serves as the resume signal entry point.
+  /// Queries pending/failed manifest entries, fetches exercise URLs from DB,
+  /// and re-enqueues each download via downloadExerciseMedia.
   Future<void> resumeQueue() async {
-    // pending entries are checked — actual URL re-resolution done in SyncService
-    await db.downloadManifestDao.getPendingDownloads();
-    // No-op until Phase 3 wires exercise URLs here.
+    final pendingEntries = await db.downloadManifestDao.getPendingDownloads();
+    for (final entry in pendingEntries) {
+      final exercise = await db.exercisesDao.getExerciseById(entry.exerciseId);
+      if (exercise == null) continue;
+      await downloadExerciseMedia(
+        exerciseId: entry.exerciseId,
+        videoUrl: exercise.muxDownloadUrl,
+        modelUrl: exercise.modelAssetUrl,
+        videoVersion: entry.videoVersion,
+      );
+    }
   }
 
   /// Handle download status changes — update manifest in Drift.
