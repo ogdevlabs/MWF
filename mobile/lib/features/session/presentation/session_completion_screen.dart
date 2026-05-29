@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../metrics/presentation/metric_log_bottom_sheet.dart';
+
 /// Full-screen session completion screen (D-12, FR-012).
-/// Shows: title, duration, exercise count, streak badge, two CTAs.
+/// Shows: title, duration, exercise count, streak badge, three CTAs.
 /// Animations: fade-in over 400ms, stat cards stagger slide-up.
 class SessionCompletionScreen extends ConsumerStatefulWidget {
   const SessionCompletionScreen({
@@ -14,6 +16,7 @@ class SessionCompletionScreen extends ConsumerStatefulWidget {
     required this.durationSeconds,
     required this.exerciseCount,
     required this.streak,
+    this.studentId,
   });
 
   final String programId;
@@ -22,6 +25,8 @@ class SessionCompletionScreen extends ConsumerStatefulWidget {
   final int durationSeconds;
   final int exerciseCount;
   final int streak;
+  /// Optional studentId to enable the Log Metrics prompt (FR-008 / US4).
+  final String? studentId;
 
   @override
   ConsumerState<SessionCompletionScreen> createState() =>
@@ -162,6 +167,22 @@ class _SessionCompletionScreenState
                   ),
                 ),
                 const SizedBox(height: 12),
+                // FR-008 / US4: Non-blocking metric log prompt
+                if (widget.studentId != null)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: OutlinedButton.icon(
+                      onPressed: () => showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (_) => const MetricLogBottomSheet(),
+                      ),
+                      icon: const Icon(Icons.monitor_weight_outlined),
+                      label: const Text('Log Today\'s Metrics'),
+                    ),
+                  ),
+                if (widget.studentId != null) const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
                   height: 48,

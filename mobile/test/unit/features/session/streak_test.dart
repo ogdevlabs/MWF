@@ -66,4 +66,61 @@ void main() {
       expect(computeCurrentStreak(dates), equals(3));
     });
   });
+
+  group('computeLongestStreak', () {
+    test('returns 0 for empty list', () {
+      expect(computeLongestStreak([]), equals(0));
+    });
+
+    test('returns 1 for single date', () {
+      expect(computeLongestStreak([DateTime(2026, 5, 28)]), equals(1));
+    });
+
+    test('returns 2 for two consecutive days', () {
+      expect(
+        computeLongestStreak([DateTime(2026, 5, 27), DateTime(2026, 5, 28)]),
+        equals(2),
+      );
+    });
+
+    test('returns longest run when gap in middle', () {
+      // May 1,2,3 = 3-day run; May 10,11,12,13,14 = 5-day run → longest = 5
+      final dates = [
+        DateTime(2026, 5, 1),
+        DateTime(2026, 5, 2),
+        DateTime(2026, 5, 3),
+        DateTime(2026, 5, 10),
+        DateTime(2026, 5, 11),
+        DateTime(2026, 5, 12),
+        DateTime(2026, 5, 13),
+        DateTime(2026, 5, 14),
+      ];
+      expect(computeLongestStreak(dates), equals(5));
+    });
+
+    test('handles duplicates on same day', () {
+      // May 1 (twice), May 2, May 3 => unique 3 days => streak 3
+      final dates = [
+        DateTime(2026, 5, 1, 8, 0),
+        DateTime(2026, 5, 1, 20, 0),
+        DateTime(2026, 5, 2),
+        DateTime(2026, 5, 3),
+      ];
+      expect(computeLongestStreak(dates), equals(3));
+    });
+
+    test('unsorted input still finds longest run', () {
+      final dates = [
+        DateTime(2026, 5, 14),
+        DateTime(2026, 5, 1),
+        DateTime(2026, 5, 13),
+        DateTime(2026, 5, 2),
+        DateTime(2026, 5, 12),
+        DateTime(2026, 5, 3),
+        DateTime(2026, 5, 11),
+        DateTime(2026, 5, 10),
+      ];
+      expect(computeLongestStreak(dates), equals(5));
+    });
+  });
 }

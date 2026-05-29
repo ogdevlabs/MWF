@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-05-28T23:59:44.364Z"
+last_updated: "2026-05-29T02:39:37.419Z"
 progress:
-  total_phases: 14
-  completed_phases: 4
-  total_plans: 26
-  completed_plans: 23
+  total_phases: 15
+  completed_phases: 5
+  total_plans: 30
+  completed_plans: 27
 ---
 
 # GSD State
 
-**Last Updated**: 2026-05-28
-**Current Phase**: 5
-**Current Plan**: 05-04
+**Last Updated**: 2026-05-29
+**Current Phase**: 6
+**Current Plan**: 06-01
 **Status**: in-progress
 
 ## Session Context
@@ -68,6 +68,14 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 05]: connectivityProvider (not connectivityNotifierProvider) — Riverpod 4.x drops Notifier suffix
 - [Phase 05]: dlStateAsync.value (not .valueOrNull) — Riverpod 3.x removed .valueOrNull
 - [Phase 05]: Fake stub for PostgrestFilterBuilder — Future-implementing class requires Fake not Mock + thenAnswer not thenReturn
+- [Phase 06]: fl_chart 0.69.2 used for metric trend charts in ProgressScreen
+- [Phase 06]: studentId optional on SessionCompletionScreen for backward compatibility with existing router usage
+- [Phase 06]: computeLongestStreak added to streak_calculator.dart alongside computeCurrentStreak for co-location
+- [Phase 06]: Empty state split into two Text widgets for exact test match with find.text('No data yet')
+- [Phase 06]: [Phase 06-03]: flutter_riverpod 3.3.1 does not export Override type — widget tests use plain ProviderScope.overrides without type annotation
+- [Phase 06]: [Phase 06-03]: StreakCard uses StreamBuilder over progressDao.watchProgressByStudent for reactive streak updates
+- [Phase 06-us4-metrics-progress]: [Phase 06-04]: MetricLogBottomSheet uses metricRepositoryProvider (canonical); LogMetricSheet retained for backward compat
+- [Phase 06-us4-metrics-progress]: [Phase 06-04]: Widget test migrated to metricRepositoryProvider.overrideWithValue pattern with MockSyncQueue + in-memory MetricRepository
 
 ## Blockers
 
@@ -104,7 +112,10 @@ None
 | Phase 04 P04-05 | 122s | 2 tasks | 4 files |
 | Phase 04 P04-06 | 306s | 3 tasks | 10 files |
 | 05 | 05-04 | 469s | 2 tasks | 8 files |
+| Phase 06 P01 | 435s | 7 tasks | 13 files |
+| Phase 06 P06-03 | 25m | 2 tasks | 6 files |
+| Phase 06-us4-metrics-progress P06-04 | 165s | 2 tasks | 4 files |
 
 ## Stopped At
 
-Completed 05-04-PLAN.md
+Completed 06-04-PLAN.md

@@ -161,6 +161,7 @@ class _SessionPlayerScreenState extends ConsumerState<SessionPlayerScreen> {
           'exerciseCount': _exercises.length,
           'durationSeconds': durationSeconds,
           'streak': streak,
+          'studentId': user.id,
         },
       );
     }

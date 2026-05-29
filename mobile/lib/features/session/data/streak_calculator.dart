@@ -40,3 +40,30 @@ int computeCurrentStreak(List<DateTime> completedDates) {
   }
   return streak;
 }
+
+/// Computes the longest streak ever recorded from a list of progress records.
+///
+/// Returns the longest run of consecutive calendar days with at least one
+/// completed session. Returns 0 if no completions.
+int computeLongestStreak(List<DateTime> completedDates) {
+  if (completedDates.isEmpty) return 0;
+
+  final uniqueDates = completedDates
+      .map((d) => DateTime(d.year, d.month, d.day))
+      .toSet()
+      .toList()
+    ..sort((a, b) => a.compareTo(b)); // ascending
+
+  int longest = 1;
+  int current = 1;
+  for (int i = 1; i < uniqueDates.length; i++) {
+    final diff = uniqueDates[i].difference(uniqueDates[i - 1]).inDays;
+    if (diff == 1) {
+      current++;
+      if (current > longest) longest = current;
+    } else {
+      current = 1;
+    }
+  }
+  return longest;
+}
