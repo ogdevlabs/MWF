@@ -137,7 +137,7 @@ Plans:
   4. Notifications screen lists all coach replies with session links
 **Plans**: 5 plans
 Plans:
-- [ ] 07-01-PLAN.md — Wave 0: Drift migration (v3), platform config, test stubs, Supabase migration
+- [x] 07-01-PLAN.md — Wave 0: Drift migration (v3), platform config, test stubs, Supabase migration
 - [ ] 07-02-PLAN.md — FeedbackRepository (CQRS data layer) + domain model + providers
 - [ ] 07-03-PLAN.md — FCM service + Firebase init + push notification handling
 - [ ] 07-04-PLAN.md — Coach Chat UI (tab screen, paywall, chat thread, bubbles, compose bar)
