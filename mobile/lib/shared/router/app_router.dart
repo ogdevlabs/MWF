@@ -8,11 +8,15 @@ import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/signup_screen.dart';
 import '../../features/auth/presentation/onboarding_screen.dart';
 import '../../features/auth/presentation/paywall_screen.dart';
+import '../../features/coach_chat/presentation/coach_chat_screen.dart';
+import '../../features/coach_chat/presentation/coach_tab_screen.dart';
+import '../../features/coach_chat/presentation/notifications_screen.dart';
 import '../../features/metrics/presentation/progress_screen.dart';
 import '../../features/programs/presentation/program_list_screen.dart';
 import '../../features/programs/presentation/program_detail_screen.dart';
 import '../../features/session/presentation/session_completion_screen.dart';
 import '../../features/session/presentation/session_player_screen.dart';
+import 'scaffold_with_nav_bar.dart';
 
 part 'app_router.g.dart';
 
@@ -21,8 +25,8 @@ part 'app_router.g.dart';
 class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(this._ref) {
     // Re-run redirect whenever auth or onboarding state changes.
-    _ref.listen(isAuthenticatedProvider, (_, _a) => notifyListeners());
-    _ref.listen(onboardingSeenProvider, (_, _a) => notifyListeners());
+    _ref.listen(isAuthenticatedProvider, (prev, next) => notifyListeners());
+    _ref.listen(onboardingSeenProvider, (prev, next) => notifyListeners());
   }
 
   final Ref _ref;
@@ -64,6 +68,7 @@ GoRouter appRouter(Ref ref) {
       return null;
     },
     routes: [
+      // ── Auth routes (no bottom nav) ────────────────────────────────────────
       GoRoute(
         path: '/login',
         name: 'login',
@@ -80,72 +85,114 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
-        path: '/programs',
-        name: 'programs',
-        builder: (context, state) => const ProgramListScreen(),
-        routes: [
-          GoRoute(
-            path: ':programId',
-            name: 'program-detail',
-            builder: (context, state) => ProgramDetailScreen(
-              programId: state.pathParameters['programId']!,
-            ),
-            routes: [
-              GoRoute(
-                path: 'session/:sessionId',
-                name: 'session-player',
-                builder: (context, state) => SessionPlayerScreen(
-                  programId: state.pathParameters['programId']!,
-                  sessionId: state.pathParameters['sessionId']!,
-                ),
-              ),
-              GoRoute(
-                path: 'session/:sessionId/complete',
-                name: 'session-complete',
-                builder: (context, state) {
-                  final extra = state.extra as Map<String, dynamic>? ?? {};
-                  return SessionCompletionScreen(
-                    programId: state.pathParameters['programId']!,
-                    sessionId: state.pathParameters['sessionId']!,
-                    sessionTitle: extra['sessionTitle'] as String? ?? 'Session',
-                    durationSeconds: extra['durationSeconds'] as int? ?? 0,
-                    exerciseCount: extra['exerciseCount'] as int? ?? 0,
-                    streak: extra['streak'] as int? ?? 0,
-                    studentId: extra['studentId'] as String?,
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-      GoRoute(
-        path: '/progress',
-        name: 'progress',
-        builder: (context, state) => const ProgressScreen(),
-      ),
-      GoRoute(
-        path: '/notifications',
-        name: 'notifications',
-        builder: (context, state) =>
-            const _PlaceholderScreen(title: 'Notifications'),
-      ),
-      GoRoute(
         path: '/paywall',
         name: 'paywall',
         builder: (context, state) => const PaywallScreen(),
-      ),
-      GoRoute(
-        path: '/feedback/:sessionId',
-        name: 'feedback',
-        builder: (context, state) =>
-            const _PlaceholderScreen(title: 'Feedback'),
       ),
       GoRoute(
         path: '/settings',
         name: 'settings',
         builder: (context, state) =>
             const _PlaceholderScreen(title: 'Settings'),
+      ),
+
+      // ── Main shell (4-tab bottom NavigationBar) ───────────────────────────
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            ScaffoldWithNavBar(navigationShell: navigationShell),
+        branches: [
+          // Tab 0: Home / Programs
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/programs',
+                name: 'programs',
+                builder: (context, state) => const ProgramListScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':programId',
+                    name: 'program-detail',
+                    builder: (context, state) => ProgramDetailScreen(
+                      programId: state.pathParameters['programId']!,
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: 'session/:sessionId',
+                        name: 'session-player',
+                        builder: (context, state) => SessionPlayerScreen(
+                          programId: state.pathParameters['programId']!,
+                          sessionId: state.pathParameters['sessionId']!,
+                        ),
+                      ),
+                      GoRoute(
+                        path: 'session/:sessionId/complete',
+                        name: 'session-complete',
+                        builder: (context, state) {
+                          final extra =
+                              state.extra as Map<String, dynamic>? ?? {};
+                          return SessionCompletionScreen(
+                            programId: state.pathParameters['programId']!,
+                            sessionId: state.pathParameters['sessionId']!,
+                            sessionTitle:
+                                extra['sessionTitle'] as String? ?? 'Session',
+                            durationSeconds:
+                                extra['durationSeconds'] as int? ?? 0,
+                            exerciseCount: extra['exerciseCount'] as int? ?? 0,
+                            streak: extra['streak'] as int? ?? 0,
+                            studentId: extra['studentId'] as String?,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // Tab 1: Progress
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/progress',
+                name: 'progress',
+                builder: (context, state) => const ProgressScreen(),
+              ),
+            ],
+          ),
+
+          // Tab 2: Coach chat (premium gate via CoachTabScreen;
+          // sessionId query param supported for FCM deep-link scroll)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/coach-chat',
+                name: 'coach-chat',
+                builder: (context, state) {
+                  final sessionId =
+                      state.uri.queryParameters['sessionId'];
+                  // CoachTabScreen handles the premium gate; passes sessionId
+                  // through to CoachChatScreen when navigating via deep link.
+                  if (sessionId != null) {
+                    return CoachChatScreen(sessionId: sessionId);
+                  }
+                  return const CoachTabScreen();
+                },
+              ),
+            ],
+          ),
+
+          // Tab 3: Notifications
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/notifications',
+                name: 'notifications',
+                builder: (context, state) => const NotificationsScreen(),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );
