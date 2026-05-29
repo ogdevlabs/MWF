@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -9,15 +10,6 @@ import 'student_remote_datasource.dart';
 
 part 'auth_remote_datasource.g.dart';
 
-/// Feature-layer auth datasource.
-///
-/// Wraps AuthRepository and adds Phase 3 side-effects:
-/// - RevenueCat logIn(supabaseUserId) after successful sign-in
-/// - RevenueCat logOut() on sign-out
-/// - Student profile upsert after sign-up/social-login
-///
-/// Auth screens (login_screen, signup_screen) call this instead of
-/// AuthRepository directly.
 class AuthRemoteDatasource {
   AuthRemoteDatasource({
     required this.authRepository,
@@ -27,8 +19,6 @@ class AuthRemoteDatasource {
   final AuthRepository authRepository;
   final StudentRemoteDatasource studentDatasource;
 
-  /// Sign up with email + password.
-  /// After success: upserts student profile + links RevenueCat user.
   Future<AuthResponse> signUpWithEmail({
     required String email,
     required String password,
@@ -38,82 +28,79 @@ class AuthRemoteDatasource {
       email: email,
       password: password,
     );
-
     final user = response.user;
     if (user != null) {
-      await studentDatasource.upsertStudentProfile(
+      unawaited(studentDatasource.upsertStudentProfile(
         userId: user.id,
         email: email,
         displayName: displayName,
-      );
+      ).catchError((_) {}));
       if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
     }
-
     return response;
   }
 
-  /// Sign in with email + password.
-  /// After success: upserts student profile (idempotent) + links RevenueCat.
   Future<AuthResponse> signInWithEmail({
     required String email,
     required String password,
   }) async {
-    final response = await authRepository.signInWithEmail(
-      email: email,
-      password: password,
-    );
+    debugPrint('[AUTH] signInWithEmail called for $email');
+    try {
+      final response = await authRepository.signInWithEmail(
+        email: email,
+        password: password,
+      );
+      debugPrint('[AUTH] Supabase signInWithPassword done. user=${response.user?.id}');
 
-    final user = response.user;
-    if (user != null) {
-      // Best-effort: don't let profile upsert block or fail the login.
-      unawaited(studentDatasource.upsertStudentProfile(
-        userId: user.id,
-        email: user.email ?? email,
-      ).catchError((_) {}));
-      if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
+      final user = response.user;
+      if (user != null) {
+        debugPrint('[AUTH] User is non-null, returning response');
+        unawaited(studentDatasource.upsertStudentProfile(
+          userId: user.id,
+          email: user.email ?? email,
+        ).catchError((e) => debugPrint('[AUTH] profile upsert error (ignored): $e')));
+        if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
+      } else {
+        debugPrint('[AUTH] WARNING: response.user is null after signIn');
+      }
+
+      debugPrint('[AUTH] returning response');
+      return response;
+    } catch (e, st) {
+      debugPrint('[AUTH] signInWithEmail THREW: $e\n$st');
+      rethrow;
     }
-
-    return response;
   }
 
-  /// Sign in with Apple.
-  /// After success: upserts student profile + links RevenueCat.
   Future<AuthResponse> signInWithApple() async {
     final response = await authRepository.signInWithApple();
-
     final user = response.user;
     if (user != null) {
-      await studentDatasource.upsertStudentProfile(
+      unawaited(studentDatasource.upsertStudentProfile(
         userId: user.id,
         email: user.email ?? '',
         displayName: user.userMetadata?['full_name'] as String?,
-      );
+      ).catchError((_) {}));
       if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
     }
-
     return response;
   }
 
-  /// Sign in with Google.
-  /// After success: upserts student profile + links RevenueCat.
   Future<AuthResponse> signInWithGoogle() async {
     final response = await authRepository.signInWithGoogle();
-
     final user = response.user;
     if (user != null) {
-      await studentDatasource.upsertStudentProfile(
+      unawaited(studentDatasource.upsertStudentProfile(
         userId: user.id,
         email: user.email ?? '',
         displayName: user.userMetadata?['full_name'] as String?,
         avatarUrl: user.userMetadata?['avatar_url'] as String?,
-      );
+      ).catchError((_) {}));
       if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
     }
-
     return response;
   }
 
-  /// Sign out: RevenueCat logOut + Supabase sign out.
   Future<void> signOut() async {
     if (await Purchases.isConfigured) { try { await Purchases.logOut(); } catch (_) {} }
     await authRepository.signOut();

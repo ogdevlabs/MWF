@@ -20,8 +20,10 @@ part 'app_router.g.dart';
 /// [refreshListenable]. GoRouter re-evaluates the redirect whenever notified.
 class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(this._ref) {
-    // Re-run redirect whenever auth or onboarding state changes.
-    _ref.listen(isAuthenticatedProvider, (_, _a) => notifyListeners());
+    _ref.listen(isAuthenticatedProvider, (prev, next) {
+      debugPrint('[ROUTER] isAuthenticated changed: $prev -> $next — notifying router');
+      notifyListeners();
+    });
     _ref.listen(onboardingSeenProvider, (_, _a) => notifyListeners());
   }
 
@@ -45,6 +47,7 @@ GoRouter appRouter(Ref ref) {
     redirect: (BuildContext context, GoRouterState state) {
       final isAuth = notifier.isAuthenticated;
       final onboardingSeen = notifier.onboardingSeen;
+      debugPrint('[ROUTER] redirect called: location=${state.matchedLocation} isAuth=$isAuth');
 
       final isAuthRoute = state.matchedLocation == '/login' ||
           state.matchedLocation == '/signup';
