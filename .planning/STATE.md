@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 08
-last_updated: "2026-05-29T22:34:31.330Z"
+last_updated: "2026-05-29T22:43:59.497Z"
 progress:
   total_phases: 17
   completed_phases: 6
   total_plans: 40
-  completed_plans: 34
+  completed_plans: 36
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-29
 **Current Phase**: 8
-**Current Plan**: 08-02, 08-03 (both complete)
+**Current Plan**: 08-04 (complete)
 **Status**: in-progress
 
 ## Session Context
@@ -97,6 +97,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 08]: [Phase 08-03]: RSC pages calling createServiceClient() require export const dynamic = 'force-dynamic' — Next.js 16 prerender at build time throws 'supabaseUrl is required' without env vars
 - [Phase 08]: [Phase 08-03]: FCM failure in send-fcm is non-fatal — coach_reply DB write succeeds unconditionally; push errors only logged
 - [Phase 08]: [Phase 08-03]: send-fcm uses crypto.subtle RSASSA-PKCS1-v1_5 (no third-party JWT lib) — Deno edge runtime compatible
+- [Phase 08-us6-admin-panel]: [Phase 08-04]: Mux webhook uses upload_id (stored in mux_asset_id) to find exercise — upload_id is written at upload time; asset_id only known after Mux processing
+- [Phase 08-us6-admin-panel]: [Phase 08-04]: VideoUploader and GlbUploader rendered only in exercise edit mode — exercise ID required for updateExerciseVideo path construction
+- [Phase 08-us6-admin-panel]: [Phase 08-04]: Empty string form fields for optional numeric inputs stripped to undefined before Zod parse to allow nullable coerce to work correctly
 
 ## Blockers
 
@@ -143,7 +146,10 @@ None
 | Phase 07 P07-05 | 295s | 3 tasks | 6 files |
 | Phase 08 P08-01 | 202 | 2 tasks | 24 files |
 | Phase 08-us6-admin-panel P08-02 | 194s | 2 tasks | 7 files |
+| Phase 08-us6-admin-panel P08-04 | 3min | 2 tasks | 11 files |
+
 ## Stopped At
+
 Completed 08-02-PLAN.md
 | 08 | 08-03 | 10m | 2 | 5 |
 Completed 08-03-PLAN.md
