@@ -12,13 +12,28 @@ import 'shared/router/app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(
-    url: const String.fromEnvironment('SUPABASE_URL'),
-    anonKey: const String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY'),
+  const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
+  const supabaseKey = String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
+
+  // Hard fail in debug mode so missing credentials are immediately visible.
+  // In release the app would just show empty data — make it obvious in dev.
+  assert(
+    supabaseUrl.isNotEmpty,
+    '\n\n'
+    '╔══════════════════════════════════════════════════════════╗\n'
+    '║  SUPABASE_URL is not set.                                ║\n'
+    '║  Run the app via:  ./local-dev/dev.sh mobile-only        ║\n'
+    '║  Or pass:          --dart-define=SUPABASE_URL=https://...║\n'
+    '╚══════════════════════════════════════════════════════════╝\n',
   );
 
-  // RevenueCat initialization — platform-specific API key via dart-define.
-  // Do NOT set appUserID here; call Purchases.logIn(supabaseUserId) after auth.
+  await Supabase.initialize(
+    url: supabaseUrl.isNotEmpty
+        ? supabaseUrl
+        : 'https://rlcgtqagfdweisnxrasn.supabase.co',
+    anonKey: supabaseKey,
+  );
+
   const rcAppleKey = String.fromEnvironment('REVENUECAT_APPLE_API_KEY');
   const rcGoogleKey = String.fromEnvironment('REVENUECAT_GOOGLE_API_KEY');
   final rcApiKey = defaultTargetPlatform == TargetPlatform.iOS
@@ -39,7 +54,8 @@ class MwfApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(appRouterProvider);
+    // Use read — the router is keepAlive and must not be recreated on rebuild.
+    final router = ref.read(appRouterProvider);
 
     return MaterialApp.router(
       title: 'Move With Fergie',

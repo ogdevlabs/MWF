@@ -8,26 +8,13 @@ part of 'app_router.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provides a stable [GoRouter] instance created once for the app lifetime.
-///
-/// Auth-driven redirects are handled via [_RouterNotifier] so the router
-/// instance is never recreated — only the redirect logic re-runs.
 
 @ProviderFor(appRouter)
 final appRouterProvider = AppRouterProvider._();
 
-/// Provides a stable [GoRouter] instance created once for the app lifetime.
-///
-/// Auth-driven redirects are handled via [_RouterNotifier] so the router
-/// instance is never recreated — only the redirect logic re-runs.
-
 final class AppRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
-  /// Provides a stable [GoRouter] instance created once for the app lifetime.
-  ///
-  /// Auth-driven redirects are handled via [_RouterNotifier] so the router
-  /// instance is never recreated — only the redirect logic re-runs.
   AppRouterProvider._()
     : super(
         from: null,
@@ -61,4 +48,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'e91188ca111c2b1d63ba2811f89ec19827b42562';
+String _$appRouterHash() => r'687b071e97db9ea274e59a8af35992946e39c89e';

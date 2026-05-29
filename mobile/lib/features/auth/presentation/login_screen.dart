@@ -36,9 +36,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
       // Router redirect handles navigation on auth state change
     } on AuthException catch (e) {
-      setState(() => _errorMessage = e.message);
+      final msg = e.message.toLowerCase();
+      if (msg.contains('invalid login') || msg.contains('invalid credentials') || msg.contains('wrong password')) {
+        setState(() => _errorMessage = 'Incorrect email or password.');
+      } else if (msg.contains('user not found') || msg.contains('no user') || msg.contains('does not exist')) {
+        setState(() => _errorMessage = 'No account found for this email. Please sign up first.');
+      } else if (msg.contains('email not confirmed')) {
+        setState(() => _errorMessage = 'Please confirm your email before signing in.');
+      } else {
+        setState(() => _errorMessage = e.message);
+      }
     } catch (e) {
-      setState(() => _errorMessage = 'An unexpected error occurred');
+      setState(() => _errorMessage = 'Sign in failed: ${e.toString()}');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
