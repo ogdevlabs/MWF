@@ -138,9 +138,9 @@ Plans:
 **Plans**: 5 plans
 Plans:
 - [x] 07-01-PLAN.md — Wave 0: Drift migration (v3), platform config, test stubs, Supabase migration
-- [ ] 07-02-PLAN.md — FeedbackRepository (CQRS data layer) + domain model + providers
+- [x] 07-02-PLAN.md — FeedbackRepository (CQRS data layer) + domain model + providers
 - [x] 07-03-PLAN.md — FCM service + Firebase init + push notification handling
-- [ ] 07-04-PLAN.md — Coach Chat UI (tab screen, paywall, chat thread, bubbles, compose bar)
+- [x] 07-04-PLAN.md — Coach Chat UI (tab screen, paywall, chat thread, bubbles, compose bar)
 - [ ] 07-05-PLAN.md — FeedbackComposeBottomSheet + NotificationsScreen + router + bottom nav
 
 ### Phase 8: US6 Admin Panel

@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 07
-last_updated: "2026-05-29T16:08:33.670Z"
+last_updated: "2026-05-29T16:49:33.794Z"
 progress:
-  total_phases: 16
+  total_phases: 9
   completed_phases: 5
   total_plans: 35
-  completed_plans: 28
+  completed_plans: 31
 ---
 
 # GSD State
@@ -81,6 +81,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 07-03]: FcmService.registerTokenDirect(@visibleForTesting) bypasses FirebaseMessaging.instance for unit testability — registerToken() calls it internally after getToken()
 - [Phase 07-03]: handleMessageNavigation and onNotificationTap exposed with @visibleForTesting for direct unit test invocation — avoids need for RemoteMessage platform mocking
 - [Phase 07-03]: Firebase.initializeApp() called in main.dart; FcmService.initialize() and registerToken() deferred to post-auth fcmInitProvider (Plan 07-04)
+- [Phase 07]: LocalFeedbackThread constructed directly in widget tests (not via DB) — Drift reactive streams cause test pump() hangs
+- [Phase 07]: fcmInitProvider fire-and-forget: ref.watch(fcmInitProvider) in CoachTabScreen.build() triggers FCM once per auth session
+- [Phase 07]: ChatBubble uses manual time formatter instead of intl package — intl not in pubspec.yaml; avoids new dependency
 
 ## Blockers
 
@@ -123,6 +126,7 @@ None
 | Phase 07 P07-01 | 8m | 2 tasks | 16 files |
 | Phase 07 P07-02 | 149s | 2 tasks | 5 files |
 | Phase 07 P07-03 | 4m | 2 tasks | 3 files |
+| Phase 07 P07-04 | 29min | 2 tasks | 9 files |
 
 ## Stopped At
 
