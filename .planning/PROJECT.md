@@ -44,7 +44,7 @@ and respond to individual student messages.
 
 ## Current State
 
-Phase 4 complete — Session player with video, 3D companion, rep/timer overlays, completion screen, and streak tracking.
+Phase 5 complete — Offline-first: Wi-Fi-only background downloads on enrollment, StorageGuard, resumeQueue on reconnect, stale video detection (Value(null) path clearing), session row download badges, offline-unavailable guard, SyncQueue dead-letter at retry_count=5. 62 tests passing.
 
 ## Source Artifacts
 
