@@ -52,11 +52,16 @@ export default async function ProgramDetailPage({ params }: PageProps) {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">{program.title}</h1>
-          <div className="mt-1">
+          <div className="mt-1 flex items-center gap-3">
             {program.published ? (
               <Badge className="bg-green-100 text-green-800 border-green-200">Published</Badge>
             ) : (
               <Badge variant="secondary">Draft</Badge>
+            )}
+            {program.published_at && (
+              <span className="text-xs text-slate-400">
+                Published on {new Date(program.published_at).toLocaleDateString()}
+              </span>
             )}
           </div>
         </div>
