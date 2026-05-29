@@ -40,3 +40,29 @@ int computeCurrentStreak(List<DateTime> completedDates) {
   }
   return streak;
 }
+
+/// Computes the longest consecutive-day streak from a list of completion dates.
+/// Unlike computeCurrentStreak, this is not anchored to today — it finds the
+/// historical maximum run anywhere in the dataset.
+int computeLongestStreak(List<DateTime> completedDates) {
+  if (completedDates.isEmpty) return 0;
+
+  final uniqueDates = completedDates
+      .map((d) => DateTime(d.year, d.month, d.day))
+      .toSet()
+      .toList()
+    ..sort((a, b) => a.compareTo(b)); // ascending
+
+  int longest = 1;
+  int current = 1;
+  for (int i = 1; i < uniqueDates.length; i++) {
+    final diff = uniqueDates[i].difference(uniqueDates[i - 1]).inDays;
+    if (diff == 1) {
+      current++;
+      if (current > longest) longest = current;
+    } else {
+      current = 1;
+    }
+  }
+  return longest;
+}

@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-05-28T23:59:44.364Z"
+last_updated: "2026-05-29T02:08:32.541Z"
 progress:
-  total_phases: 14
+  total_phases: 9
   completed_phases: 4
-  total_plans: 26
-  completed_plans: 23
+  total_plans: 28
+  completed_plans: 24
 ---
 
 # GSD State
@@ -68,6 +68,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 05]: connectivityProvider (not connectivityNotifierProvider) — Riverpod 4.x drops Notifier suffix
 - [Phase 05]: dlStateAsync.value (not .valueOrNull) — Riverpod 3.x removed .valueOrNull
 - [Phase 05]: Fake stub for PostgrestFilterBuilder — Future-implementing class requires Fake not Mock + thenAnswer not thenReturn
+- [Phase 06]: metricLogsByTypeProvider uses manual StreamProvider.family — riverpod_generator cannot resolve Drift-generated LocalMetricLog type
+- [Phase 06]: metric_logs sync uses created_at filter (not updated_at) — table has no updated_at column
+- [Phase 06]: logged_at payload formatted as YYYY-MM-DD for Supabase date column (not full ISO-8601)
 
 ## Blockers
 
@@ -104,7 +107,8 @@ None
 | Phase 04 P04-05 | 122s | 2 tasks | 4 files |
 | Phase 04 P04-06 | 306s | 3 tasks | 10 files |
 | 05 | 05-04 | 469s | 2 tasks | 8 files |
+| Phase 06 P06-02 | 583s | 2 tasks | 19 files |
 
 ## Stopped At
 
-Completed 05-04-PLAN.md
+Completed 06-02-PLAN.md
