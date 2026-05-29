@@ -105,23 +105,26 @@ final class CurrentUserProvider extends $FunctionalProvider<User?, User?, User?>
 String _$currentUserHash() => r'dd5b1e3a1ebb875a88650ea03f77c677dae4a0ae';
 
 /// Whether the user is currently authenticated.
+/// keepAlive so the router notifier listener is never dropped.
 
 @ProviderFor(isAuthenticated)
 final isAuthenticatedProvider = IsAuthenticatedProvider._();
 
 /// Whether the user is currently authenticated.
+/// keepAlive so the router notifier listener is never dropped.
 
 final class IsAuthenticatedProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether the user is currently authenticated.
+  /// keepAlive so the router notifier listener is never dropped.
   IsAuthenticatedProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'isAuthenticatedProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -148,4 +151,4 @@ final class IsAuthenticatedProvider
   }
 }
 
-String _$isAuthenticatedHash() => r'ec341d95b490bda54e8278477e26f7b345844931';
+String _$isAuthenticatedHash() => r'fddebdc2007304fe7096090fb6e944a9842192be';

@@ -28,7 +28,8 @@ User? currentUser(Ref ref) {
 }
 
 /// Whether the user is currently authenticated.
-@riverpod
+/// keepAlive so the router notifier listener is never dropped.
+@Riverpod(keepAlive: true)
 bool isAuthenticated(Ref ref) {
   final user = ref.watch(currentUserProvider);
   return user != null;
