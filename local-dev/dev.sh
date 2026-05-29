@@ -62,6 +62,19 @@ command -v node    >/dev/null 2>&1 || die "Node.js not found. Run ./local-dev/in
 
 banner
 
+# ── Firebase config ───────────────────────────────────────────────────────────
+# Auto-generate firebase_options.dart + platform files if credentials are set.
+if [[ -n "${FIREBASE_PROJECT_ID:-}" ]]; then
+  step "Generating Firebase config"
+  bash "$REPO_ROOT/local-dev/setup-firebase.sh"
+else
+  # Check if the file is still a placeholder stub
+  if grep -q "TODO-replace-with-real-api-key" "$REPO_ROOT/mobile/lib/firebase_options.dart" 2>/dev/null; then
+    warn "Firebase credentials not set in local-dev/.env — push notifications will not work."
+    warn "Set FIREBASE_PROJECT_ID and related vars, then re-run dev.sh."
+  fi
+fi
+
 # ── detect hosted vs local Supabase ──────────────────────────────────────────
 SUPABASE_URL="${SUPABASE_URL:-}"
 SUPABASE_PUBLISHABLE_KEY="${SUPABASE_PUBLISHABLE_KEY:-}"
