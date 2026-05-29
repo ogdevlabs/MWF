@@ -44,7 +44,7 @@ and respond to individual student messages.
 
 ## Current State
 
-Phase 5 complete — Offline-first: Wi-Fi-only background downloads on enrollment, StorageGuard, resumeQueue on reconnect, stale video detection (Value(null) path clearing), session row download badges, offline-unavailable guard, SyncQueue dead-letter at retry_count=5. 62 tests passing.
+Phase 6 complete — Metrics & Progress: MetricRepository (offline-first Drift + SyncQueue to metric_logs), computeLongestStreak, computeMetricDelta, ProgressScreen (streak card, fl_chart line chart, delta badge, tab bar), MetricLogBottomSheet (Log another flow), non-blocking completion screen prompt. 90 tests passing.
 
 ## Source Artifacts
 
