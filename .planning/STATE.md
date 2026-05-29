@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 08
-last_updated: "2026-05-29T22:26:27.807Z"
+last_updated: "2026-05-29T22:34:31.330Z"
 progress:
   total_phases: 17
   completed_phases: 6
   total_plans: 40
-  completed_plans: 33
+  completed_plans: 34
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-29
 **Current Phase**: 8
-**Current Plan**: 08-01 (complete)
+**Current Plan**: 08-02 (complete)
 **Status**: in-progress
 
 ## Session Context
@@ -91,6 +91,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 08]: [Phase 08-01]: getUser() (not getSession()) used in every Server Action and Route Handler for verified auth — getSession() returns unverified cookie data
 - [Phase 08]: [Phase 08-01]: shadcn CLI requires manual install of lucide-react, class-variance-authority, tailwind-merge — these are peer deps not auto-added to package.json
 - [Phase 08]: [Phase 08-01]: Login page uses 'use client' + useActionState — required because useActionState is a React hook; Server Action in actions.ts remains server-only
+- [Phase 08-us6-admin-panel]: [Phase 08-02]: export const dynamic='force-dynamic' required on RSC pages calling createServiceClient() — Next.js static prerender fails without runtime env vars
+- [Phase 08-us6-admin-panel]: [Phase 08-02]: publish/unpublish uses form action={fn.bind(null, id)} in RSC — no client component needed for simple toggle
+- [Phase 08-us6-admin-panel]: [Phase 08-02]: ThumbnailUploader rendered only in edit mode — programId required for upload path, program must exist first
 
 ## Blockers
 
@@ -136,7 +139,8 @@ None
 | Phase 07 P07-04 | 29min | 2 tasks | 9 files |
 | Phase 07 P07-05 | 295s | 3 tasks | 6 files |
 | Phase 08 P08-01 | 202 | 2 tasks | 24 files |
+| Phase 08-us6-admin-panel P08-02 | 194s | 2 tasks | 7 files |
 
 ## Stopped At
 
-Completed 08-01-PLAN.md
+Completed 08-02-PLAN.md
