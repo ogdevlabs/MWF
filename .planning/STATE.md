@@ -8,14 +8,14 @@ progress:
   total_phases: 17
   completed_phases: 6
   total_plans: 40
-  completed_plans: 33
+  completed_plans: 34
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-29
 **Current Phase**: 8
-**Current Plan**: 08-01 (complete)
+**Current Plan**: 08-03 (complete)
 **Status**: in-progress
 
 ## Session Context
@@ -91,6 +91,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 08]: [Phase 08-01]: getUser() (not getSession()) used in every Server Action and Route Handler for verified auth — getSession() returns unverified cookie data
 - [Phase 08]: [Phase 08-01]: shadcn CLI requires manual install of lucide-react, class-variance-authority, tailwind-merge — these are peer deps not auto-added to package.json
 - [Phase 08]: [Phase 08-01]: Login page uses 'use client' + useActionState — required because useActionState is a React hook; Server Action in actions.ts remains server-only
+- [Phase 08]: [Phase 08-03]: RSC pages calling createServiceClient() require export const dynamic = 'force-dynamic' — Next.js 16 prerender at build time throws 'supabaseUrl is required' without env vars
+- [Phase 08]: [Phase 08-03]: FCM failure in send-fcm is non-fatal — coach_reply DB write succeeds unconditionally; push errors only logged
+- [Phase 08]: [Phase 08-03]: send-fcm uses crypto.subtle RSASSA-PKCS1-v1_5 (no third-party JWT lib) — Deno edge runtime compatible
 
 ## Blockers
 
@@ -136,7 +139,8 @@ None
 | Phase 07 P07-04 | 29min | 2 tasks | 9 files |
 | Phase 07 P07-05 | 295s | 3 tasks | 6 files |
 | Phase 08 P08-01 | 202 | 2 tasks | 24 files |
+| 08 | 08-03 | 10m | 2 | 5 |
 
 ## Stopped At
 
-Completed 08-01-PLAN.md
+Completed 08-03-PLAN.md

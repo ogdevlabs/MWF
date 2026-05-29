@@ -156,7 +156,7 @@ Plans:
 Plans:
 - [x] 08-01-PLAN.md — Foundation: proxy.ts auth guard, Supabase clients, login, admin shell, shadcn, Mux route, migration
 - [ ] 08-02-PLAN.md — Programs CRUD: list, create, edit, delete pages + server actions + publish/unpublish
-- [ ] 08-03-PLAN.md — Feedback: thread list, detail, coach reply form + send-fcm Edge Function
+- [x] 08-03-PLAN.md — Feedback: thread list, detail, coach reply form + send-fcm Edge Function
 - [ ] 08-04-PLAN.md — Sessions & Exercises: editors, Mux video upload, GLB upload, mux-webhook completion
 - [ ] 08-05-PLAN.md — Integration: dashboard, root redirect, publish toggle wiring, final verification
 
