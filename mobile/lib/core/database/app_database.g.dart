@@ -3596,6 +3596,27 @@ class $LocalFeedbackThreadsTable extends LocalFeedbackThreads
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('sent'),
+  );
+  static const VerificationMeta _localPhotoPathMeta = const VerificationMeta(
+    'localPhotoPath',
+  );
+  @override
+  late final GeneratedColumn<String> localPhotoPath = GeneratedColumn<String>(
+    'local_photo_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3608,6 +3629,8 @@ class $LocalFeedbackThreadsTable extends LocalFeedbackThreads
     notificationSent,
     createdAt,
     updatedAt,
+    status,
+    localPhotoPath,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3696,6 +3719,21 @@ class $LocalFeedbackThreadsTable extends LocalFeedbackThreads
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('local_photo_path')) {
+      context.handle(
+        _localPhotoPathMeta,
+        localPhotoPath.isAcceptableOrUnknown(
+          data['local_photo_path']!,
+          _localPhotoPathMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -3745,6 +3783,14 @@ class $LocalFeedbackThreadsTable extends LocalFeedbackThreads
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      localPhotoPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_photo_path'],
+      ),
     );
   }
 
@@ -3766,6 +3812,8 @@ class LocalFeedbackThread extends DataClass
   final bool notificationSent;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String status;
+  final String? localPhotoPath;
   const LocalFeedbackThread({
     required this.id,
     required this.studentId,
@@ -3777,6 +3825,8 @@ class LocalFeedbackThread extends DataClass
     required this.notificationSent,
     required this.createdAt,
     required this.updatedAt,
+    required this.status,
+    this.localPhotoPath,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3797,6 +3847,10 @@ class LocalFeedbackThread extends DataClass
     map['notification_sent'] = Variable<bool>(notificationSent);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || localPhotoPath != null) {
+      map['local_photo_path'] = Variable<String>(localPhotoPath);
+    }
     return map;
   }
 
@@ -3818,6 +3872,10 @@ class LocalFeedbackThread extends DataClass
       notificationSent: Value(notificationSent),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      status: Value(status),
+      localPhotoPath: localPhotoPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localPhotoPath),
     );
   }
 
@@ -3837,6 +3895,8 @@ class LocalFeedbackThread extends DataClass
       notificationSent: serializer.fromJson<bool>(json['notificationSent']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      status: serializer.fromJson<String>(json['status']),
+      localPhotoPath: serializer.fromJson<String?>(json['localPhotoPath']),
     );
   }
   @override
@@ -3853,6 +3913,8 @@ class LocalFeedbackThread extends DataClass
       'notificationSent': serializer.toJson<bool>(notificationSent),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'status': serializer.toJson<String>(status),
+      'localPhotoPath': serializer.toJson<String?>(localPhotoPath),
     };
   }
 
@@ -3867,6 +3929,8 @@ class LocalFeedbackThread extends DataClass
     bool? notificationSent,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? status,
+    Value<String?> localPhotoPath = const Value.absent(),
   }) => LocalFeedbackThread(
     id: id ?? this.id,
     studentId: studentId ?? this.studentId,
@@ -3878,6 +3942,10 @@ class LocalFeedbackThread extends DataClass
     notificationSent: notificationSent ?? this.notificationSent,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    status: status ?? this.status,
+    localPhotoPath: localPhotoPath.present
+        ? localPhotoPath.value
+        : this.localPhotoPath,
   );
   LocalFeedbackThread copyWithCompanion(LocalFeedbackThreadsCompanion data) {
     return LocalFeedbackThread(
@@ -3897,6 +3965,10 @@ class LocalFeedbackThread extends DataClass
           : this.notificationSent,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      status: data.status.present ? data.status.value : this.status,
+      localPhotoPath: data.localPhotoPath.present
+          ? data.localPhotoPath.value
+          : this.localPhotoPath,
     );
   }
 
@@ -3912,7 +3984,9 @@ class LocalFeedbackThread extends DataClass
           ..write('repliedAt: $repliedAt, ')
           ..write('notificationSent: $notificationSent, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('status: $status, ')
+          ..write('localPhotoPath: $localPhotoPath')
           ..write(')'))
         .toString();
   }
@@ -3929,6 +4003,8 @@ class LocalFeedbackThread extends DataClass
     notificationSent,
     createdAt,
     updatedAt,
+    status,
+    localPhotoPath,
   );
   @override
   bool operator ==(Object other) =>
@@ -3943,7 +4019,9 @@ class LocalFeedbackThread extends DataClass
           other.repliedAt == this.repliedAt &&
           other.notificationSent == this.notificationSent &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.status == this.status &&
+          other.localPhotoPath == this.localPhotoPath);
 }
 
 class LocalFeedbackThreadsCompanion
@@ -3958,6 +4036,8 @@ class LocalFeedbackThreadsCompanion
   final Value<bool> notificationSent;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<String> status;
+  final Value<String?> localPhotoPath;
   final Value<int> rowid;
   const LocalFeedbackThreadsCompanion({
     this.id = const Value.absent(),
@@ -3970,6 +4050,8 @@ class LocalFeedbackThreadsCompanion
     this.notificationSent = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.status = const Value.absent(),
+    this.localPhotoPath = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LocalFeedbackThreadsCompanion.insert({
@@ -3983,6 +4065,8 @@ class LocalFeedbackThreadsCompanion
     this.notificationSent = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
+    this.status = const Value.absent(),
+    this.localPhotoPath = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        studentId = Value(studentId),
@@ -4001,6 +4085,8 @@ class LocalFeedbackThreadsCompanion
     Expression<bool>? notificationSent,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<String>? status,
+    Expression<String>? localPhotoPath,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4014,6 +4100,8 @@ class LocalFeedbackThreadsCompanion
       if (notificationSent != null) 'notification_sent': notificationSent,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (status != null) 'status': status,
+      if (localPhotoPath != null) 'local_photo_path': localPhotoPath,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4029,6 +4117,8 @@ class LocalFeedbackThreadsCompanion
     Value<bool>? notificationSent,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<String>? status,
+    Value<String?>? localPhotoPath,
     Value<int>? rowid,
   }) {
     return LocalFeedbackThreadsCompanion(
@@ -4042,6 +4132,8 @@ class LocalFeedbackThreadsCompanion
       notificationSent: notificationSent ?? this.notificationSent,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      status: status ?? this.status,
+      localPhotoPath: localPhotoPath ?? this.localPhotoPath,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4079,6 +4171,12 @@ class LocalFeedbackThreadsCompanion
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (localPhotoPath.present) {
+      map['local_photo_path'] = Variable<String>(localPhotoPath.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -4098,6 +4196,8 @@ class LocalFeedbackThreadsCompanion
           ..write('notificationSent: $notificationSent, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('status: $status, ')
+          ..write('localPhotoPath: $localPhotoPath, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -7142,6 +7242,8 @@ typedef $$LocalFeedbackThreadsTableCreateCompanionBuilder =
       Value<bool> notificationSent,
       required DateTime createdAt,
       required DateTime updatedAt,
+      Value<String> status,
+      Value<String?> localPhotoPath,
       Value<int> rowid,
     });
 typedef $$LocalFeedbackThreadsTableUpdateCompanionBuilder =
@@ -7156,6 +7258,8 @@ typedef $$LocalFeedbackThreadsTableUpdateCompanionBuilder =
       Value<bool> notificationSent,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<String> status,
+      Value<String?> localPhotoPath,
       Value<int> rowid,
     });
 
@@ -7215,6 +7319,16 @@ class $$LocalFeedbackThreadsTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localPhotoPath => $composableBuilder(
+    column: $table.localPhotoPath,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -7277,6 +7391,16 @@ class $$LocalFeedbackThreadsTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localPhotoPath => $composableBuilder(
+    column: $table.localPhotoPath,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$LocalFeedbackThreadsTableAnnotationComposer
@@ -7323,6 +7447,14 @@ class $$LocalFeedbackThreadsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get localPhotoPath => $composableBuilder(
+    column: $table.localPhotoPath,
+    builder: (column) => column,
+  );
 }
 
 class $$LocalFeedbackThreadsTableTableManager
@@ -7378,6 +7510,8 @@ class $$LocalFeedbackThreadsTableTableManager
                 Value<bool> notificationSent = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String?> localPhotoPath = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LocalFeedbackThreadsCompanion(
                 id: id,
@@ -7390,6 +7524,8 @@ class $$LocalFeedbackThreadsTableTableManager
                 notificationSent: notificationSent,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                status: status,
+                localPhotoPath: localPhotoPath,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -7404,6 +7540,8 @@ class $$LocalFeedbackThreadsTableTableManager
                 Value<bool> notificationSent = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
+                Value<String> status = const Value.absent(),
+                Value<String?> localPhotoPath = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LocalFeedbackThreadsCompanion.insert(
                 id: id,
@@ -7416,6 +7554,8 @@ class $$LocalFeedbackThreadsTableTableManager
                 notificationSent: notificationSent,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                status: status,
+                localPhotoPath: localPhotoPath,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

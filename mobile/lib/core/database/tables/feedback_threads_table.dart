@@ -15,6 +15,8 @@ class LocalFeedbackThreads extends Table {
       boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+  TextColumn get status => text().withDefault(const Constant('sent'))();
+  TextColumn get localPhotoPath => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

@@ -5,7 +5,9 @@
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera access is used for AR model viewing</string>
+	<string>Take a photo to share with your coach</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Select a photo to share with your coach</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

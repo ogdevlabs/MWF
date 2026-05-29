@@ -8,44 +8,26 @@ part of 'app_router.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provides the app router with reactive auth-based redirects.
+/// Provides a stable [GoRouter] instance created once for the app lifetime.
 ///
-/// Redirect logic:
-/// 1. Unauthenticated + not on auth route -> /login
-/// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
-/// 3. Authenticated + on auth route + onboarding seen -> /programs
-/// 4. Authenticated + on /onboarding + already seen -> /programs
-///
-/// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
-/// during async loading, preventing flash-redirect to /onboarding on every launch.
+/// Auth-driven redirects are handled via [_RouterNotifier] so the router
+/// instance is never recreated — only the redirect logic re-runs.
 
 @ProviderFor(appRouter)
 final appRouterProvider = AppRouterProvider._();
 
-/// Provides the app router with reactive auth-based redirects.
+/// Provides a stable [GoRouter] instance created once for the app lifetime.
 ///
-/// Redirect logic:
-/// 1. Unauthenticated + not on auth route -> /login
-/// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
-/// 3. Authenticated + on auth route + onboarding seen -> /programs
-/// 4. Authenticated + on /onboarding + already seen -> /programs
-///
-/// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
-/// during async loading, preventing flash-redirect to /onboarding on every launch.
+/// Auth-driven redirects are handled via [_RouterNotifier] so the router
+/// instance is never recreated — only the redirect logic re-runs.
 
 final class AppRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
-  /// Provides the app router with reactive auth-based redirects.
+  /// Provides a stable [GoRouter] instance created once for the app lifetime.
   ///
-  /// Redirect logic:
-  /// 1. Unauthenticated + not on auth route -> /login
-  /// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
-  /// 3. Authenticated + on auth route + onboarding seen -> /programs
-  /// 4. Authenticated + on /onboarding + already seen -> /programs
-  ///
-  /// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
-  /// during async loading, preventing flash-redirect to /onboarding on every launch.
+  /// Auth-driven redirects are handled via [_RouterNotifier] so the router
+  /// instance is never recreated — only the redirect logic re-runs.
   AppRouterProvider._()
     : super(
         from: null,
@@ -79,4 +61,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'bd1cfd9521d310478d518212821c05b91d9ccd3a';
+String _$appRouterHash() => r'0810b0d2d51832d85a57e8b895008d1fd0e4aa83';
