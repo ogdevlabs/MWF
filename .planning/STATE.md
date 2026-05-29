@@ -3,19 +3,19 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Executing Phase 07
-last_updated: "2026-05-29T16:49:33.794Z"
+last_updated: "2026-05-29T16:58:25.422Z"
 progress:
-  total_phases: 9
-  completed_phases: 5
+  total_phases: 16
+  completed_phases: 6
   total_plans: 35
-  completed_plans: 31
+  completed_plans: 32
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-29
 **Current Phase**: 7
-**Current Plan**: 07-03
+**Current Plan**: 07-05 (complete — all Phase 07 plans done)
 **Status**: in-progress
 
 ## Session Context
@@ -84,6 +84,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 07]: LocalFeedbackThread constructed directly in widget tests (not via DB) — Drift reactive streams cause test pump() hangs
 - [Phase 07]: fcmInitProvider fire-and-forget: ref.watch(fcmInitProvider) in CoachTabScreen.build() triggers FCM once per auth session
 - [Phase 07]: ChatBubble uses manual time formatter instead of intl package — intl not in pubspec.yaml; avoids new dependency
+- [Phase 07]: StatefulShellRoute.indexedStack wraps 4 branches (programs, progress, coach-chat, notifications) with ScaffoldWithNavBar — auth/paywall/settings remain outside shell
+- [Phase 07]: [Phase 07-05]: /coach-chat route: when sessionId query param present -> CoachChatScreen(sessionId) for FCM deep-link; without sessionId -> CoachTabScreen (premium gate)
+- [Phase 07]: [Phase 07-05]: GoRouter navigation widget test pattern — MaterialApp.router + GoRouter with test routes to verify navigation targets
 
 ## Blockers
 
@@ -127,7 +130,8 @@ None
 | Phase 07 P07-02 | 149s | 2 tasks | 5 files |
 | Phase 07 P07-03 | 4m | 2 tasks | 3 files |
 | Phase 07 P07-04 | 29min | 2 tasks | 9 files |
+| Phase 07 P07-05 | 295s | 3 tasks | 6 files |
 
 ## Stopped At
 
-Completed 07-03-PLAN.md
+Completed 07-05-PLAN.md
