@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../metrics/presentation/log_metric_sheet.dart';
+import '../../metrics/presentation/metric_log_bottom_sheet.dart';
 
 /// Full-screen session completion screen (D-12, FR-012).
 /// Shows: title, duration, exercise count, streak badge, three CTAs.
@@ -176,8 +176,7 @@ class _SessionCompletionScreenState
                       onPressed: () => showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        builder: (_) =>
-                            LogMetricSheet(studentId: widget.studentId!),
+                        builder: (_) => const MetricLogBottomSheet(),
                       ),
                       icon: const Icon(Icons.monitor_weight_outlined),
                       label: const Text('Log Today\'s Metrics'),

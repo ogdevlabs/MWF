@@ -6,8 +6,8 @@ import '../../../core/database/app_database.dart';
 import '../../session/data/streak_calculator.dart';
 import '../data/metric_providers.dart';
 import '../domain/metric_delta.dart';
-import 'log_metric_sheet.dart';
 import 'metric_line_chart.dart';
+import 'metric_log_bottom_sheet.dart';
 import 'widgets/delta_badge.dart';
 import 'widgets/streak_card.dart';
 
@@ -75,7 +75,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                 _StreakSection(studentId: studentId),
                 const SizedBox(height: 12),
                 FilledButton.tonal(
-                  onPressed: () => _openLogSheet(context, studentId),
+                  onPressed: () => _openLogSheet(context),
                   child: const Text('Log Metrics'),
                 ),
                 const SizedBox(height: 8),
@@ -97,11 +97,11 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
-  void _openLogSheet(BuildContext context, String studentId) {
+  void _openLogSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (_) => LogMetricSheet(studentId: studentId),
+      builder: (_) => const MetricLogBottomSheet(),
     );
   }
 }
