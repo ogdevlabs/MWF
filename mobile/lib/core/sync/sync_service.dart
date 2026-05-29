@@ -188,6 +188,31 @@ class SyncService {
       },
     );
 
+    // Pull metric logs (insert-only table — uses created_at, not updated_at)
+    // Supabase table is 'metric_logs' (001_initial_schema.sql); no updated_at column
+    totalPulled += await _pullTable(
+      tableName: 'metric_logs',
+      since: null, // Skip generic updated_at filter; apply created_at filter below
+      filter: (query) => lastSync != null
+          ? query.gte('created_at', lastSync)
+          : query,
+      upsert: (rows) async {
+        for (final row in rows) {
+          await db.metricLogsDao.upsertMetricLog(LocalMetricLogsCompanion(
+            id: Value(row['id'] as String),
+            studentId: Value(row['student_id'] as String),
+            metricType: Value(row['metric_type'] as String),
+            metricSubtype: Value(row['metric_subtype'] as String?),
+            value: Value((row['value'] as num).toDouble()),
+            unit: Value(row['unit'] as String),
+            // metric_logs.logged_at is DATE in Postgres — arrives as 'YYYY-MM-DD'
+            loggedAt: Value(DateTime.parse(row['logged_at'] as String)),
+            createdAt: Value(DateTime.parse(row['created_at'] as String)),
+          ));
+        }
+      },
+    );
+
     // Pull feedback threads
     totalPulled += await _pullTable(
       tableName: 'feedback_threads',
