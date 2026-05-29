@@ -114,6 +114,17 @@ None — all feedback management functionality is fully wired. The send-fcm Edge
 - Feedback CRUD fully implemented — Plan 08-04 (session/exercise editor) can proceed independently
 - `send-fcm` Edge Function ready for deployment to Supabase; requires `FIREBASE_SERVICE_ACCOUNT_JSON`, `FIREBASE_PROJECT_ID` secrets in Supabase Vault
 
+## Self-Check: PASSED
+
+- FOUND: admin/app/actions/feedback.ts
+- FOUND: supabase/functions/send-fcm/index.ts
+- FOUND: admin/app/(admin)/feedback/page.tsx
+- FOUND: admin/app/(admin)/feedback/[threadId]/page.tsx
+- FOUND: admin/components/feedback-reply-form.tsx
+- FOUND commit: fb4beb3 (Task 1)
+- FOUND commit: bd8d86b (Task 2)
+- FOUND commit: 3c5269c (metadata/docs)
+
 ---
 *Phase: 08-us6-admin-panel*  
 *Completed: 2026-05-29*
