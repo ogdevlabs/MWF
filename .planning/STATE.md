@@ -15,7 +15,7 @@ progress:
 
 **Last Updated**: 2026-05-29
 **Current Phase**: 7
-**Current Plan**: 07-02
+**Current Plan**: 07-03
 **Status**: in-progress
 
 ## Session Context
@@ -78,6 +78,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 06-us4-metrics-progress]: [Phase 06-04]: Widget test migrated to metricRepositoryProvider.overrideWithValue pattern with MockSyncQueue + in-memory MetricRepository
 - [Phase 07-us5-private-feedback]: Drift schemaVersion 3 with addColumn migration for status (default 'sent') and localPhotoPath (nullable) on LocalFeedbackThreads
 - [Phase 07-us5-private-feedback]: feedback-photos Storage bucket is private with per-student folder RLS using (storage.foldername(name))[1] = auth.uid()::text
+- [Phase 07-03]: FcmService.registerTokenDirect(@visibleForTesting) bypasses FirebaseMessaging.instance for unit testability — registerToken() calls it internally after getToken()
+- [Phase 07-03]: handleMessageNavigation and onNotificationTap exposed with @visibleForTesting for direct unit test invocation — avoids need for RemoteMessage platform mocking
+- [Phase 07-03]: Firebase.initializeApp() called in main.dart; FcmService.initialize() and registerToken() deferred to post-auth fcmInitProvider (Plan 07-04)
 
 ## Blockers
 
@@ -119,7 +122,8 @@ None
 | Phase 06-us4-metrics-progress P06-04 | 165s | 2 tasks | 4 files |
 | Phase 07 P07-01 | 8m | 2 tasks | 16 files |
 | Phase 07 P07-02 | 149s | 2 tasks | 5 files |
+| Phase 07 P07-03 | 4m | 2 tasks | 3 files |
 
 ## Stopped At
 
-Completed 07-02-PLAN.md
+Completed 07-03-PLAN.md
