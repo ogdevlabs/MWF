@@ -44,7 +44,7 @@ class AuthRemoteDatasource {
         email: email,
         displayName: displayName,
       );
-      try { await Purchases.logIn(user.id); } catch (_) {}
+      if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
     }
 
     return response;
@@ -67,7 +67,7 @@ class AuthRemoteDatasource {
         userId: user.id,
         email: user.email ?? email,
       );
-      try { await Purchases.logIn(user.id); } catch (_) {}
+      if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
     }
 
     return response;
@@ -85,7 +85,7 @@ class AuthRemoteDatasource {
         email: user.email ?? '',
         displayName: user.userMetadata?['full_name'] as String?,
       );
-      try { await Purchases.logIn(user.id); } catch (_) {}
+      if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
     }
 
     return response;
@@ -104,7 +104,7 @@ class AuthRemoteDatasource {
         displayName: user.userMetadata?['full_name'] as String?,
         avatarUrl: user.userMetadata?['avatar_url'] as String?,
       );
-      try { await Purchases.logIn(user.id); } catch (_) {}
+      if (await Purchases.isConfigured) { try { await Purchases.logIn(user.id); } catch (_) {} }
     }
 
     return response;
@@ -112,7 +112,7 @@ class AuthRemoteDatasource {
 
   /// Sign out: RevenueCat logOut + Supabase sign out.
   Future<void> signOut() async {
-    try { await Purchases.logOut(); } catch (_) {}
+    if (await Purchases.isConfigured) { try { await Purchases.logOut(); } catch (_) {} }
     await authRepository.signOut();
   }
 }
