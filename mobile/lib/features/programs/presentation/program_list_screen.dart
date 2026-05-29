@@ -31,6 +31,15 @@ class ProgramListScreen extends ConsumerWidget {
               Text('Failed to load programs',
                   style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  error.toString(),
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 12),
               OutlinedButton(
                 onPressed: () => ref.invalidate(programsListProvider),
                 child: const Text('Retry'),

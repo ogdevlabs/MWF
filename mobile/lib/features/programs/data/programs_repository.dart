@@ -49,9 +49,15 @@ class ProgramsRepository {
       // Cache for offline
       await localDatasource.cachePrograms(programs);
       return programs;
-    } catch (_) {
-      // Remote failed — serve cached programs with local subscription overlay
+    } catch (e, st) {
+      // Remote failed — log then serve cached programs with local subscription overlay
+      // ignore: avoid_print
+      print('[ProgramsRepository] getPrograms remote failed: $e\n$st');
       final cached = await localDatasource.getCachedPrograms();
+      if (cached.isEmpty) {
+        // Nothing cached either — rethrow so the UI shows the real error
+        rethrow;
+      }
       final isSubActive = await _getCachedSubscriptionStatus();
       return cached
           .map((p) => p.copyWith(isSubscribed: isSubActive))
