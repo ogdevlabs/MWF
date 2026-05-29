@@ -16,29 +16,41 @@ import '../../features/session/presentation/session_player_screen.dart';
 
 part 'app_router.g.dart';
 
-/// Provides the app router with reactive auth-based redirects.
+/// A [ChangeNotifier] that bridges Riverpod providers into a GoRouter
+/// [refreshListenable]. GoRouter re-evaluates the redirect whenever notified.
+class _RouterNotifier extends ChangeNotifier {
+  _RouterNotifier(this._ref) {
+    // Re-run redirect whenever auth or onboarding state changes.
+    _ref.listen(isAuthenticatedProvider, (_, _a) => notifyListeners());
+    _ref.listen(onboardingSeenProvider, (_, _a) => notifyListeners());
+  }
+
+  final Ref _ref;
+
+  bool get isAuthenticated => _ref.read(isAuthenticatedProvider);
+  bool get onboardingSeen => _ref.read(onboardingSeenProvider).value ?? true;
+}
+
+/// Provides a stable [GoRouter] instance created once for the app lifetime.
 ///
-/// Redirect logic:
-/// 1. Unauthenticated + not on auth route -> /login
-/// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
-/// 3. Authenticated + on auth route + onboarding seen -> /programs
-/// 4. Authenticated + on /onboarding + already seen -> /programs
-///
-/// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
-/// during async loading, preventing flash-redirect to /onboarding on every launch.
+/// Auth-driven redirects are handled via [_RouterNotifier] so the router
+/// instance is never recreated — only the redirect logic re-runs.
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
-  final isAuth = ref.watch(isAuthenticatedProvider);
-  final onboardingSeen = ref.watch(onboardingSeenProvider).value ?? true;
+  final notifier = _RouterNotifier(ref);
 
   return GoRouter(
-    initialLocation: '/programs',
+    initialLocation: '/login',
+    refreshListenable: notifier,
     redirect: (BuildContext context, GoRouterState state) {
+      final isAuth = notifier.isAuthenticated;
+      final onboardingSeen = notifier.onboardingSeen;
+
       final isAuthRoute = state.matchedLocation == '/login' ||
           state.matchedLocation == '/signup';
       final isOnboardingRoute = state.matchedLocation == '/onboarding';
 
-      // Not authenticated -> force login (except if already on auth route)
+      // Not authenticated -> force login
       if (!isAuth && !isAuthRoute) return '/login';
 
       // Authenticated + on auth route -> redirect away
