@@ -23,6 +23,8 @@ jobs:
       dart: ${{ steps.filter.outputs.dart }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -30,6 +32,7 @@ jobs:
             dart:
               - 'mobile/lib/**'
               - 'mobile/test/**'
+              - 'mobile/integration_test/**'
               - 'mobile/pubspec.yaml'
               - 'mobile/pubspec.lock'
               - 'mobile/analysis_options.yaml'

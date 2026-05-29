@@ -72,8 +72,16 @@ if [[ -n "$SUPABASE_URL" ]] && [[ "$SUPABASE_URL" == https://* ]]; then
   echo -e "  ${GREEN}${BOLD}Mode: HOSTED Supabase${NC}"
   info "URL: $SUPABASE_URL"
 
-  if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]]; then
-    die "SUPABASE_PUBLISHABLE_KEY is required in local-dev/.env when using hosted Supabase."
+  if [[ -z "$SUPABASE_PUBLISHABLE_KEY" ]] || [[ "$SUPABASE_PUBLISHABLE_KEY" == "PASTE_YOUR_ANON_KEY_HERE" ]]; then
+    echo ""
+    echo -e "${RED}${BOLD}✗  SUPABASE_PUBLISHABLE_KEY not set.${NC}"
+    echo ""
+    echo "  1. Go to: https://supabase.com/dashboard/project/rlcgtqagfdweisnxrasn/settings/api"
+    echo "  2. Copy the 'anon public' key (starts with eyJ...)"
+    echo "  3. Paste it in local-dev/.env:"
+    echo "     SUPABASE_PUBLISHABLE_KEY=eyJ..."
+    echo ""
+    exit 1
   fi
   info "Anon key: ${SUPABASE_PUBLISHABLE_KEY:0:20}..."
   echo ""
@@ -209,14 +217,27 @@ if [[ "$TARGET" != "admin-only" ]]; then
 
   if [[ -n "$DEVICE_FLAG" ]]; then
     cd "$REPO_ROOT/mobile"
+    echo ""
+    echo -e "${GREEN}${BOLD}▶ Starting Flutter — logs appear below. Press q to quit.${NC}"
+    echo ""
+    # Write dart-defines to file so flutter can read them reliably.
+    # This avoids shell quoting issues with special chars in keys/passwords.
+    DEFINES_FILE="$REPO_ROOT/.dart-defines.json"
+    cat > "$DEFINES_FILE" << JSONEOF
+{
+  "SUPABASE_URL": "$SUPABASE_URL",
+  "SUPABASE_PUBLISHABLE_KEY": "$SUPABASE_PUBLISHABLE_KEY",
+  "GOOGLE_WEB_CLIENT_ID": "$GOOGLE_WEB_CLIENT_ID",
+  "GOOGLE_IOS_CLIENT_ID": "$GOOGLE_IOS_CLIENT_ID",
+  "REVENUECAT_APPLE_API_KEY": "${REVENUECAT_APPLE_API_KEY:-}",
+  "REVENUECAT_GOOGLE_API_KEY": "${REVENUECAT_GOOGLE_API_KEY:-}"
+}
+JSONEOF
+    info "Wrote dart-defines to .dart-defines.json"
+
+    # Run in foreground so debug prints ([AUTH], [ROUTER]) are visible here.
     # shellcheck disable=SC2086
-    flutter run $DEVICE_FLAG \
-      --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-      --dart-define=SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY" \
-      --dart-define=GOOGLE_WEB_CLIENT_ID="$GOOGLE_WEB_CLIENT_ID" \
-      --dart-define=GOOGLE_IOS_CLIENT_ID="$GOOGLE_IOS_CLIENT_ID" \
-      --dart-define=GOOGLE_IOS_URL_SCHEME="${GOOGLE_IOS_CLIENT_ID:+com.googleusercontent.apps.${GOOGLE_IOS_CLIENT_ID%.apps.googleusercontent.com}}" &
-    PIDS+=($!)
+    flutter run $DEVICE_FLAG --dart-define-from-file="$DEFINES_FILE"
   fi
 fi
 

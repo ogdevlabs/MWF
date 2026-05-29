@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../core/auth/auth_provider.dart';
 import '../../features/auth/data/onboarding_prefs_service.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/signup_screen.dart';
@@ -16,49 +18,53 @@ import '../../features/session/presentation/session_player_screen.dart';
 
 part 'app_router.g.dart';
 
-/// A [ChangeNotifier] that bridges Riverpod providers into a GoRouter
-/// [refreshListenable]. GoRouter re-evaluates the redirect whenever notified.
-class _RouterNotifier extends ChangeNotifier {
-  _RouterNotifier(this._ref) {
-    // Re-run redirect whenever auth or onboarding state changes.
-    _ref.listen(isAuthenticatedProvider, (_, _a) => notifyListeners());
-    _ref.listen(onboardingSeenProvider, (_, _a) => notifyListeners());
+/// Bridges Supabase's auth stream directly into GoRouter — no Riverpod layers.
+/// Supabase fires onAuthStateChange immediately on sign-in/out, so the router
+/// redirect runs synchronously after the auth response.
+class _AuthNotifier extends ChangeNotifier {
+  _AuthNotifier() {
+    _sub = Supabase.instance.client.auth.onAuthStateChange.listen((state) {
+      debugPrint('[ROUTER] auth event: ${state.event} user=${state.session?.user.id}');
+      notifyListeners();
+    });
   }
 
-  final Ref _ref;
+  late final StreamSubscription<AuthState> _sub;
 
-  bool get isAuthenticated => _ref.read(isAuthenticatedProvider);
-  bool get onboardingSeen => _ref.read(onboardingSeenProvider).value ?? true;
+  bool get isAuthenticated =>
+      Supabase.instance.client.auth.currentSession != null;
+
+  @override
+  void dispose() {
+    _sub.cancel();
+    super.dispose();
+  }
 }
 
-/// Provides a stable [GoRouter] instance created once for the app lifetime.
-///
-/// Auth-driven redirects are handled via [_RouterNotifier] so the router
-/// instance is never recreated — only the redirect logic re-runs.
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
-  final notifier = _RouterNotifier(ref);
+  final authNotifier = _AuthNotifier();
+  ref.onDispose(authNotifier.dispose);
+
+  final onboardingService = OnboardingPrefsService();
 
   return GoRouter(
     initialLocation: '/login',
-    refreshListenable: notifier,
-    redirect: (BuildContext context, GoRouterState state) {
-      final isAuth = notifier.isAuthenticated;
-      final onboardingSeen = notifier.onboardingSeen;
+    refreshListenable: authNotifier,
+    redirect: (BuildContext context, GoRouterState state) async {
+      final isAuth = authNotifier.isAuthenticated;
+      final onboardingSeen = await onboardingService.hasSeenOnboarding();
+
+      debugPrint('[ROUTER] redirect: ${state.matchedLocation} isAuth=$isAuth');
 
       final isAuthRoute = state.matchedLocation == '/login' ||
           state.matchedLocation == '/signup';
       final isOnboardingRoute = state.matchedLocation == '/onboarding';
 
-      // Not authenticated -> force login
       if (!isAuth && !isAuthRoute) return '/login';
-
-      // Authenticated + on auth route -> redirect away
       if (isAuth && isAuthRoute) {
         return onboardingSeen ? '/programs' : '/onboarding';
       }
-
-      // Authenticated + on onboarding but already seen -> skip
       if (isAuth && isOnboardingRoute && onboardingSeen) return '/programs';
 
       return null;
@@ -161,7 +167,7 @@ class _PlaceholderScreen extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: Text(
-          '$title\n(Placeholder - will be replaced in later phases)',
+          '$title\n(Placeholder)',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineMedium,
         ),

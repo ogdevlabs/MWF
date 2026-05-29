@@ -8,27 +8,14 @@ part of 'auth_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provides a reactive stream of [AuthState] changes.
-///
-/// Uses keepAlive because auth state must persist for the entire app lifecycle.
-/// Includes handleError to prevent crashes on network errors during token refresh.
 
 @ProviderFor(authState)
 final authStateProvider = AuthStateProvider._();
-
-/// Provides a reactive stream of [AuthState] changes.
-///
-/// Uses keepAlive because auth state must persist for the entire app lifecycle.
-/// Includes handleError to prevent crashes on network errors during token refresh.
 
 final class AuthStateProvider
     extends
         $FunctionalProvider<AsyncValue<AuthState>, AuthState, Stream<AuthState>>
     with $FutureModifier<AuthState>, $StreamProvider<AuthState> {
-  /// Provides a reactive stream of [AuthState] changes.
-  ///
-  /// Uses keepAlive because auth state must persist for the entire app lifecycle.
-  /// Includes handleError to prevent crashes on network errors during token refresh.
   AuthStateProvider._()
     : super(
         from: null,
@@ -54,21 +41,13 @@ final class AuthStateProvider
   }
 }
 
-String _$authStateHash() => r'626550e94f16e9803680aa010f0ed8efb929fac3';
-
-/// Synchronous accessor for the current user.
-/// Returns null if no user is signed in or if auth state hasn't loaded yet.
+String _$authStateHash() => r'cd19e1f8b2f5f417f70b4845c60f73fa34b24235';
 
 @ProviderFor(currentUser)
 final currentUserProvider = CurrentUserProvider._();
 
-/// Synchronous accessor for the current user.
-/// Returns null if no user is signed in or if auth state hasn't loaded yet.
-
 final class CurrentUserProvider extends $FunctionalProvider<User?, User?, User?>
     with $Provider<User?> {
-  /// Synchronous accessor for the current user.
-  /// Returns null if no user is signed in or if auth state hasn't loaded yet.
   CurrentUserProvider._()
     : super(
         from: null,
@@ -102,26 +81,21 @@ final class CurrentUserProvider extends $FunctionalProvider<User?, User?, User?>
   }
 }
 
-String _$currentUserHash() => r'dd5b1e3a1ebb875a88650ea03f77c677dae4a0ae';
-
-/// Whether the user is currently authenticated.
+String _$currentUserHash() => r'acd442c9a69b1e49effa9754eb6620baf5431e7c';
 
 @ProviderFor(isAuthenticated)
 final isAuthenticatedProvider = IsAuthenticatedProvider._();
 
-/// Whether the user is currently authenticated.
-
 final class IsAuthenticatedProvider
     extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
-  /// Whether the user is currently authenticated.
   IsAuthenticatedProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'isAuthenticatedProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -148,4 +122,4 @@ final class IsAuthenticatedProvider
   }
 }
 
-String _$isAuthenticatedHash() => r'ec341d95b490bda54e8278477e26f7b345844931';
+String _$isAuthenticatedHash() => r'acd55910f154b4795d7a0025ead07fc2b9ca04c0';

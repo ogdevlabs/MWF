@@ -8,44 +8,13 @@ part of 'app_router.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provides the app router with reactive auth-based redirects.
-///
-/// Redirect logic:
-/// 1. Unauthenticated + not on auth route -> /login
-/// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
-/// 3. Authenticated + on auth route + onboarding seen -> /programs
-/// 4. Authenticated + on /onboarding + already seen -> /programs
-///
-/// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
-/// during async loading, preventing flash-redirect to /onboarding on every launch.
 
 @ProviderFor(appRouter)
 final appRouterProvider = AppRouterProvider._();
 
-/// Provides the app router with reactive auth-based redirects.
-///
-/// Redirect logic:
-/// 1. Unauthenticated + not on auth route -> /login
-/// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
-/// 3. Authenticated + on auth route + onboarding seen -> /programs
-/// 4. Authenticated + on /onboarding + already seen -> /programs
-///
-/// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
-/// during async loading, preventing flash-redirect to /onboarding on every launch.
-
 final class AppRouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
     with $Provider<GoRouter> {
-  /// Provides the app router with reactive auth-based redirects.
-  ///
-  /// Redirect logic:
-  /// 1. Unauthenticated + not on auth route -> /login
-  /// 2. Authenticated + on auth route + onboarding unseen -> /onboarding
-  /// 3. Authenticated + on auth route + onboarding seen -> /programs
-  /// 4. Authenticated + on /onboarding + already seen -> /programs
-  ///
-  /// Uses .valueOrNull ?? true for onboardingSeenProvider to default to "seen"
-  /// during async loading, preventing flash-redirect to /onboarding on every launch.
   AppRouterProvider._()
     : super(
         from: null,
@@ -79,4 +48,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'bd1cfd9521d310478d518212821c05b91d9ccd3a';
+String _$appRouterHash() => r'd5a5bbe9010c98c89d14f5fee1b8f91bdc0a6982';

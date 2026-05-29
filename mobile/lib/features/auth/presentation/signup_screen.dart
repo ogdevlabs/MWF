@@ -19,6 +19,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _displayNameController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
+  bool _awaitingConfirmation = false;
 
   @override
   void dispose() {
@@ -30,20 +31,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() { _isLoading = true; _errorMessage = null; });
+    setState(() { _isLoading = true; _errorMessage = null; _awaitingConfirmation = false; });
     try {
-      await ref.read(authRemoteDatasourceProvider).signUpWithEmail(
+      final response = await ref.read(authRemoteDatasourceProvider).signUpWithEmail(
         email: _emailController.text.trim(),
         password: _passwordController.text,
         displayName: _displayNameController.text.trim().isNotEmpty
             ? _displayNameController.text.trim()
             : null,
       );
-      // Router redirect handles navigation on auth state change
+      // If session is null, Supabase sent a confirmation email.
+      if (response.session == null) {
+        if (mounted) setState(() => _awaitingConfirmation = true);
+      }
+      // If session is non-null, router redirect handles navigation.
     } on AuthException catch (e) {
-      setState(() => _errorMessage = e.message);
+      final msg = e.message.toLowerCase();
+      if (msg.contains('already registered') || msg.contains('already exists')) {
+        setState(() => _errorMessage = 'An account with this email already exists. Try signing in.');
+      } else {
+        setState(() => _errorMessage = e.message);
+      }
     } catch (e) {
-      setState(() => _errorMessage = 'An unexpected error occurred');
+      setState(() => _errorMessage = 'Sign up failed: ${e.toString()}');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -51,6 +61,38 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_awaitingConfirmation) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Check your email')),
+        body: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.mark_email_unread_outlined, size: 64),
+              const SizedBox(height: 24),
+              Text(
+                'Confirm your email',
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'We sent a confirmation link to\n${_emailController.text.trim()}\n\nOpen that email and tap the link to activate your account.',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              OutlinedButton(
+                onPressed: () => context.goNamed('login'),
+                child: const Text('Back to Sign In'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Create Account')),
       body: SafeArea(
@@ -95,8 +137,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   onPressed: _isLoading ? null : _signUp,
                   child: _isLoading
                       ? const SizedBox(
-                          height: 20,
-                          width: 20,
+                          height: 20, width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Text('Create Account'),
