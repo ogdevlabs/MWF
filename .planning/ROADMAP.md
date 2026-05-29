@@ -16,7 +16,7 @@ coach create/publish programs and reply to student messages.
 - [x] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking (completed 2026-05-27)
 - [x] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync (completed 2026-05-28)
 - [x] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks (completed 2026-05-29)
-- [ ] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading
+- [x] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading (completed 2026-05-29)
 - [ ] **Phase 8: US6 Admin Panel** - Coach content creation, program publishing, private feedback replies
 - [ ] **Phase 9: Polish & QA** - Accessibility, error handling, performance benchmarks, analytics, final QA
 
@@ -135,7 +135,13 @@ Plans:
   2. No cross-student data access: RLS prevents student A from reading student B's threads
   3. Offline feedback notes save locally and submit on reconnect
   4. Notifications screen lists all coach replies with session links
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [x] 07-01-PLAN.md — Wave 0: Drift migration (v3), platform config, test stubs, Supabase migration
+- [x] 07-02-PLAN.md — FeedbackRepository (CQRS data layer) + domain model + providers
+- [x] 07-03-PLAN.md — FCM service + Firebase init + push notification handling
+- [x] 07-04-PLAN.md — Coach Chat UI (tab screen, paywall, chat thread, bubbles, compose bar)
+- [x] 07-05-PLAN.md — FeedbackComposeBottomSheet + NotificationsScreen + router + bottom nav
 
 ### Phase 8: US6 Admin Panel
 **Goal**: Coach can create and publish multi-week programs (with Mux video + GLB 3D asset uploads), manage sessions and exercises, and reply to individual student private feedback threads via the Next.js admin panel.

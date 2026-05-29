@@ -1,9 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'firebase_options.dart';
 import 'shared/theme/app_theme.dart';
 import 'shared/router/app_router.dart';
 
@@ -40,6 +42,9 @@ void main() async {
   if (rcApiKey.isNotEmpty) {
     await Purchases.configure(PurchasesConfiguration(rcApiKey));
   }
+
+  // Firebase initialization for push notifications (FCM)
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const ProviderScope(child: MwfApp()));
 }
