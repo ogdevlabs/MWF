@@ -64,7 +64,7 @@ goal-setting, reminders/notifications for logging, or multi-user comparison.
 - **D-12:** Flexibility tab: subtype selector (forward_bend, shoulder, hip_flexor) —
   same chip row pattern as measurements.
 - **D-13:** All metric_type and metric_subtype values stored as lowercase strings
-  matching the `body_metrics` Supabase table schema.
+  matching the `metric_logs` Supabase table schema.
 
 ### Streak Data Source
 - **D-14:** Streak is derived from `LocalProgressRecords` Drift table using the existing
@@ -76,9 +76,9 @@ goal-setting, reminders/notifications for logging, or multi-user comparison.
 ### Offline Sync
 - **D-16:** Metric log writes use the SyncQueue pattern:
   1. Insert into `local_metric_logs` (Drift) — immediate local write
-  2. `SyncQueue.enqueue('insert', 'body_metrics', payload)` — queues remote write
-  3. On reconnect, `SyncService.processQueue()` replays to Supabase `body_metrics` table
-- **D-17:** `SyncService._pullRemoteChanges()` must also pull `body_metrics` from
+  2. `SyncQueue.enqueue('insert', 'metric_logs', payload)` — queues remote write
+  3. On reconnect, `SyncService.processQueue()` replays to Supabase `metric_logs` table
+- **D-17:** `SyncService._pullRemoteChanges()` must also pull `metric_logs` from
   Supabase (like other mirrored tables) to handle multi-device sync.
 
 ### Claude's Discretion
@@ -97,7 +97,7 @@ goal-setting, reminders/notifications for logging, or multi-user comparison.
 
 ### Specification & Requirements
 - `specs/001-mat-pilates-coach/spec.md` — User Story 4 (FR-008, FR-009), acceptance scenarios US4-SC1..SC4
-- `specs/001-mat-pilates-coach/data-model.md` — `body_metrics` Supabase table, `local_metric_logs` Drift table schema
+- `specs/001-mat-pilates-coach/data-model.md` — `metric_logs` Supabase table, `local_metric_logs` Drift table schema
 
 ### Existing Code (integration & reuse points)
 - `mobile/lib/core/database/tables/metric_logs_table.dart` — `LocalMetricLogs` Drift table (already defined)
@@ -106,7 +106,7 @@ goal-setting, reminders/notifications for logging, or multi-user comparison.
 - `mobile/lib/features/session/presentation/session_completion_screen.dart` — add non-blocking metric prompt CTA (currently has "Send Feedback to Coach" + "Back to Program")
 - `mobile/lib/shared/router/app_router.dart` — `/progress` route is a `_PlaceholderScreen` to replace
 - `mobile/lib/core/sync/sync_queue.dart` — `SyncQueue.enqueue()` for offline metric writes
-- `mobile/lib/core/sync/sync_service.dart` — `_pullRemoteChanges()` needs `body_metrics` pull added
+- `mobile/lib/core/sync/sync_service.dart` — `_pullRemoteChanges()` needs `metric_logs` pull added
 
 </canonical_refs>
 
@@ -129,7 +129,7 @@ goal-setting, reminders/notifications for logging, or multi-user comparison.
 ### Integration Points
 - Replace `_PlaceholderScreen` at `/progress` route in `app_router.dart`
 - `session_completion_screen.dart`: add "Log Metrics?" prompt — a `TextButton` or auto-shown bottom sheet (non-blocking, dismissible)
-- `SyncService._pullRemoteChanges()`: add `body_metrics` pull block (same pattern as other tables)
+- `SyncService._pullRemoteChanges()`: add `metric_logs` pull block (same pattern as other tables)
 - New `metrics` feature directory: `mobile/lib/features/metrics/`
 
 </code_context>

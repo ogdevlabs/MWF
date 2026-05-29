@@ -11,7 +11,7 @@ metrics (session completion prompt + progress tab button) and a `ProgressScreen`
 streak data and per-type line charts. Almost all infrastructure already exists: `MetricLogsDao`,
 `LocalMetricLogs` table, `SyncQueue.enqueue()`, and the `_pullTable` pattern in `SyncService`.
 The only missing pieces are `computeLongestStreak()`, the `fl_chart` dependency, all presentation
-widgets, a `MetricRepository`/providers layer, and the `body_metrics` pull block in
+widgets, a `MetricRepository`/providers layer, and the `metric_logs` pull block in
 `_pullRemoteChanges()`.
 
 The `logged_at` column in the Supabase `metric_logs` table is `date` (not `timestamptz`), which
@@ -53,8 +53,8 @@ as pure functions and the repository as unit tests against real in-memory Drift.
 - **D-14:** Streak uses existing `computeCurrentStreak()` from `streak_calculator.dart`.
 - **D-15:** Add `computeLongestStreak()` to `streak_calculator.dart`.
 - **D-16:** Offline sync: (1) insert into `local_metric_logs`, (2) `SyncQueue.enqueue('insert',
-  'body_metrics', payload)`, (3) replay on reconnect.
-- **D-17:** `SyncService._pullRemoteChanges()` must pull `body_metrics` table.
+  'metric_logs', payload)`, (3) replay on reconnect.
+- **D-17:** `SyncService._pullRemoteChanges()` must pull `metric_logs` table.
 
 ### Claude's Discretion
 - Exact bottom sheet height and animation (`showModalBottomSheet` with `isScrollControlled: true`)
@@ -169,7 +169,7 @@ class MetricRepository {
     // 2. Enqueue remote write (D-16)
     await syncQueue.enqueue(
       operation: 'insert',
-      targetTable: 'body_metrics',
+      targetTable: 'metric_logs',
       payload: {
         'id': id,
         'student_id': studentId,
@@ -291,7 +291,7 @@ LineChart(
 `getTitlesWidget`. Show abbreviated date (e.g., `DateFormat('M/d')` from `intl` — but `intl` is
 not yet in pubspec. Use manual formatting: `'${dt.month}/${dt.day}'`).
 
-### Pattern 5: SyncService body_metrics pull block
+### Pattern 5: SyncService metric_logs pull block
 
 **What:** Add one `_pullTable` call in `_pullRemoteChanges()`, matching the progress_records block.
 **When to use:** On every sync cycle (reconnect + startup + pull-to-refresh).
@@ -299,7 +299,7 @@ not yet in pubspec. Use manual formatting: `'${dt.month}/${dt.day}'`).
 ```dart
 // Source: sync_service.dart — _pullRemoteChanges() — add after progress_records block
 totalPulled += await _pullTable(
-  tableName: 'body_metrics',
+  tableName: 'metric_logs',
   since: lastSync,
   upsert: (rows) async {
     for (final row in rows) {
@@ -310,7 +310,7 @@ totalPulled += await _pullTable(
         metricSubtype: Value(row['metric_subtype'] as String?),
         value: Value((row['value'] as num).toDouble()),
         unit: Value(row['unit'] as String),
-        // body_metrics.logged_at is a DATE in Postgres — arrives as 'YYYY-MM-DD' string
+        // metric_logs.logged_at is a DATE in Postgres — arrives as 'YYYY-MM-DD' string
         loggedAt: Value(DateTime.parse(row['logged_at'] as String)),
         createdAt: Value(DateTime.parse(row['created_at'] as String)),
       ));
@@ -348,7 +348,7 @@ TextButton(
 - **Storing `logged_at` as full ISO-8601 in Supabase payload:** `metric_logs.logged_at` is a
   `date` column in Postgres, not `timestamptz`. Sending `2026-05-28T10:30:00Z` will cause a
   Postgres type cast error. Always serialize as `YYYY-MM-DD`.
-- **Pulling body_metrics without `updated_at` filter:** The `_pullTable` helper filters on
+- **Pulling metric_logs without `updated_at` filter:** The `_pullTable` helper filters on
   `updated_at >= since`. The `metric_logs` Supabase table does NOT have an `updated_at` column
   (see data-model.md — only `created_at`). Use `created_at` in the filter instead. Pass
   `filter: (q) => since != null ? q.gte('created_at', since) : q` OR add an `updated_at`
@@ -386,18 +386,18 @@ column. SyncQueue item reaches retry_count=5 and dead-letters.
 epoch). When serializing for Supabase, the naive `.toIso8601String()` produces a full timestamp.
 **How to avoid:** Always format `logged_at` in the SyncQueue payload as `YYYY-MM-DD`:
 `'${d.year.toString().padLeft(4,'0')}-${d.month.toString().padLeft(2,'0')}-${d.day.toString().padLeft(2,'0')}'`
-**Warning signs:** `SyncQueue` items for `body_metrics` not clearing after processQueue(); Supabase
+**Warning signs:** `SyncQueue` items for `metric_logs` not clearing after processQueue(); Supabase
 logs show `invalid input syntax for type date`.
 
-### Pitfall 2: `body_metrics` pull uses `created_at` not `updated_at`
+### Pitfall 2: `metric_logs` pull uses `created_at` not `updated_at`
 **What goes wrong:** `_pullTable` applies `updated_at >= since` filter. `metric_logs` Supabase
 table has only `created_at`, not `updated_at`. The query either errors or returns nothing.
 **Why it happens:** The generic `_pullTable` helper was written for tables with `updated_at`.
 **How to avoid:** Add a `sinceColumn` parameter to `_pullTable` (default: `'updated_at'`), or
-for the `body_metrics` block, pass `filter: (q) => since != null ? q.gte('created_at', since) : q`
+for the `metric_logs` block, pass `filter: (q) => since != null ? q.gte('created_at', since) : q`
 and skip the built-in timestamp filter. Since metric logs are insert-only, filtering on
 `created_at` is correct.
-**Warning signs:** `GET body_metrics?updated_at=gte....` 400 error in Supabase logs.
+**Warning signs:** `GET metric_logs?updated_at=gte....` 400 error in Supabase logs.
 
 ### Pitfall 3: fl_chart renders zero-width chart in tests
 **What goes wrong:** `testWidgets` renders widgets at 800x600 by default. `LineChart` needs a
@@ -452,12 +452,12 @@ db = AppDatabase(
 );
 ```
 
-### Verified: SyncQueue.enqueue pattern for body_metrics
+### Verified: SyncQueue.enqueue pattern for metric_logs
 ```dart
 // Source: mobile/lib/core/sync/sync_queue.dart — enqueue() signature
 await syncQueue.enqueue(
   operation: 'insert',
-  targetTable: 'body_metrics',
+  targetTable: 'metric_logs',
   payload: {
     'id': id,
     'student_id': studentId,
@@ -559,14 +559,14 @@ testWidgets('MetricLineChart renders LineChart widget when data provided', (test
 | `computeMetricDelta()` — < 2 logs → null | unit | `flutter test test/unit/features/metrics/ --no-pub` | `metric_delta_test.dart` (Wave 0 gap) |
 | `computeMetricDelta()` — weight down → negative double | unit | same | same |
 | `MetricRepository.logMetric()` — inserts into Drift local_metric_logs | unit | same | `metric_repository_test.dart` (Wave 0 gap) |
-| `MetricRepository.logMetric()` — enqueues to sync_queue with body_metrics target | unit | same | same |
+| `MetricRepository.logMetric()` — enqueues to sync_queue with metric_logs target | unit | same | same |
 | `MetricRepository.logMetric()` — payload `logged_at` is DATE string not full ISO | unit | same | same |
 | `watchMetricsByType()` — returns ordered stream from real in-memory Drift | unit | same | same |
 | `MetricLogBottomSheet` — renders form fields (metric type, value, date) | widget | `flutter test test/widget/ --no-pub` | `metric_log_bottom_sheet_test.dart` (Wave 0 gap) |
 | `MetricLogBottomSheet` — dismisses without crashing | widget | same | same |
 | `ProgressScreen` — shows empty state message when no logs | widget | same | `progress_screen_empty_state_test.dart` (Wave 0 gap) |
 | `ProgressScreen` — shows streak card with current + longest streak | widget | same | same |
-| Offline metric log → sync_queue → replay to body_metrics | integration | `flutter test test/unit/features/metrics/offline_metric_sync_test.dart --no-pub` | `offline_metric_sync_test.dart` (Wave 0 gap) |
+| Offline metric log → sync_queue → replay to metric_logs | integration | `flutter test test/unit/features/metrics/offline_metric_sync_test.dart --no-pub` | `offline_metric_sync_test.dart` (Wave 0 gap) |
 
 ---
 
@@ -582,7 +582,7 @@ testWidgets('MetricLineChart renders LineChart widget when data provided', (test
 - Use `AppDatabase(DatabaseConnection(NativeDatabase.memory(), closeStreamsSynchronously: true))`.
 - Mock `SyncQueue` with mocktail: `class MockSyncQueue extends Mock implements SyncQueue {}`.
 - Assert: after `logMetric()`, `db.metricLogsDao.getMetricsByStudent(studentId)` returns 1 row.
-- Assert: `verify(() => mockSyncQueue.enqueue(operation: 'insert', targetTable: 'body_metrics', payload: any(named: 'payload'))).called(1)`.
+- Assert: `verify(() => mockSyncQueue.enqueue(operation: 'insert', targetTable: 'metric_logs', payload: any(named: 'payload'))).called(1)`.
 - Assert payload `logged_at` key: `captureAny` on payload map → expect value matches `RegExp(r'^\d{4}-\d{2}-\d{2}$')`.
 
 **`computeMetricDelta()` — pure function:**
@@ -615,19 +615,19 @@ testWidgets('MetricLineChart renders LineChart widget when data provided', (test
 ### Integration Test: Offline Metric Log → SyncQueue → Replay
 
 **Pattern:** Mirror `offline_sync_integration_test.dart` exactly — real in-memory Drift,
-mock SupabaseClient with `_FakeQueryBuilder` for `body_metrics`.
+mock SupabaseClient with `_FakeQueryBuilder` for `metric_logs`.
 
 ```
 test file: test/unit/features/metrics/offline_metric_sync_test.dart
 
 1. Create AppDatabase(NativeDatabase.memory())
-2. Create MockSupabaseClient + _FakeQueryBuilder for 'body_metrics'
+2. Create MockSupabaseClient + _FakeQueryBuilder for 'metric_logs'
 3. Create SyncQueue(db, mockSupabase)
 4. Create MetricRepository(db, syncQueue, 'student-1')
 5. Call repo.logMetric(metricType: 'weight', value: 75.0, unit: 'kg', loggedAt: today)
 6. Assert: db.metricLogsDao.getMetricsByStudent('student-1') has length 1
-7. Assert: db.syncQueueDao.getPendingItems() has length 1, targetTable == 'body_metrics'
-8. wire up: when(() => mockSupabase.from('body_metrics')).thenAnswer((_) => fakeQueryBuilder)
+7. Assert: db.syncQueueDao.getPendingItems() has length 1, targetTable == 'metric_logs'
+8. wire up: when(() => mockSupabase.from('metric_logs')).thenAnswer((_) => fakeQueryBuilder)
 9. Call syncQueue.processQueue()
 10. Assert: db.syncQueueDao.getPendingItems() is empty
 11. Assert: fakeQueryBuilder.upsertedPayloads.first['metric_type'] == 'weight'
@@ -691,7 +691,7 @@ Supabase is already running (Phase 2 foundation). No new services to check.
 
 ## Open Questions
 
-1. **`_pullTable` timestamp column for `body_metrics`**
+1. **`_pullTable` timestamp column for `metric_logs`**
    - What we know: `_pullTable` applies `.gte('updated_at', since)` universally. `metric_logs`
      Supabase table has only `created_at`, not `updated_at`.
    - What's unclear: Whether to (a) add `updated_at` column to `metric_logs` via migration,
@@ -699,16 +699,16 @@ Supabase is already running (Phase 2 foundation). No new services to check.
      a `sinceColumn` parameter.
    - Recommendation: Option (c) is the cleanest — add optional `sinceColumn` parameter to
      `_pullTable` defaulting to `'updated_at'`; pass `sinceColumn: 'created_at'` for the
-     `body_metrics` block. Since metric logs are insert-only (no edits), this is semantically
+     `metric_logs` block. Since metric logs are insert-only (no edits), this is semantically
      correct.
 
-2. **Supabase table name: `body_metrics` vs `metric_logs`**
+2. **Supabase table name: `metric_logs` vs `metric_logs`**
    - What we know: The data model Supabase schema calls the table `metric_logs`. CONTEXT.md D-16
-     says `SyncQueue.enqueue('insert', 'body_metrics', payload)`.
-   - What's unclear: Whether `body_metrics` is the actual Supabase table name or a typo/alias.
+     says `SyncQueue.enqueue('insert', 'metric_logs', payload)`.
+   - What's unclear: Whether `metric_logs` is the actual Supabase table name or a typo/alias.
    - Recommendation: Check `supabase/migrations/` to confirm the table name before implementing
      the sync payload. Use whatever the migration file defines as the canonical name. (The
-     CONTEXT.md author wrote `body_metrics` for the SyncQueue target but the data model uses
+     CONTEXT.md author wrote `metric_logs` for the SyncQueue target but the data model uses
      `metric_logs`.) This discrepancy MUST be resolved in Wave 0.
 
 ---
