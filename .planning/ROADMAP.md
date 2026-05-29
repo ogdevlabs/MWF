@@ -15,7 +15,7 @@ coach create/publish programs and reply to student messages.
 - [x] **Phase 3: US1 Enroll & Access** - Student signup, subscription, program browse and access (completed 2026-05-26)
 - [x] **Phase 4: US2 Session Player** - Daily session player with video + 3D animation, completion tracking (completed 2026-05-27)
 - [x] **Phase 5: US3 Offline-First** - Pre-download content, offline session completion, reconnect sync (completed 2026-05-28)
-- [ ] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks
+- [x] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks (completed 2026-05-29)
 - [ ] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading
 - [ ] **Phase 8: US6 Admin Panel** - Coach content creation, program publishing, private feedback replies
 - [ ] **Phase 9: Polish & QA** - Accessibility, error handling, performance benchmarks, analytics, final QA
