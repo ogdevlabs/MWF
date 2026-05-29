@@ -2,20 +2,20 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-last_updated: "2026-05-29T18:49:06.607Z"
+status: Executing Phase 08
+last_updated: "2026-05-29T22:26:27.807Z"
 progress:
-  total_phases: 16
+  total_phases: 17
   completed_phases: 6
-  total_plans: 35
-  completed_plans: 32
+  total_plans: 40
+  completed_plans: 33
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-29
-**Current Phase**: 7
-**Current Plan**: 07-05 (complete — all Phase 07 plans done)
+**Current Phase**: 8
+**Current Plan**: 08-01 (complete)
 **Status**: in-progress
 
 ## Session Context
@@ -87,6 +87,10 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 07]: StatefulShellRoute.indexedStack wraps 4 branches (programs, progress, coach-chat, notifications) with ScaffoldWithNavBar — auth/paywall/settings remain outside shell
 - [Phase 07]: [Phase 07-05]: /coach-chat route: when sessionId query param present -> CoachChatScreen(sessionId) for FCM deep-link; without sessionId -> CoachTabScreen (premium gate)
 - [Phase 07]: [Phase 07-05]: GoRouter navigation widget test pattern — MaterialApp.router + GoRouter with test routes to verify navigation targets
+- [Phase 08]: Next.js 16 proxy.ts (not middleware.ts): file and exported function must both be named 'proxy'
+- [Phase 08]: [Phase 08-01]: getUser() (not getSession()) used in every Server Action and Route Handler for verified auth — getSession() returns unverified cookie data
+- [Phase 08]: [Phase 08-01]: shadcn CLI requires manual install of lucide-react, class-variance-authority, tailwind-merge — these are peer deps not auto-added to package.json
+- [Phase 08]: [Phase 08-01]: Login page uses 'use client' + useActionState — required because useActionState is a React hook; Server Action in actions.ts remains server-only
 
 ## Blockers
 
@@ -131,7 +135,8 @@ None
 | Phase 07 P07-03 | 4m | 2 tasks | 3 files |
 | Phase 07 P07-04 | 29min | 2 tasks | 9 files |
 | Phase 07 P07-05 | 295s | 3 tasks | 6 files |
+| Phase 08 P08-01 | 202 | 2 tasks | 24 files |
 
 ## Stopped At
 
-Completed 07-05-PLAN.md
+Completed 08-01-PLAN.md
