@@ -1,16 +1,30 @@
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mwf_mobile/features/metrics/presentation/metric_log_bottom_sheet.dart';
+import 'package:mwf_mobile/core/database/app_database.dart';
+import 'package:mwf_mobile/features/metrics/presentation/log_metric_sheet.dart';
 
 void main() {
-  group('MetricLogBottomSheet', () {
-    Widget _buildSubject({List<Override> overrides = const []}) {
+  late AppDatabase db;
+
+  setUp(() {
+    db = AppDatabase(NativeDatabase.memory());
+  });
+
+  tearDown(() async {
+    await db.close();
+  });
+
+  group('LogMetricSheet', () {
+    Widget _buildSubject() {
       return ProviderScope(
-        overrides: overrides,
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+        ],
         child: const MaterialApp(
           home: Scaffold(
-            body: MetricLogBottomSheet(),
+            body: LogMetricSheet(studentId: 'test-student'),
           ),
         ),
       );
