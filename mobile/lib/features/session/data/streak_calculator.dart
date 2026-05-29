@@ -41,9 +41,10 @@ int computeCurrentStreak(List<DateTime> completedDates) {
   return streak;
 }
 
-/// Computes the longest consecutive-day streak from a list of completion dates.
-/// Unlike computeCurrentStreak, this is not anchored to today — it finds the
-/// historical maximum run anywhere in the dataset.
+/// Computes the longest streak ever recorded from a list of progress records.
+///
+/// Returns the longest run of consecutive calendar days with at least one
+/// completed session. Returns 0 if no completions.
 int computeLongestStreak(List<DateTime> completedDates) {
   if (completedDates.isEmpty) return 0;
 
