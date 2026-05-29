@@ -3,20 +3,20 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-05-29T18:49:06.607Z"
+last_updated: "2026-05-29T22:56:42.837Z"
 progress:
-  total_phases: 16
-  completed_phases: 6
-  total_plans: 35
-  completed_plans: 32
+  total_phases: 17
+  completed_phases: 7
+  total_plans: 40
+  completed_plans: 37
 ---
 
 # GSD State
 
 **Last Updated**: 2026-05-29
-**Current Phase**: 7
-**Current Plan**: 07-05 (complete — all Phase 07 plans done)
-**Status**: in-progress
+**Current Phase**: 8 (complete)
+**Current Plan**: 08-05 (complete)
+**Status**: Phase 8 complete — ready for Phase 9
 
 ## Session Context
 
@@ -87,6 +87,21 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 07]: StatefulShellRoute.indexedStack wraps 4 branches (programs, progress, coach-chat, notifications) with ScaffoldWithNavBar — auth/paywall/settings remain outside shell
 - [Phase 07]: [Phase 07-05]: /coach-chat route: when sessionId query param present -> CoachChatScreen(sessionId) for FCM deep-link; without sessionId -> CoachTabScreen (premium gate)
 - [Phase 07]: [Phase 07-05]: GoRouter navigation widget test pattern — MaterialApp.router + GoRouter with test routes to verify navigation targets
+- [Phase 08]: Next.js 16 proxy.ts (not middleware.ts): file and exported function must both be named 'proxy'
+- [Phase 08]: [Phase 08-01]: getUser() (not getSession()) used in every Server Action and Route Handler for verified auth — getSession() returns unverified cookie data
+- [Phase 08]: [Phase 08-01]: shadcn CLI requires manual install of lucide-react, class-variance-authority, tailwind-merge — these are peer deps not auto-added to package.json
+- [Phase 08]: [Phase 08-01]: Login page uses 'use client' + useActionState — required because useActionState is a React hook; Server Action in actions.ts remains server-only
+- [Phase 08-us6-admin-panel]: [Phase 08-02]: export const dynamic='force-dynamic' required on RSC pages calling createServiceClient() — Next.js static prerender fails without runtime env vars
+- [Phase 08-us6-admin-panel]: [Phase 08-02]: publish/unpublish uses form action={fn.bind(null, id)} in RSC — no client component needed for simple toggle
+- [Phase 08-us6-admin-panel]: [Phase 08-02]: ThumbnailUploader rendered only in edit mode — programId required for upload path, program must exist first
+- [Phase 08]: [Phase 08-03]: RSC pages calling createServiceClient() require export const dynamic = 'force-dynamic' — Next.js 16 prerender at build time throws 'supabaseUrl is required' without env vars
+- [Phase 08]: [Phase 08-03]: FCM failure in send-fcm is non-fatal — coach_reply DB write succeeds unconditionally; push errors only logged
+- [Phase 08]: [Phase 08-03]: send-fcm uses crypto.subtle RSASSA-PKCS1-v1_5 (no third-party JWT lib) — Deno edge runtime compatible
+- [Phase 08-us6-admin-panel]: [Phase 08-04]: Mux webhook uses upload_id (stored in mux_asset_id) to find exercise — upload_id is written at upload time; asset_id only known after Mux processing
+- [Phase 08-us6-admin-panel]: [Phase 08-04]: VideoUploader and GlbUploader rendered only in exercise edit mode — exercise ID required for updateExerciseVideo path construction
+- [Phase 08-us6-admin-panel]: [Phase 08-04]: Empty string form fields for optional numeric inputs stripped to undefined before Zod parse to allow nullable coerce to work correctly
+- [Phase 08-us6-admin-panel]: [Phase 08-05]: Dashboard placed in (admin) route group; root app/page.tsx handles redirect — proxy.ts auth guard protects the (admin) group
+- [Phase 08-us6-admin-panel]: [Phase 08-05]: Dashboard counts pending feedback via .is('coach_reply', null) — matches the column used in feedback reply flow
 
 ## Blockers
 
@@ -131,7 +146,11 @@ None
 | Phase 07 P07-03 | 4m | 2 tasks | 3 files |
 | Phase 07 P07-04 | 29min | 2 tasks | 9 files |
 | Phase 07 P07-05 | 295s | 3 tasks | 6 files |
+| Phase 08 P08-01 | 202 | 2 tasks | 24 files |
+| Phase 08-us6-admin-panel P08-02 | 194s | 2 tasks | 7 files |
+| Phase 08-us6-admin-panel P08-04 | 3min | 2 tasks | 11 files |
+| Phase 08-us6-admin-panel P08-05 | 2min | 1 task | 3 files |
 
 ## Stopped At
 
-Completed 07-05-PLAN.md
+Completed 08-05-PLAN.md — Phase 8 complete
