@@ -62,16 +62,20 @@ command -v node    >/dev/null 2>&1 || die "Node.js not found. Run ./local-dev/in
 
 banner
 
-# ── Firebase config ───────────────────────────────────────────────────────────
-# Auto-generate firebase_options.dart + platform files if credentials are set.
-if [[ -n "${FIREBASE_PROJECT_ID:-}" ]]; then
-  step "Generating Firebase config"
+# ── Secrets + Edge Functions ──────────────────────────────────────────────────
+# Auto-configure all secrets and Firebase when credentials are present.
+if [[ -n "${FIREBASE_PROJECT_ID:-}" ]] && [[ -n "${MUX_TOKEN_ID:-}" ]] && [[ -n "${FIREBASE_SERVICE_ACCOUNT_JSON:-}" ]]; then
+  step "Setting up secrets and deploying edge functions"
+  bash "$REPO_ROOT/local-dev/setup-secrets.sh"
+elif [[ -n "${FIREBASE_PROJECT_ID:-}" ]]; then
+  step "Generating Firebase client config"
   bash "$REPO_ROOT/local-dev/setup-firebase.sh"
+  warn "MUX_TOKEN_ID or FIREBASE_SERVICE_ACCOUNT_JSON not set — edge function secrets not pushed."
+  warn "Run ./local-dev/setup-secrets.sh once all vars are in local-dev/.env."
 else
-  # Check if the file is still a placeholder stub
   if grep -q "TODO-replace-with-real-api-key" "$REPO_ROOT/mobile/lib/firebase_options.dart" 2>/dev/null; then
-    warn "Firebase credentials not set in local-dev/.env — push notifications will not work."
-    warn "Set FIREBASE_PROJECT_ID and related vars, then re-run dev.sh."
+    warn "Firebase + Mux credentials not set in local-dev/.env — push notifications and video upload will not work."
+    warn "See docs/secrets-setup.md for setup instructions."
   fi
 fi
 
