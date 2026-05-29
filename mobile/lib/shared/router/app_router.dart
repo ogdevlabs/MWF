@@ -8,6 +8,7 @@ import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/signup_screen.dart';
 import '../../features/auth/presentation/onboarding_screen.dart';
 import '../../features/auth/presentation/paywall_screen.dart';
+import '../../features/metrics/presentation/progress_screen.dart';
 import '../../features/programs/presentation/program_list_screen.dart';
 import '../../features/programs/presentation/program_detail_screen.dart';
 import '../../features/session/presentation/session_completion_screen.dart';
@@ -108,8 +109,7 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/progress',
         name: 'progress',
-        builder: (context, state) =>
-            const _PlaceholderScreen(title: 'Progress'),
+        builder: (context, state) => const ProgressScreen(),
       ),
       GoRoute(
         path: '/notifications',
