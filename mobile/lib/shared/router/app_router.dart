@@ -99,6 +99,7 @@ GoRouter appRouter(Ref ref) {
                     durationSeconds: extra['durationSeconds'] as int? ?? 0,
                     exerciseCount: extra['exerciseCount'] as int? ?? 0,
                     streak: extra['streak'] as int? ?? 0,
+                    studentId: extra['studentId'] as String?,
                   );
                 },
               ),
