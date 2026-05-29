@@ -1,2 +1,4 @@
 local-dev/.env
 build/
+.dart-defines.json
+mobile/.vscode/
