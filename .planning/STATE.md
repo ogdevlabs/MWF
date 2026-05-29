@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-05-29T02:23:19.481Z"
+last_updated: "2026-05-29T02:30:47.509Z"
 progress:
-  total_phases: 9
-  completed_phases: 4
+  total_phases: 15
+  completed_phases: 5
   total_plans: 30
-  completed_plans: 26
+  completed_plans: 27
 ---
 
 # GSD State
@@ -74,6 +74,8 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 06]: Empty state split into two Text widgets for exact test match with find.text('No data yet')
 - [Phase 06]: [Phase 06-03]: flutter_riverpod 3.3.1 does not export Override type — widget tests use plain ProviderScope.overrides without type annotation
 - [Phase 06]: [Phase 06-03]: StreakCard uses StreamBuilder over progressDao.watchProgressByStudent for reactive streak updates
+- [Phase 06-us4-metrics-progress]: [Phase 06-04]: MetricLogBottomSheet uses metricRepositoryProvider (canonical); LogMetricSheet retained for backward compat
+- [Phase 06-us4-metrics-progress]: [Phase 06-04]: Widget test migrated to metricRepositoryProvider.overrideWithValue pattern with MockSyncQueue + in-memory MetricRepository
 
 ## Blockers
 
@@ -112,7 +114,8 @@ None
 | 05 | 05-04 | 469s | 2 tasks | 8 files |
 | Phase 06 P01 | 435s | 7 tasks | 13 files |
 | Phase 06 P06-03 | 25m | 2 tasks | 6 files |
+| Phase 06-us4-metrics-progress P06-04 | 165s | 2 tasks | 4 files |
 
 ## Stopped At
 
-Completed 06-01-PLAN.md
+Completed 06-04-PLAN.md

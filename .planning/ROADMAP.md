@@ -124,7 +124,7 @@ Plans:
 - [x] 06-01-PLAN.md — Wave 0 test stubs (unit + widget tests for all new code)
 - [x] 06-02-PLAN.md — Pure functions (computeLongestStreak, computeMetricDelta) + MetricRepository + SyncService pull
 - [x] 06-03-PLAN.md — Progress screen UI (StreakCard, MetricLineChart, DeltaBadge, tab bar, router)
-- [ ] 06-04-PLAN.md — MetricLogBottomSheet + session completion prompt wiring
+- [x] 06-04-PLAN.md — MetricLogBottomSheet + session completion prompt wiring
 
 ### Phase 7: US5 Private Feedback
 **Goal**: Student submits a private post-session note and optional photo directly to the coach; receives a push notification when the coach replies; the full exchange is visible only to the student and coach (no community/public visibility).
