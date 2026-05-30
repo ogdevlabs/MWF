@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,18 +26,25 @@ class SubscriptionRepository {
   final SupabaseClient supabase;
 
   /// Check if user has active subscription via RevenueCat entitlement.
-  /// Falls back to Supabase subscriptions table on PlatformException.
+  /// Falls back to Supabase subscriptions table when RevenueCat is
+  /// unavailable or not configured (no API key set).
   /// Caches result in SharedPreferences for offline use.
   Future<bool> isSubscribed(String userId) async {
     try {
+      final isConfigured = await Purchases.isConfigured;
+      if (!isConfigured) {
+        // RevenueCat not configured — no API key set (development mode).
+        // Fall straight through to Supabase fallback.
+        return _checkSupabaseFallback(userId);
+      }
       final customerInfo = await Purchases.getCustomerInfo();
       final isActive =
           customerInfo.entitlements.active.containsKey('premium_access');
       await _cacheSubscriptionStatus(isActive);
       return isActive;
-    } on PlatformException catch (_) {
-      // RevenueCat unavailable (network error, SDK not configured)
-      // Fall back to Supabase
+    } catch (_) {
+      // Catches PlatformException, StateError, and any other RC error.
+      // Fall back to Supabase subscriptions table.
       return _checkSupabaseFallback(userId);
     }
   }
