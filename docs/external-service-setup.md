@@ -24,17 +24,24 @@ Manual configuration steps required outside of code before certain features func
 ## 2. RevenueCat (In-App Purchases)
 
 **Required for:** Phase 3 — Subscription gating
+**Status: ⏳ Deferred until App Store submission** — not needed for development or testing.
 
-1. Create project at https://app.revenuecat.com → name: `Move With Fergie`
-2. Configure platforms (App Store Connect API key + Google Play service account)
-3. Create entitlement: `premium_access`
-4. Create products: `mwf_monthly_premium` (monthly), `mwf_annual_premium` (annual)
-5. Create default offering with both packages
-6. Configure webhook:
-   - URL: `https://YOUR_SUPABASE_PROJECT.supabase.co/functions/v1/revenuecat-webhook`
-   - Events: `INITIAL_PURCHASE`, `RENEWAL`, `CANCELLATION`, `EXPIRATION`
-   - Set webhook secret → `npx supabase secrets set REVENUECAT_WEBHOOK_SECRET=xxx`
-7. Note API keys: `REVENUECAT_APPLE_API_KEY` and `REVENUECAT_GOOGLE_API_KEY` (used as `--dart-define` in Flutter builds)
+> The app falls back to the Supabase `subscriptions` table when RevenueCat is not configured.
+> The seeded test account `premium@test.mwf` works as premium without any RevenueCat setup.
+> Complete this only when you are ready to submit to the App Store.
+
+**Full step-by-step guide: [`docs/revenuecat-setup.md`](./revenuecat-setup.md)**
+
+Summary of what's needed when you're ready:
+1. Apple Developer account ($99/year) + Bundle ID `com.fererelabs.mwf` registered
+2. App Store Connect app record created
+3. App Store Connect API key (p8 file) generated
+4. RevenueCat project → iOS app added with p8 file
+5. Entitlement `premium_access` created
+6. Products `mwf_monthly_premium` + `mwf_annual_premium` created in App Store Connect
+7. Default offering with both packages
+8. Webhook → `https://rlcgtqagfdweisnxrasn.supabase.co/functions/v1/revenuecat-webhook`
+9. `REVENUECAT_APPLE_API_KEY` + `REVENUECAT_GOOGLE_API_KEY` added to `local-dev/.env`
 
 ---
 
@@ -86,10 +93,14 @@ Manual configuration steps required outside of code before certain features func
 
 ## Checklist
 
-- [ ] Firebase project created + `flutterfire configure` run
-- [ ] RevenueCat: entitlement `premium_access` + products `mwf_monthly_premium` / `mwf_annual_premium` created
-- [ ] RevenueCat webhook URL + secret configured
-- [ ] Mux API token created + webhook configured
-- [ ] Supabase project created + migration pushed + buckets created
-- [ ] iOS capabilities added in Xcode
-- [ ] All environment variables set in respective config files
+**Development (required now):**
+- [x] Firebase project created + credentials in `local-dev/.env` + `setup-firebase.sh` run
+- [x] Mux API token created + webhook registered in dashboard + secrets pushed via `setup-secrets.sh`
+- [x] Supabase project live + migrations applied + all 4 buckets created + `setup-supabase.sh` run
+- [ ] iOS capabilities added in Xcode (Push Notifications + Background Modes)
+- [ ] `SUPABASE_DB_PASSWORD` added to `local-dev/.env`
+
+**App Store submission (deferred):**
+- [ ] Apple Developer account enrolled ($99/year)
+- [ ] RevenueCat fully configured — see `docs/revenuecat-setup.md`
+- [ ] iOS In-App Purchase capability added in Xcode
