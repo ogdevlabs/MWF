@@ -3,20 +3,20 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: Ready to plan
-last_updated: "2026-05-29T22:56:42.837Z"
+last_updated: "2026-05-30T00:44:04Z"
 progress:
   total_phases: 17
   completed_phases: 7
   total_plans: 40
-  completed_plans: 37
+  completed_plans: 38
 ---
 
 # GSD State
 
-**Last Updated**: 2026-05-29
-**Current Phase**: 8 (complete)
-**Current Plan**: 08-05 (complete)
-**Status**: Phase 8 complete — ready for Phase 9
+**Last Updated**: 2026-05-30
+**Current Phase**: 9
+**Current Plan**: 09-01 (complete)
+**Status**: Phase 9 in progress — 09-01 complete
 
 ## Session Context
 
@@ -102,6 +102,9 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 08-us6-admin-panel]: [Phase 08-04]: Empty string form fields for optional numeric inputs stripped to undefined before Zod parse to allow nullable coerce to work correctly
 - [Phase 08-us6-admin-panel]: [Phase 08-05]: Dashboard placed in (admin) route group; root app/page.tsx handles redirect — proxy.ts auth guard protects the (admin) group
 - [Phase 08-us6-admin-panel]: [Phase 08-05]: Dashboard counts pending feedback via .is('coach_reply', null) — matches the column used in feedback reply flow
+- [Phase 09]: [Phase 09-01]: DropdownButtonFormField.value deprecated after Flutter 3.33.0-1.0.pre — replacement is initialValue on FormField variant only; regular DropdownButton.value unaffected
+- [Phase 09]: [Phase 09-01]: postgrest types (PostgrestFilterBuilder, PostgrestList) are transitively re-exported by supabase_flutter — direct package:postgrest imports are unnecessary_import + depend_on_referenced_packages violations
+- [Phase 09]: [Phase 09-01]: no_leading_underscores_for_local_identifiers lint applies to local function declarations in test files — _makeLog, _buildSubject must be renamed without underscore
 
 ## Blockers
 
@@ -150,7 +153,8 @@ None
 | Phase 08-us6-admin-panel P08-02 | 194s | 2 tasks | 7 files |
 | Phase 08-us6-admin-panel P08-04 | 3min | 2 tasks | 11 files |
 | Phase 08-us6-admin-panel P08-05 | 2min | 1 task | 3 files |
+| Phase 09-polish-qa P09-01 | 3min | 2 tasks | 9 files |
 
 ## Stopped At
 
-Completed 08-05-PLAN.md — Phase 8 complete
+Completed 09-01-PLAN.md — flutter analyze --fatal-infos exits 0 (15 issues resolved)
