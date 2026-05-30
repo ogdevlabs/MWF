@@ -34,7 +34,21 @@ class ProgramDetailScreen extends ConsumerWidget {
       ),
       error: (error, _) => Scaffold(
         appBar: AppBar(),
-        body: Center(child: Text('Error loading program: $error')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 48),
+              const SizedBox(height: 16),
+              const Text('Failed to load program'),
+              const SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: () => ref.invalidate(programsListProvider),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
       ),
       data: (programs) {
         final program =
@@ -153,10 +167,24 @@ class _ProgramDetailBody extends ConsumerWidget {
                             child: CircularProgressIndicator(),
                           ),
                         ),
-                        error: (e, _) => Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Text('Error loading sessions: $e'),
+                        error: (e, _) => Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.error_outline, size: 48),
+                              const SizedBox(height: 16),
+                              const Text('Failed to load sessions'),
+                              const SizedBox(height: 12),
+                              OutlinedButton(
+                                onPressed: () => ref.invalidate(
+                                  sessionsWithStateProvider(
+                                    programId: program.id,
+                                    currentDay: program.currentDay,
+                                  ),
+                                ),
+                                child: const Text('Retry'),
+                              ),
+                            ],
                           ),
                         ),
                         data: (sessions) {
@@ -235,9 +263,14 @@ class _ProgramDetailBody extends ConsumerWidget {
           onPressed: null,
           child: Text('Loading...'),
         ),
-        error: (_, _) => const FilledButton(
-          onPressed: null,
-          child: Text('Continue Program'),
+        error: (_, _) => OutlinedButton(
+          onPressed: () => ref.invalidate(
+            sessionsWithStateProvider(
+              programId: program.id,
+              currentDay: program.currentDay,
+            ),
+          ),
+          child: const Text('Retry'),
         ),
         data: (sessions) {
           final currentSession = sessions

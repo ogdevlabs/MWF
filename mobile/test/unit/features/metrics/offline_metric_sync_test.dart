@@ -4,7 +4,6 @@ import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:postgrest/postgrest.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:mwf_mobile/core/database/app_database.dart';
 import 'package:mwf_mobile/core/sync/sync_queue.dart';

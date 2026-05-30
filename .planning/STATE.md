@@ -2,21 +2,21 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-last_updated: "2026-05-29T22:56:42.837Z"
+status: Milestone complete
+last_updated: "2026-05-30T01:17:05.414Z"
 progress:
-  total_phases: 17
-  completed_phases: 7
-  total_plans: 40
-  completed_plans: 37
+  total_phases: 18
+  completed_phases: 8
+  total_plans: 44
+  completed_plans: 41
 ---
 
 # GSD State
 
-**Last Updated**: 2026-05-29
-**Current Phase**: 8 (complete)
-**Current Plan**: 08-05 (complete)
-**Status**: Phase 8 complete — ready for Phase 9
+**Last Updated**: 2026-05-30
+**Current Phase**: 9
+**Current Plan**: 09-04 (complete)
+**Status**: Phase 9 complete — all 4 plans done (09-01 through 09-04)
 
 ## Session Context
 
@@ -102,6 +102,12 @@ Phase 2 foundation in progress. Plans 02-01 and 02-02 complete.
 - [Phase 08-us6-admin-panel]: [Phase 08-04]: Empty string form fields for optional numeric inputs stripped to undefined before Zod parse to allow nullable coerce to work correctly
 - [Phase 08-us6-admin-panel]: [Phase 08-05]: Dashboard placed in (admin) route group; root app/page.tsx handles redirect — proxy.ts auth guard protects the (admin) group
 - [Phase 08-us6-admin-panel]: [Phase 08-05]: Dashboard counts pending feedback via .is('coach_reply', null) — matches the column used in feedback reply flow
+- [Phase 09]: [Phase 09-01]: DropdownButtonFormField.value deprecated after Flutter 3.33.0-1.0.pre — replacement is initialValue on FormField variant only; regular DropdownButton.value unaffected
+- [Phase 09]: [Phase 09-01]: postgrest types (PostgrestFilterBuilder, PostgrestList) are transitively re-exported by supabase_flutter — direct package:postgrest imports are unnecessary_import + depend_on_referenced_packages violations
+- [Phase 09]: [Phase 09-01]: no_leading_underscores_for_local_identifiers lint applies to local function declarations in test files — _makeLog, _buildSubject must be renamed without underscore
+- [Phase 09]: [Phase 09-02]: Semantics wrapper on ExerciseVideoPlayer covers all build paths (loading/unavailable/playing) — placed in build() root wrapping _buildContent() so bySemanticsLabel works in no-video test environments
+- [Phase 09-polish-qa]: Riverpod 4.x uses Ref (not FooRef) in functional provider signatures — plan template was Riverpod 2.x style; corrected to match project convention
+- [Phase 09-polish-qa]: Integration test skip: uses bool true (not string) per flutter_test 1.31.x API change; linter auto-corrected; consistent with 09-04 agent fix in 4cf339a
 
 ## Blockers
 
@@ -150,7 +156,11 @@ None
 | Phase 08-us6-admin-panel P08-02 | 194s | 2 tasks | 7 files |
 | Phase 08-us6-admin-panel P08-04 | 3min | 2 tasks | 11 files |
 | Phase 08-us6-admin-panel P08-05 | 2min | 1 task | 3 files |
+| Phase 09-polish-qa P09-01 | 3min | 2 tasks | 9 files |
+| Phase 09-polish-qa P09-02 | 4min | 3 tasks | 8 files |
+| Phase 09-polish-qa P09-04 | 6min | 2 tasks | 12 files |
+| Phase 09-polish-qa P09-03 | 9min | 2 tasks | 11 files |
 
 ## Stopped At
 
-Completed 08-05-PLAN.md — Phase 8 complete
+Completed 09-03-PLAN.md — SC-001..SC-008 integration test stubs (skip: true) + AnalyticsService/NoOpAnalyticsService scaffold with keepAlive Riverpod provider; 114 tests pass

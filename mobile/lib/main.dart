@@ -6,6 +6,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'firebase_options.dart';
+import 'l10n/app_localizations.dart';
 import 'shared/theme/app_theme.dart';
 import 'shared/router/app_router.dart';
 
@@ -62,6 +63,8 @@ class MwfApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

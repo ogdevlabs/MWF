@@ -18,7 +18,7 @@ void main() {
   });
 
   group('ProgressScreen', () {
-    Widget _buildSubject() {
+    Widget buildSubject() {
       return ProviderScope(
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
@@ -54,7 +54,7 @@ void main() {
     });
 
     testWidgets('shows streak card section', (tester) async {
-      await tester.pumpWidget(_buildSubject());
+      await tester.pumpWidget(buildSubject());
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
       // Streak card header should be visible
@@ -63,7 +63,7 @@ void main() {
 
     testWidgets('shows tab bar with Weight, Measurements, Flexibility tabs',
         (tester) async {
-      await tester.pumpWidget(_buildSubject());
+      await tester.pumpWidget(buildSubject());
       await tester.pump();
       expect(find.text('Weight'), findsOneWidget);
       expect(find.text('Measurements'), findsOneWidget);
@@ -71,7 +71,7 @@ void main() {
     });
 
     testWidgets('shows Log Metrics button', (tester) async {
-      await tester.pumpWidget(_buildSubject());
+      await tester.pumpWidget(buildSubject());
       await tester.pump();
       expect(find.text('Log Metrics'), findsOneWidget);
     });

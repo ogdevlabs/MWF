@@ -176,7 +176,22 @@ class _MetricTabContentState extends ConsumerState<_MetricTabContent>
 
     return logsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => const Center(child: Text('Unable to load metrics')),
+      error: (err, _) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48),
+            const SizedBox(height: 16),
+            const Text('Unable to load metrics'),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: () =>
+                  ref.invalidate(metricLogsByTypeProvider(widget.metricType)),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
       data: (allLogs) {
         // Filter by subtype when applicable (D-11, D-12).
         final logs = _selectedSubtype != null

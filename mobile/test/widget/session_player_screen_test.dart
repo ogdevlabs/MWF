@@ -68,6 +68,18 @@ void main() {
   }
 
   group('SessionPlayerScreen widget', () {
+    testWidgets('session player video area has accessibility label',
+        (tester) async {
+      final semanticsHandle = tester.ensureSemantics();
+      await tester.pumpWidget(buildSubject(db));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      expect(
+        find.bySemanticsLabel(RegExp(r'Exercise video')),
+        findsAtLeastNWidgets(1),
+      );
+      semanticsHandle.dispose();
+    });
+
     testWidgets('screen builds and loads without crashing', (tester) async {
       await tester.pumpWidget(buildSubject(db));
       await tester.pumpAndSettle(const Duration(seconds: 2));
