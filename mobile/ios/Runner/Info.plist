@@ -61,12 +61,12 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<!-- Reversed iOS client ID for Google Sign-In OAuth redirect.
-				     Format: com.googleusercontent.apps.<ios-client-id>
+				     Format: com.googleusercontent.apps.826982026670-kc63o2hhqfafo5eguf3ifnljj19tn716<ios-client-id>
 				     This is the REVERSED form of your iOS OAuth client ID.
 				     Example: if iOS client ID is abc123.apps.googleusercontent.com
-				              the scheme is com.googleusercontent.apps.abc123
+				              the scheme is com.googleusercontent.apps.826982026670-kc63o2hhqfafo5eguf3ifnljj19tn716
 				     Set GOOGLE_IOS_CLIENT_ID in local-dev/.env — run-mobile.sh patches this automatically. -->
-				<string>GOOGLE_IOS_URL_SCHEME_PLACEHOLDER</string>
+				<string>com.googleusercontent.apps.826982026670-kc63o2hhqfafo5eguf3ifnljj19tn716</string>
 			</array>
 		</dict>
 	</array>

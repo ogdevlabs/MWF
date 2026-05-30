@@ -158,15 +158,20 @@ if [[ "$TARGET" != "android" ]] && command -v pod >/dev/null 2>&1; then
 fi
 
 # ── ensure admin .env.local ───────────────────────────────────────────────────
-if [[ "$TARGET" != "mobile-only" ]] && [[ ! -f admin/.env.local ]]; then
-  cat > admin/.env.local << EOF
-NEXT_PUBLIC_SUPABASE_URL=$SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY
-SUPABASE_SERVICE_ROLE_KEY=placeholder
-MUX_TOKEN_ID=placeholder
-MUX_TOKEN_SECRET=placeholder
+if [[ "$TARGET" != "mobile-only" ]]; then
+  # Always regenerate admin/.env.local from .env so real secrets are picked up.
+  cat > "$REPO_ROOT/admin/.env.local" << EOF
+NEXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL}
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY}
+SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY:-placeholder}
+MUX_TOKEN_ID=${MUX_TOKEN_ID:-placeholder}
+MUX_TOKEN_SECRET=${MUX_TOKEN_SECRET:-placeholder}
 EOF
-  warn "Created admin/.env.local — update SUPABASE_SERVICE_ROLE_KEY for admin queries."
+  if [[ "${SUPABASE_SERVICE_ROLE_KEY:-}" == "placeholder" ]] || [[ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]]; then
+    warn "admin/.env.local: SUPABASE_SERVICE_ROLE_KEY is placeholder — add it to local-dev/.env"
+  else
+    ok "admin/.env.local written with real credentials"
+  fi
 fi
 
 # ── start admin panel (background) ───────────────────────────────────────────
