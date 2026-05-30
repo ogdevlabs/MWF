@@ -45,11 +45,18 @@ class NotificationsScreen extends ConsumerWidget {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(
-          child: Text(
-            'Unable to load notifications',
-            style: textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 48),
+              const SizedBox(height: 16),
+              const Text('Failed to load notifications'),
+              const SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: () => ref.invalidate(coachRepliesProvider),
+                child: const Text('Retry'),
+              ),
+            ],
           ),
         ),
       ),

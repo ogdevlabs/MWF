@@ -146,8 +146,20 @@ class _CoachChatScreenState extends ConsumerState<CoachChatScreen> {
               },
               loading: () =>
                   const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => const Center(
-                child: Text('Unable to load messages'),
+              error: (err, stack) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 48),
+                    const SizedBox(height: 16),
+                    const Text('Failed to load conversations'),
+                    const SizedBox(height: 12),
+                    OutlinedButton(
+                      onPressed: () => ref.invalidate(feedbackThreadProvider),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
