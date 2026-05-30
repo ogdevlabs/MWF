@@ -9,8 +9,8 @@ Manual configuration steps required outside of code before certain features func
 **Required for:** Phase 7 — Push notifications for coach replies
 
 1. Create project at https://console.firebase.google.com
-2. Add iOS app (Bundle ID: `com.fererelabs.mwfMobile`) → download `GoogleService-Info.plist` → place at `mobile/ios/Runner/GoogleService-Info.plist`
-3. Add Android app (Package: `com.fererelabs.mwf_mobile`) → download `google-services.json` → place at `mobile/android/app/google-services.json`
+2. Add iOS app (Bundle ID: `com.fererelabs.mwf`) → download `GoogleService-Info.plist` → place at `mobile/ios/Runner/GoogleService-Info.plist`
+3. Add Android app (Package: `com.fererelabs.mwf`) → download `google-services.json` → place at `mobile/android/app/google-services.json`
 4. Run FlutterFire CLI to regenerate `firebase_options.dart`:
    ```bash
    dart pub global activate flutterfire_cli

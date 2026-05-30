@@ -60,7 +60,7 @@ Firebase Console
 
 1. On the Project Overview page, click the **iOS icon** (looks like an Apple logo)
 2. Fill in:
-   - **Apple bundle ID**: `com.fererelabs.mwfMobile`
+   - **Apple bundle ID**: `com.fererelabs.mwf`
    - **App nickname**: `MWF iOS` (optional, just a label)
    - **App Store ID**: leave blank
 3. Click **"Register app"**
@@ -113,7 +113,7 @@ FIREBASE_IOS_STORAGE_BUCKET=move-with-fergie.appspot.com
 
 1. Back on the Project Overview, click **"Add app"** → **Android icon**
 2. Fill in:
-   - **Android package name**: `com.fererelabs.mwf_mobile`
+   - **Android package name**: `com.fererelabs.mwf`
    - **App nickname**: `MWF Android` (optional)
    - **Debug signing certificate SHA-1**: leave blank for now
 3. Click **"Register app"**

@@ -63,8 +63,8 @@ if [[ ${#MISSING[@]} -gt 0 ]]; then
   exit 1
 fi
 
-BUNDLE_ID="com.fererelabs.mwfMobile"
-ANDROID_PKG="com.fererelabs.mwf_mobile"
+BUNDLE_ID="com.fererelabs.mwf"
+ANDROID_PKG="com.fererelabs.mwf"
 
 # ── 1. firebase_options.dart ──────────────────────────────────────────────────
 step "Writing mobile/lib/firebase_options.dart"

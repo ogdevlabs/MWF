@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.fererelabs.mwf_mobile"
+    namespace = "com.fererelabs.mwf"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.fererelabs.mwf_mobile"
+        applicationId = "com.fererelabs.mwf"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24 // model_viewer_plus requires API 24+
