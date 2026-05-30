@@ -59,7 +59,7 @@ cat ~/Downloads/your-service-account.json | python3 -c "import sys,json; print(j
 | `MUX_TOKEN_SECRET` | Same token creation page — copy immediately, shown only once |
 | `MUX_WEBHOOK_SIGNING_SECRET` | dashboard.mux.com → Settings → Webhooks → any webhook → Signing secret |
 
-> **Mux webhook URL** is registered automatically by `setup-secrets.sh`. You do NOT need to create it manually in the Mux dashboard.
+> **Mux webhook** must be registered manually in the Mux dashboard — the API does not allow webhook creation via tokens. `setup-secrets.sh` will print the exact URL and steps.
 
 ---
 
@@ -100,7 +100,7 @@ MUX_WEBHOOK_SIGNING_SECRET=your-signing-secret
 This command:
 1. Pushes 7 secrets to Supabase Edge Functions (`send-fcm`, `mux-webhook`, etc.)
 2. Deploys all 4 Edge Functions
-3. Registers the Mux webhook URL automatically
+3. Prints Mux webhook setup instructions (manual dashboard step — API does not support creation via token)
 4. Generates `firebase_options.dart`, `GoogleService-Info.plist`, `google-services.json`
 
 After this, `./local-dev/dev.sh` calls `setup-secrets.sh` automatically on every start (when credentials are present).
@@ -123,7 +123,7 @@ SUPABASE_ACCESS_TOKEN=sbp_...   # supabase.com → Account → Access Tokens
 ./local-dev/setup-secrets.sh --env prod
 ```
 
-Same secrets, different project ref. The Mux webhook will be registered pointing to the prod Edge Function URL.
+Same secrets, different project ref. Register the Mux webhook manually in the dashboard pointing to the prod Edge Function URL.
 
 ---
 

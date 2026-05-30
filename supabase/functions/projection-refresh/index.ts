@@ -1,4 +1,4 @@
-import "@supabase/functions-js/edge-runtime.d.ts";
+
 
 // Projection Refresh Handler
 // Triggered by Supabase Database Webhook on command-side table changes.

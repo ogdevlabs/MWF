@@ -1,4 +1,4 @@
-import "@supabase/functions-js/edge-runtime.d.ts";
+
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // Base64url encode a Uint8Array

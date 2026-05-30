@@ -128,19 +128,19 @@ if [[ "$DRY_RUN" == "true" ]]; then
   dryrun "Secrets: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, FIREBASE_SERVICE_ACCOUNT_JSON,"
   dryrun "         FIREBASE_PROJECT_ID, MUX_TOKEN_ID, MUX_TOKEN_SECRET, MUX_WEBHOOK_SIGNING_SECRET"
 elif [[ -n "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
-  # Use Management API directly (no CLI login required)
+  # Push non-SUPABASE_ prefixed secrets via Management API
+  # Note: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are built-in to edge functions
+  # and cannot be set via this API (prefix is reserved). Only push app-level secrets.
   SECRETS_JSON=$(python3 -c "
 import json, os
 secrets = {
-    'SUPABASE_URL': '${SUPABASE_URL:-${SUPABASE_URL_PROD:-}}',
-    'SUPABASE_SERVICE_ROLE_KEY': '${SUPABASE_SERVICE_ROLE_KEY}',
     'FIREBASE_SERVICE_ACCOUNT_JSON': os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON', ''),
-    'FIREBASE_PROJECT_ID': '${FIREBASE_PROJECT_ID}',
-    'MUX_TOKEN_ID': '${MUX_TOKEN_ID}',
-    'MUX_TOKEN_SECRET': '${MUX_TOKEN_SECRET}',
-    'MUX_WEBHOOK_SIGNING_SECRET': '${MUX_WEBHOOK_SIGNING_SECRET}',
+    'FIREBASE_PROJECT_ID': os.environ.get('FIREBASE_PROJECT_ID', ''),
+    'MUX_TOKEN_ID': os.environ.get('MUX_TOKEN_ID', ''),
+    'MUX_TOKEN_SECRET': os.environ.get('MUX_TOKEN_SECRET', ''),
+    'MUX_WEBHOOK_SIGNING_SECRET': os.environ.get('MUX_WEBHOOK_SIGNING_SECRET', ''),
 }
-print(json.dumps([{'name': k, 'value': v} for k, v in secrets.items()]))
+print(json.dumps([{'name': k, 'value': v} for k, v in secrets.items() if v]))
 " 2>/dev/null)
   RESULT=$(curl -sf \
     -X POST \
@@ -148,10 +148,10 @@ print(json.dumps([{'name': k, 'value': v} for k, v in secrets.items()]))
     -H "Content-Type: application/json" \
     "https://api.supabase.com/v1/projects/${PROJECT_REF}/secrets" \
     -d "$SECRETS_JSON" 2>&1 || echo "FAILED")
-  if [[ "$RESULT" == "FAILED" ]] || echo "$RESULT" | grep -q '"error"'; then
-    warn "Secrets push failed. Check SUPABASE_ACCESS_TOKEN. Response: $RESULT"
+  if [[ "$RESULT" == "FAILED" ]] || echo "$RESULT" | grep -q '"message"'; then
+    warn "Secrets push failed: $RESULT"
   else
-    ok "Edge Function secrets set (7 secrets via Management API)"
+    ok "Edge Function secrets set (5 secrets: Firebase + Mux)"
   fi
 else
   warn "SUPABASE_ACCESS_TOKEN not set — skipping secrets push."
@@ -184,61 +184,31 @@ for fn in "${FUNCTIONS[@]}"; do
   fi
 done
 
-# ── 3. Register Mux webhook ───────────────────────────────────────────────────
-step "3/3  Registering Mux webhook"
+# ── 3. Mux webhook (dashboard-only — cannot be automated via API) ─────────────
+step "3/3  Mux webhook"
 
 WEBHOOK_URL="${SUPABASE_FUNCTIONS_URL}/mux-webhook"
 
-# Query existing webhooks to check if already registered
-EXISTING=$(curl -sf \
-  -u "${MUX_TOKEN_ID}:${MUX_TOKEN_SECRET}" \
-  "https://api.mux.com/video/v1/webhooks" 2>/dev/null || echo '{"data":[]}')
-
-ALREADY_REGISTERED=$(echo "$EXISTING" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-webhooks = data.get('data', [])
-url = '$WEBHOOK_URL'
-for w in webhooks:
-    if w.get('url') == url:
-        print(w['id'])
-        break
-" 2>/dev/null || echo "")
-
-if [[ -n "$ALREADY_REGISTERED" ]]; then
-  ok "Mux webhook already registered (id: $ALREADY_REGISTERED)"
+# Mux does not allow webhook creation via API tokens.
+# The /system/v1/webhooks endpoint returns 401 "must be completed through dashboard".
+# Verify if already registered by checking if the URL is known.
+MUX_WEBHOOK_ID_KEY="MUX_WEBHOOK_ID_$(echo "$TARGET_ENV" | tr '[:lower:]' '[:upper:]')"
+if grep -q "$MUX_WEBHOOK_ID_KEY" "$REPO_ROOT/local-dev/.env" 2>/dev/null; then
+  SAVED_ID=$(grep "$MUX_WEBHOOK_ID_KEY" "$REPO_ROOT/local-dev/.env" | cut -d= -f2 | tr -d ' ')
+  ok "Mux webhook previously registered (id: $SAVED_ID)"
   info "URL: $WEBHOOK_URL"
-elif [[ "$DRY_RUN" == "true" ]]; then
-  dryrun "curl -X POST https://api.mux.com/video/v1/webhooks"
-  dryrun "  url=$WEBHOOK_URL"
-  dryrun "  events=[video.asset.ready, video.asset.errored]"
 else
-  RESPONSE=$(curl -sf \
-    -X POST \
-    -u "${MUX_TOKEN_ID}:${MUX_TOKEN_SECRET}" \
-    -H "Content-Type: application/json" \
-    "https://api.mux.com/video/v1/webhooks" \
-    -d "{
-      \"url\": \"$WEBHOOK_URL\",
-      \"events\": [\"video.asset.ready\", \"video.asset.errored\"]
-    }" 2>&1 || echo '{"error":"failed"}')
-
-  if echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('data',{}).get('id',''))" 2>/dev/null | grep -q "."; then
-    WEBHOOK_ID=$(echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['data']['id'])" 2>/dev/null)
-    ok "Mux webhook registered (id: $WEBHOOK_ID)"
-    info "URL: $WEBHOOK_URL"
-
-    # Save the webhook ID back to .env for reference
-    if ! grep -q "MUX_WEBHOOK_ID_$(echo "$TARGET_ENV" | tr '[:lower:]' '[:upper:]')" "$REPO_ROOT/local-dev/.env" 2>/dev/null; then
-      echo "" >> "$REPO_ROOT/local-dev/.env"
-      echo "# Auto-set by setup-secrets.sh" >> "$REPO_ROOT/local-dev/.env"
-      echo "MUX_WEBHOOK_ID_$(echo "$TARGET_ENV" | tr '[:lower:]' '[:upper:]')=${WEBHOOK_ID}" >> "$REPO_ROOT/local-dev/.env"
-    fi
-  else
-    warn "Mux webhook registration may have failed. Response: $RESPONSE"
-    warn "Register manually at https://dashboard.mux.com/settings/webhooks"
-    warn "URL to register: $WEBHOOK_URL"
-  fi
+  echo ""
+  echo -e "${YELLOW}${BOLD}  ⚠  Mux webhook requires manual setup (dashboard-only):${NC}"
+  echo ""
+  echo "  1. Go to: https://dashboard.mux.com/settings/webhooks"
+  echo "  2. Click 'Add Webhook'"
+  echo "  3. URL: ${WEBHOOK_URL}"
+  echo "  4. Events: video.asset.ready, video.asset.errored"
+  echo "  5. Copy the Signing Secret → paste as MUX_WEBHOOK_SIGNING_SECRET in local-dev/.env"
+  echo "  6. Copy the Webhook ID → add to local-dev/.env:"
+  echo "     ${MUX_WEBHOOK_ID_KEY}=<webhook-id>"
+  echo ""
 fi
 
 # ── 4. Firebase client config (delegates to setup-firebase.sh) ───────────────
@@ -258,9 +228,11 @@ fi
 echo ""
 echo -e "${GREEN}${BOLD}✓ Secrets setup complete for $(echo "$TARGET_ENV" | tr '[:lower:]' '[:upper:]')${NC}"
 echo ""
-echo "  ✓ Supabase Edge Function secrets (7 vars)"
-echo "  ✓ Edge Functions deployed (send-fcm, mux-webhook, revenuecat-webhook, projection-refresh)"
-echo "  ✓ Mux webhook registered → $WEBHOOK_URL"
+echo "  ✓ Firebase client config files generated"
+[[ -n "${SUPABASE_ACCESS_TOKEN:-}" ]] && echo "  ✓ Supabase Edge Function secrets (7 vars)" || echo "  ⚠  Supabase secrets skipped — add SUPABASE_ACCESS_TOKEN to .env"
+[[ -n "${SUPABASE_ACCESS_TOKEN:-}" ]] && echo "  ✓ Edge Functions deployed" || echo "  ⚠  Edge Function deploy skipped — add SUPABASE_ACCESS_TOKEN to .env"
+echo "  ⚙  Mux webhook — register manually at https://dashboard.mux.com/settings/webhooks"
+echo "     URL: $WEBHOOK_URL"
 echo "  ✓ Firebase client config files generated"
 echo ""
 if [[ "$TARGET_ENV" == "dev" ]]; then
