@@ -174,6 +174,6 @@ Plans:
 Plans:
 - [x] 09-01-PLAN.md — Analyzer cleanup: fix all 15 static analysis issues (deprecated params, redundant imports, unused vars, identifier renames)
 
-- [ ] 09-02-PLAN.md — Error+retry states on 5 screens + Semantics accessibility for ExerciseVideoPlayer
+- [x] 09-02-PLAN.md — Error+retry states on 5 screens + Semantics accessibility for ExerciseVideoPlayer
 - [ ] 09-03-PLAN.md — SC-001..SC-008 integration test stubs + AnalyticsService scaffold (NoOp)
 - [ ] 09-04-PLAN.md — Localization scaffold (gen-l10n pipeline + ARB template + MaterialApp wiring) + final QA pass
