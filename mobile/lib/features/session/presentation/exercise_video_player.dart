@@ -104,6 +104,13 @@ class ExerciseVideoPlayerState extends State<ExerciseVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Exercise video: ${widget.exercise.title}',
+      child: _buildContent(),
+    );
+  }
+
+  Widget _buildContent() {
     if (!_videoAvailable) {
       return Container(
         color: Colors.black,
