@@ -18,7 +18,7 @@ coach create/publish programs and reply to student messages.
 - [x] **Phase 6: US4 Metrics & Progress** - Body metric logging, trend charts, completion streaks (completed 2026-05-29)
 - [x] **Phase 7: US5 Private Feedback** - Private student→coach DM, push notifications, reply threading (completed 2026-05-29)
 - [x] **Phase 8: US6 Admin Panel** - Coach content creation, program publishing, private feedback replies (completed 2026-05-29)
-- [ ] **Phase 9: Polish & QA** - Accessibility, error handling, performance benchmarks, analytics, final QA
+- [x] **Phase 9: Polish & QA** - Accessibility, error handling, performance benchmarks, analytics, final QA (completed 2026-05-30)
 
 ## Phase Details
 
@@ -175,5 +175,5 @@ Plans:
 - [x] 09-01-PLAN.md — Analyzer cleanup: fix all 15 static analysis issues (deprecated params, redundant imports, unused vars, identifier renames)
 
 - [x] 09-02-PLAN.md — Error+retry states on 5 screens + Semantics accessibility for ExerciseVideoPlayer
-- [ ] 09-03-PLAN.md — SC-001..SC-008 integration test stubs + AnalyticsService scaffold (NoOp)
-- [ ] 09-04-PLAN.md — Localization scaffold (gen-l10n pipeline + ARB template + MaterialApp wiring) + final QA pass
+- [x] 09-03-PLAN.md — SC-001..SC-008 integration test stubs + AnalyticsService scaffold (NoOp)
+- [x] 09-04-PLAN.md — Localization scaffold (gen-l10n pipeline + ARB template + MaterialApp wiring) + final QA pass
