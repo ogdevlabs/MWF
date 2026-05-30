@@ -100,7 +100,7 @@ fi
 # ── banner ────────────────────────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BOLD}  MWF Secrets Setup — ${TARGET_ENV^^}${NC}"
+echo -e "${BOLD}  MWF Secrets Setup — $(echo "$TARGET_ENV" | tr '[:lower:]' '[:upper:]')${NC}"
 echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 info "Project ref: $PROJECT_REF"
 info "Functions:   $SUPABASE_FUNCTIONS_URL"
@@ -124,14 +124,39 @@ MUX_WEBHOOK_SIGNING_SECRET=${MUX_WEBHOOK_SIGNING_SECRET}
 ENVEOF
 
 if [[ "$DRY_RUN" == "true" ]]; then
-  dryrun "npx supabase secrets set --project-ref $PROJECT_REF --env-file <secrets_file>"
+  dryrun "Push 7 secrets to Supabase Edge Functions via Management API"
   dryrun "Secrets: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, FIREBASE_SERVICE_ACCOUNT_JSON,"
   dryrun "         FIREBASE_PROJECT_ID, MUX_TOKEN_ID, MUX_TOKEN_SECRET, MUX_WEBHOOK_SIGNING_SECRET"
+elif [[ -n "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
+  # Use Management API directly (no CLI login required)
+  SECRETS_JSON=$(python3 -c "
+import json, os
+secrets = {
+    'SUPABASE_URL': '${SUPABASE_URL:-${SUPABASE_URL_PROD:-}}',
+    'SUPABASE_SERVICE_ROLE_KEY': '${SUPABASE_SERVICE_ROLE_KEY}',
+    'FIREBASE_SERVICE_ACCOUNT_JSON': os.environ.get('FIREBASE_SERVICE_ACCOUNT_JSON', ''),
+    'FIREBASE_PROJECT_ID': '${FIREBASE_PROJECT_ID}',
+    'MUX_TOKEN_ID': '${MUX_TOKEN_ID}',
+    'MUX_TOKEN_SECRET': '${MUX_TOKEN_SECRET}',
+    'MUX_WEBHOOK_SIGNING_SECRET': '${MUX_WEBHOOK_SIGNING_SECRET}',
+}
+print(json.dumps([{'name': k, 'value': v} for k, v in secrets.items()]))
+" 2>/dev/null)
+  RESULT=$(curl -sf \
+    -X POST \
+    -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+    -H "Content-Type: application/json" \
+    "https://api.supabase.com/v1/projects/${PROJECT_REF}/secrets" \
+    -d "$SECRETS_JSON" 2>&1 || echo "FAILED")
+  if [[ "$RESULT" == "FAILED" ]] || echo "$RESULT" | grep -q '"error"'; then
+    warn "Secrets push failed. Check SUPABASE_ACCESS_TOKEN. Response: $RESULT"
+  else
+    ok "Edge Function secrets set (7 secrets via Management API)"
+  fi
 else
-  npx supabase secrets set \
-    --project-ref "$PROJECT_REF" \
-    --env-file "$SECRETS_TMP" 2>&1 | grep -v "^$" || true
-  ok "Edge Function secrets set (7 secrets)"
+  warn "SUPABASE_ACCESS_TOKEN not set — skipping secrets push."
+  warn "Get token from: https://supabase.com/dashboard/account/tokens"
+  warn "Add SUPABASE_ACCESS_TOKEN=sbp_... to local-dev/.env"
 fi
 
 # ── 2. Deploy Edge Functions ───────────────────────────────────────────────────
@@ -147,12 +172,15 @@ for fn in "${FUNCTIONS[@]}"; do
   fi
 
   if [[ "$DRY_RUN" == "true" ]]; then
-    dryrun "npx supabase functions deploy $fn --project-ref $PROJECT_REF"
-  else
+    dryrun "Deploy edge function: $fn"
+  elif [[ -n "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
+    export SUPABASE_ACCESS_TOKEN
     npx supabase functions deploy "$fn" \
       --project-ref "$PROJECT_REF" \
-      --no-verify-jwt 2>&1 | tail -3 || warn "Deploy of $fn may have failed — check output above"
+      --no-verify-jwt 2>&1 | tail -3 || warn "Deploy of $fn may have failed"
     ok "Deployed: $fn"
+  else
+    warn "Skipping deploy of $fn — SUPABASE_ACCESS_TOKEN not set"
   fi
 done
 
@@ -201,10 +229,10 @@ else
     info "URL: $WEBHOOK_URL"
 
     # Save the webhook ID back to .env for reference
-    if ! grep -q "MUX_WEBHOOK_ID_${TARGET_ENV^^}" "$REPO_ROOT/local-dev/.env" 2>/dev/null; then
+    if ! grep -q "MUX_WEBHOOK_ID_$(echo "$TARGET_ENV" | tr '[:lower:]' '[:upper:]')" "$REPO_ROOT/local-dev/.env" 2>/dev/null; then
       echo "" >> "$REPO_ROOT/local-dev/.env"
       echo "# Auto-set by setup-secrets.sh" >> "$REPO_ROOT/local-dev/.env"
-      echo "MUX_WEBHOOK_ID_${TARGET_ENV^^}=${WEBHOOK_ID}" >> "$REPO_ROOT/local-dev/.env"
+      echo "MUX_WEBHOOK_ID_$(echo "$TARGET_ENV" | tr '[:lower:]' '[:upper:]')=${WEBHOOK_ID}" >> "$REPO_ROOT/local-dev/.env"
     fi
   else
     warn "Mux webhook registration may have failed. Response: $RESPONSE"
@@ -228,7 +256,7 @@ fi
 
 # ── summary ───────────────────────────────────────────────────────────────────
 echo ""
-echo -e "${GREEN}${BOLD}✓ Secrets setup complete for ${TARGET_ENV^^}${NC}"
+echo -e "${GREEN}${BOLD}✓ Secrets setup complete for $(echo "$TARGET_ENV" | tr '[:lower:]' '[:upper:]')${NC}"
 echo ""
 echo "  ✓ Supabase Edge Function secrets (7 vars)"
 echo "  ✓ Edge Functions deployed (send-fcm, mux-webhook, revenuecat-webhook, projection-refresh)"

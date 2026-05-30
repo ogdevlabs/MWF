@@ -95,15 +95,23 @@ create_auth_user() {
   echo "$response" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4
 }
 
-# Get existing auth user id by email
+# Get existing auth user id by email (filters correctly — admin API returns all users)
 get_auth_user_id() {
   local email="$1"
   local response
   response=$(curl -sf \
     -H "apikey: $SERVICE_KEY" \
     -H "Authorization: Bearer $SERVICE_KEY" \
-    "$AUTH/admin/users?email=$email" 2>&1 || true)
-  echo "$response" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4
+    "$AUTH/admin/users?per_page=1000" 2>&1 || true)
+  echo "$response" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+users = data.get('users', [])
+for u in users:
+    if u.get('email') == '$email':
+        print(u['id'])
+        break
+" 2>/dev/null || true
 }
 
 # ── reset ─────────────────────────────────────────────────────────────────────
