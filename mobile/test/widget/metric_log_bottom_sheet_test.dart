@@ -42,7 +42,7 @@ void main() {
   });
 
   group('MetricLogBottomSheet', () {
-    Widget _buildSubject() {
+    Widget buildSubject() {
       return ProviderScope(
         overrides: [
           metricRepositoryProvider.overrideWithValue(metricRepository),
@@ -56,26 +56,26 @@ void main() {
     }
 
     testWidgets('renders metric type selector', (tester) async {
-      await tester.pumpWidget(_buildSubject());
+      await tester.pumpWidget(buildSubject());
       await tester.pump();
       // DropdownButtonFormField shows 'Weight' as default selected type
       expect(find.text('Weight'), findsOneWidget);
     });
 
     testWidgets('renders value text field', (tester) async {
-      await tester.pumpWidget(_buildSubject());
+      await tester.pumpWidget(buildSubject());
       await tester.pump();
       expect(find.byType(TextFormField), findsAtLeastNWidgets(1));
     });
 
     testWidgets('renders Log button', (tester) async {
-      await tester.pumpWidget(_buildSubject());
+      await tester.pumpWidget(buildSubject());
       await tester.pump();
       expect(find.text('Log'), findsOneWidget);
     });
 
     testWidgets('renders Log Metric title', (tester) async {
-      await tester.pumpWidget(_buildSubject());
+      await tester.pumpWidget(buildSubject());
       await tester.pump();
       expect(find.text('Log Metric'), findsOneWidget);
     });

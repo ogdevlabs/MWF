@@ -181,7 +181,7 @@ class _MetricLogBottomSheetState extends ConsumerState<MetricLogBottomSheet> {
                 children: [
                   // Metric type selector (DropdownButtonFormField)
                   DropdownButtonFormField<String>(
-                    value: _selectedType,
+                    initialValue: _selectedType,
                     decoration: const InputDecoration(
                       labelText: 'Metric type',
                       border: OutlineInputBorder(),
@@ -210,7 +210,7 @@ class _MetricLogBottomSheetState extends ConsumerState<MetricLogBottomSheet> {
                   // Optional subtype dropdown for measurement/flexibility
                   if (_subtypes != null) ...[
                     DropdownButtonFormField<String>(
-                      value: _selectedSubtype,
+                      initialValue: _selectedSubtype,
                       decoration: const InputDecoration(
                         labelText: 'Subtype',
                         border: OutlineInputBorder(),

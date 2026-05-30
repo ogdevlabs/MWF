@@ -37,9 +37,6 @@ void main() {
     List<GoRoute> extraRoutes = const [],
     List<String> navigatedRoutes = const [],
   }) {
-    // Record navigation events
-    final recorded = <String>[];
-
     final router = GoRouter(
       initialLocation: '/notifications',
       routes: [
