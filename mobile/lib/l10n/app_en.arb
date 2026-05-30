@@ -1,0 +1,63 @@
+{
+  "@@locale": "en",
+  "appTitle": "Move With Fergie",
+  "@appTitle": {
+    "description": "App title shown in app bar and about screen"
+  },
+  "programsScreenTitle": "Programs",
+  "@programsScreenTitle": {
+    "description": "Title for the programs list screen"
+  },
+  "progressScreenTitle": "Progress",
+  "@progressScreenTitle": {
+    "description": "Title for the progress dashboard screen"
+  },
+  "coachChatScreenTitle": "Coach",
+  "@coachChatScreenTitle": {
+    "description": "Title for the coach chat tab"
+  },
+  "notificationsScreenTitle": "Notifications",
+  "@notificationsScreenTitle": {
+    "description": "Title for the notifications screen"
+  },
+  "sessionCompleteTitle": "Session Complete!",
+  "@sessionCompleteTitle": {
+    "description": "Title shown on the session completion screen"
+  },
+  "retryButtonLabel": "Retry",
+  "@retryButtonLabel": {
+    "description": "Label for retry buttons on error states"
+  },
+  "signInButtonLabel": "Sign In",
+  "@signInButtonLabel": {
+    "description": "Label for the sign in button"
+  },
+  "signUpButtonLabel": "Sign Up",
+  "@signUpButtonLabel": {
+    "description": "Label for the sign up button"
+  },
+  "subscribeButtonLabel": "Subscribe",
+  "@subscribeButtonLabel": {
+    "description": "Label for the subscribe CTA button"
+  },
+  "errorGeneric": "Something went wrong",
+  "@errorGeneric": {
+    "description": "Generic error message"
+  },
+  "errorLoadFailed": "Failed to load",
+  "@errorLoadFailed": {
+    "description": "Error message when a resource fails to load"
+  },
+  "emptyStateNoPrograms": "No programs available",
+  "@emptyStateNoPrograms": {
+    "description": "Empty state message when no programs exist"
+  },
+  "emptyStateNoMetrics": "No data yet",
+  "@emptyStateNoMetrics": {
+    "description": "Empty state message when no metrics have been logged"
+  },
+  "emptyStateNoNotifications": "No notifications yet",
+  "@emptyStateNoNotifications": {
+    "description": "Empty state for notifications screen"
+  }
+}
