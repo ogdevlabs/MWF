@@ -17,7 +17,9 @@ class CoachTabScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Trigger FCM initialization (fire-and-forget — errors are non-blocking)
-    ref.watch(fcmInitProvider);
+    ref.watch(fcmInitProvider).whenOrNull(error: (e, _) {
+      debugPrint('[CoachTab] FCM init error suppressed: $e');
+    });
 
     return ref.watch(isSubscribedProvider).when(
           data: (isSubscribed) =>

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/network/supabase_client.dart';
@@ -20,7 +21,14 @@ Future<void> fcmInit(Ref ref) async {
 
   if (user == null) return; // Not authenticated yet — no-op
 
-  final fcmService = FcmService(supabase: supabase, router: router);
-  await fcmService.initialize();
-  await fcmService.registerToken(user.id);
+  try {
+    final fcmService = FcmService(supabase: supabase, router: router);
+    await fcmService.initialize();
+    await fcmService.registerToken(user.id);
+  } catch (e) {
+    // FCM setup is non-critical — log and continue.
+    // Common causes: Firebase placeholder config, simulator without push support,
+    // or permission denied. The app remains fully functional without push.
+    debugPrint('[FCM] Initialization failed (non-fatal): $e');
+  }
 }
