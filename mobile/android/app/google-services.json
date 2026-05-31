@@ -1,22 +1,27 @@
 {
   "project_info": {
-    "project_number": "000000000000",
-    "project_id": "move-with-fergie-placeholder",
-    "storage_bucket": "move-with-fergie-placeholder.appspot.com"
+    "project_number": "406915772080",
+    "project_id": "move-with-fergie",
+    "storage_bucket": "move-with-fergie.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "mobilesdk_app_id": "1:406915772080:android:0b53923b472b19c57c5575",
         "android_client_info": {
-          "package_name": "com.fererelabs.mwf_mobile"
+          "package_name": "com.fererelabs.mwf"
         }
       },
       "api_key": [
         {
-          "current_key": "TODO-replace-with-real-api-key"
+          "current_key": "AIzaSyDQCtANzGrMFx-ZFn4BhhArTlHkhp52BHA"
         }
-      ]
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"
